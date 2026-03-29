@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Connect — BNI前夜祭</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: "Helvetica Neue", "Hiragino Sans", "Noto Sans JP", sans-serif;
+    background: #0D0D0D;
+    color: #fff;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+  }
+  h1 {
+    font-size: 3rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, #CF2030, #C9A84C);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 8px;
+  }
+  .sub { color: #888; font-size: 1.1rem; margin-bottom: 48px; }
+  .links {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+    max-width: 480px;
+  }
+  a {
+    display: block;
+    padding: 20px 28px;
+    background: #1A1A1A;
+    border: 1px solid #333;
+    border-radius: 16px;
+    color: #fff;
+    text-decoration: none;
+    font-size: 1.1rem;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+  a:hover { border-color: #CF2030; background: #222; }
+  a .desc { font-size: 0.85rem; color: #888; font-weight: 400; margin-top: 4px; }
+  .footer { margin-top: 48px; font-size: 0.8rem; color: #555; }
+</style>
+</head>
+<body>
+  <h1>AI Connect</h1>
+  <p class="sub">BNI前夜祭 コンタクトサークル自動編成システム</p>
+  <div class="links">
+    <a href="docs/proposal/ai-connect-proposal.html">
+      📄 提案書
+      <div class="desc">BNIナショナル運営向け提案資料</div>
+    </a>
+    <a href="src/screen/index.html">
+      📺 スクリーンデモ
+      <div class="desc">テーブル発表・一覧・名前検索のデモ</div>
+    </a>
+  </div>
+  <p class="footer">AI Connect by BNI AIラボチーム</p>
+</body>
+</html>
