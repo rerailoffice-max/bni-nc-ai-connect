@@ -1,0 +1,67 @@
+{
+  "tables": [
+    {
+      "table_number": 1,
+      "theme": "住宅ワンストップ",
+      "members": [
+        {"name": "佐藤 太郎", "chapter": "アンカー", "industry": "不動産売買"},
+        {"name": "鈴木 花子", "chapter": "ライジング", "industry": "リフォーム・リノベーション"},
+        {"name": "高橋 健太", "chapter": "フェニックス", "industry": "生命保険"},
+        {"name": "田中 由美", "chapter": "ドリーム", "industry": "税理士・会計士"},
+        {"name": "伊藤 大輔", "chapter": "サクセス", "industry": "インテリア・内装"}
+      ],
+      "synergy_reason": "住宅購入者を起点に、リフォーム・保険・税務・内装の相互紹介チェーンを構築"
+    },
+    {
+      "table_number": 2,
+      "theme": "中小企業の成長支援",
+      "members": [
+        {"name": "渡辺 一郎", "chapter": "風神", "industry": "経営コンサルティング"},
+        {"name": "山本 美咲", "chapter": "UKA", "industry": "Web制作・デザイン"},
+        {"name": "中村 陽子", "chapter": "パイオニア", "industry": "融資・資金調達"},
+        {"name": "小林 翔太", "chapter": "ビクトリー", "industry": "社会保険労務士"},
+        {"name": "加藤 麻衣", "chapter": "フォルテ", "industry": "研修・セミナー"}
+      ],
+      "synergy_reason": "中小企業経営者に対し、資金調達→Web強化→人材育成→労務管理を一気通貫で提案"
+    },
+    {
+      "table_number": 3,
+      "theme": "美容×富裕層ライフスタイル",
+      "members": [
+        {"name": "吉田 拓也", "chapter": "レガシー", "industry": "美容室・ヘアサロン"},
+        {"name": "山田 真由美", "chapter": "ジャンヌ", "industry": "パーソナルトレーニング"},
+        {"name": "佐々木 直樹", "chapter": "インフィニティ", "industry": "ファイナンシャルプランナー"},
+        {"name": "松本 裕子", "chapter": "ブリリアント", "industry": "歯科"},
+        {"name": "井上 達也", "chapter": "エクセレンス", "industry": "写真・映像"},
+        {"name": "木村 恵子", "chapter": "アドバンス", "industry": "エステ・リラクゼーション"}
+      ],
+      "synergy_reason": "富裕層・高所得者層への美と健康と資産管理を横断するライフスタイル提案"
+    },
+    {
+      "table_number": 4,
+      "theme": "IT×クリエイティブ連合",
+      "members": [
+        {"name": "林 雄一", "chapter": "トリニティ", "industry": "AI・DX支援"},
+        {"name": "斎藤 智子", "chapter": "グローリー", "industry": "グラフィックデザイン"},
+        {"name": "清水 和也", "chapter": "ネクサス", "industry": "SNSマーケティング"},
+        {"name": "山崎 理恵", "chapter": "アンカー", "industry": "広告・PR"},
+        {"name": "森 俊介", "chapter": "ライジング", "industry": "コーチング"}
+      ],
+      "synergy_reason": "企業のブランディング案件でAI・デザイン・SNS・PRが連携して包括的な支援を提供"
+    },
+    {
+      "table_number": 5,
+      "theme": "店舗オーナー支援チーム",
+      "members": [
+        {"name": "池田 綾子", "chapter": "フェニックス", "industry": "飲食店経営"},
+        {"name": "橋本 修", "chapter": "ドリーム", "industry": "損害保険"},
+        {"name": "阿部 明美", "chapter": "サクセス", "industry": "行政書士"},
+        {"name": "石川 誠", "chapter": "風神", "industry": "清掃・ハウスクリーニング"},
+        {"name": "前田 久美子", "chapter": "UKA", "industry": "動画制作・映像"},
+        {"name": "藤田 浩二", "chapter": "パイオニア", "industry": "建築設計・施工"}
+      ],
+      "synergy_reason": "飲食・小売店舗の開業から運営まで、許認可・保険・施工・清掃・PR動画を一括サポート"
+    }
+  ],
+  "generated_at": "2026-03-29T22:00:00+09:00"
+}
