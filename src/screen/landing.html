@@ -6,54 +6,53 @@
 <title>AI Connect — BNI前夜祭</title>
 <style>
   :root {
-    --bni-red: #CF2030; --bni-red-dark: #A81A28; --bni-gold: #C9A84C;
-    --bg: #F5F5F5; --card-bg: #FFFFFF; --text: #1A1A1A; --text-dim: #666; --border: #E0E0E0;
+    --bg: #121318; --card: #1B1D24; --text: #EAEAEA; --text-dim: #8B8FA0; --border: #2A2D38;
+    --accent: #CF2030; --accent-dark: #A81A28; --gold: #C9A84C;
   }
   * { margin:0; padding:0; box-sizing:border-box; }
   body {
     font-family: "Helvetica Neue","Hiragino Sans","Noto Sans JP",sans-serif;
     background: var(--bg); color: var(--text); min-height: 100vh;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
-    padding: 40px 20px;
+    padding: 40px 20px; -webkit-font-smoothing: antialiased;
   }
   .logo {
-    width: 64px; height: 64px; background: var(--bni-red); border-radius: 16px;
+    width: 64px; height: 64px; border-radius: 16px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-dark));
     display: flex; align-items: center; justify-content: center;
-    font-weight: 900; font-size: 1.4rem; color: #fff; margin-bottom: 24px;
-    box-shadow: 0 4px 16px rgba(207,32,48,0.2);
+    font-weight: 900; font-size: 1.4rem; color: #fff; margin-bottom: 28px;
+    box-shadow: 0 8px 24px rgba(207,32,48,0.25);
   }
   h1 {
-    font-size: 2.8rem; font-weight: 900;
-    background: linear-gradient(135deg, var(--bni-red), var(--bni-gold));
+    font-size: 2.6rem; font-weight: 900; letter-spacing: -0.02em;
+    background: linear-gradient(135deg, var(--accent), var(--gold));
     -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-    margin-bottom: 8px; text-align: center;
+    margin-bottom: 10px; text-align: center;
   }
-  .subtitle { color: var(--text-dim); font-size: 1rem; margin-bottom: 12px; text-align: center; }
+  .subtitle { color: var(--text-dim); font-size: 0.95rem; margin-bottom: 16px; text-align: center; }
   .event-info {
-    color: var(--text-dim); font-size: 0.85rem; margin-bottom: 48px; text-align: center;
-    padding: 12px 24px; border: 1px solid var(--border); border-radius: 12px;
-    background: var(--card-bg);
+    color: var(--text-dim); font-size: 0.82rem; margin-bottom: 48px; text-align: center;
+    padding: 14px 28px; border: 1px solid var(--border); border-radius: 14px; background: var(--card);
   }
-  .event-info strong { color: var(--bni-red); }
+  .event-info strong { color: var(--gold); }
 
-  .buttons { display: flex; flex-direction: column; gap: 16px; width: 100%; max-width: 400px; }
+  .buttons { display: flex; flex-direction: column; gap: 14px; width: 100%; max-width: 380px; }
   .btn {
     display: flex; flex-direction: column; align-items: center;
-    padding: 28px 24px; border-radius: 20px; text-decoration: none;
+    padding: 26px 24px; border-radius: 18px; text-decoration: none;
     font-weight: 700; transition: all 0.3s; text-align: center;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
   }
   .btn-primary {
-    background: var(--bni-red); color: #fff; border: 2px solid var(--bni-red);
-    font-size: 1.2rem;
+    background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+    color: #fff; border: none; font-size: 1.15rem;
+    box-shadow: 0 4px 20px rgba(207,32,48,0.25);
   }
-  .btn-primary:hover { background: var(--bni-red-dark); border-color: var(--bni-red-dark); }
+  .btn-primary:hover { opacity: 0.92; }
   .btn-secondary {
-    background: var(--card-bg); color: var(--text); border: 2px solid var(--border);
-    font-size: 1.1rem;
+    background: var(--card); color: var(--text); border: 1px solid var(--border); font-size: 1.05rem;
   }
-  .btn-secondary:hover { border-color: var(--bni-red); }
-  .btn .desc { font-size: 0.82rem; font-weight: 400; opacity: 0.7; margin-top: 6px; }
+  .btn-secondary:hover { border-color: var(--gold); }
+  .btn .desc { font-size: 0.8rem; font-weight: 400; opacity: 0.6; margin-top: 6px; }
 </style>
 </head>
 <body>
@@ -64,7 +63,6 @@
     <strong>BNI National Conference 前夜祭</strong><br>
     2026年4月27日（日）ベルサール汐留
   </div>
-
   <div class="buttons">
     <a href="form.html" class="btn btn-primary">
       📝 アンケートに回答する
