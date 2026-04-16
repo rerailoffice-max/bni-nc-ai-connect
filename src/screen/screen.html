@@ -411,9 +411,9 @@
 <nav class="nav">
   <div class="nav-brand"><div class="logo">AI</div><h1>AI Connect</h1></div>
   <div class="nav-tabs">
-    <button class="nav-tab active" onclick="showMode('presentation')">発表</button>
-    <button class="nav-tab" onclick="showMode('list')">一覧</button>
-    <button class="nav-tab" onclick="showMode('search')">検索</button>
+    <button class="nav-tab active" onclick="showMode('presentation')">発表 / Present</button>
+    <button class="nav-tab" onclick="showMode('list')">一覧 / List</button>
+    <button class="nav-tab" onclick="showMode('search')">検索 / Search</button>
   </div>
   <div class="nav-info" id="nav-info"></div>
 </nav>
@@ -425,15 +425,15 @@
   <div id="presentation-mode">
     <div class="welcome" id="welcome">
       <h2>AI Connect</h2>
-      <p>パワーチーム × 行動特性 AIグループ編成</p>
-      <button class="start-btn" onclick="startPresentation()">発表を開始する</button>
+      <p>BNI National Conference 前夜祭</p>
+      <button class="start-btn" onclick="startPresentation()">発表を開始する / Start Presentation</button>
     </div>
     <div id="presentation-content" style="display:none;width:100%">
       <div id="card-container"></div>
       <div class="presentation-controls">
-        <button class="ctrl-btn" onclick="prevGroup()">← 前</button>
-        <button class="ctrl-btn" onclick="toggleAutoPlay()" id="auto-btn">▶ 自動再生</button>
-        <button class="ctrl-btn primary" onclick="nextGroup()">次 →</button>
+        <button class="ctrl-btn" onclick="prevGroup()">← Prev</button>
+        <button class="ctrl-btn" onclick="toggleAutoPlay()" id="auto-btn">▶ Auto</button>
+        <button class="ctrl-btn primary" onclick="nextGroup()">Next →</button>
       </div>
       <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
       <div class="counter" id="counter"></div>
@@ -445,7 +445,7 @@
 
   <!-- 検索モード -->
   <div id="search-mode">
-    <input class="search-box" id="search-input" type="text" placeholder="名前 or 電話番号を入力 / Enter name or phone..." oninput="searchByNameOrPhone()">
+    <input class="search-box" id="search-input" type="text" placeholder="名前 or 電話番号 / Name or Phone..." oninput="searchByNameOrPhone()">
     <div class="search-result" id="search-result"></div>
     <div class="no-result" id="no-result">該当する参加者が見つかりません / No participant found</div>
   </div>
@@ -559,7 +559,7 @@ function generateDemoData() {
 
   return {
     groups,
-    serendipity_group: { group_name: "セレンディピティ — 予期せぬ出会い", tables: serenTables },
+    serendipity_group: { group_name: "Serendipity — 予期せぬ出会い", tables: serenTables },
     stats: { total_participants: id-1, total_groups: 10 },
     generated_at: new Date().toISOString()
   };
@@ -614,10 +614,10 @@ function memberHtmlFull(m, opts={}) {
 function discDetailHtml(bal) {
   if (!bal) return '';
   const descs = {
-    D: { emoji:'🔥', name:'炎 Fire', desc:'推進力で決断を加速。チームを前に動かすエンジン' },
-    I: { emoji:'🌀', name:'風 Wind', desc:'人をつなぎアイデアを広げる。場の空気を変える力' },
-    S: { emoji:'🌿', name:'大地 Earth', desc:'安定感と信頼でチームを支える。着実に成果を積む' },
-    C: { emoji:'💧', name:'水 Water', desc:'データと分析で最適解を導く。戦略の要' }
+    D: { emoji:'🔥', name:'炎 Fire', desc:'推進力で決断を加速 / Drives bold decisions and fast action' },
+    I: { emoji:'🌀', name:'風 Wind', desc:'人をつなぎアイデアを広げる / Connects people and spreads ideas' },
+    S: { emoji:'🌿', name:'大地 Earth', desc:'安定と信頼でチームを支える / Builds trust and steady results' },
+    C: { emoji:'💧', name:'水 Water', desc:'データと分析で最適解を導く / Finds optimal solutions through analysis' }
   };
   return `<div class="disc-detail">
     ${Object.entries(descs).map(([k,v]) => `<div class="disc-detail-item">
@@ -639,10 +639,10 @@ function tableAnalysisHtml(tables) {
     // テーブルの特色を判定
     const max = Object.entries(tb).sort((a,b)=>b[1]-a[1])[0];
     const flavors = {
-      D: {text:'🔥 攻めのテーブル — Action Table', desc:'決断力と推進力に溢れるメンバーが揃う。スピード重視の紹介が期待できます'},
-      I: {text:'🌀 つながりのテーブル — Connection Table', desc:'社交力と巻き込み力の高いメンバー中心。ネットワークが爆発的に広がります'},
-      S: {text:'🌿 信頼のテーブル — Trust Table', desc:'安定感と継続力のあるメンバーが揃う。長期的なビジネス関係が築けます'},
-      C: {text:'💧 戦略のテーブル — Strategy Table', desc:'分析力と正確さを持つメンバー中心。質の高い紹介が期待できます'}
+      D: {text:'🔥 Action Table', desc:'決断力と推進力のチーム / Bold decisions, fast referrals'},
+      I: {text:'🌀 Connection Table', desc:'社交力でネットワーク拡大 / Expanding networks through connections'},
+      S: {text:'🌿 Trust Table', desc:'安定と信頼の長期パートナー / Building long-term business bonds'},
+      C: {text:'💧 Strategy Table', desc:'分析力で質の高い紹介 / Quality referrals through analysis'}
     };
     const flavor = flavors[max[0]];
 
@@ -665,7 +665,7 @@ function getAllGroups() {
   if (DATA.serendipity_group) {
     const sm = DATA.serendipity_group.tables.flatMap(t=>t.members);
     if (sm.length > 0) {
-      all.push({ group_number:"✨", group_name:DATA.serendipity_group.group_name, disc_balance:null, tables:DATA.serendipity_group.tables, synergy_reason:"運命が引き寄せた予期せぬ出会い。ここから新しいビジネスが生まれるかもしれません", disc_comment:null, _isSerendipity:true });
+      all.push({ group_number:"✨", group_name:DATA.serendipity_group.group_name, disc_balance:null, tables:DATA.serendipity_group.tables, synergy_reason:"運命が引き寄せた出会い / Serendipitous encounters that spark new business", disc_comment:null, _isSerendipity:true });
     }
   }
   return all;
@@ -681,7 +681,7 @@ let revealedGroups = new Set(); // Reveal済みグループ
 document.addEventListener('DOMContentLoaded', () => {
   const total = DATA.groups.reduce((s,g)=>s+g.tables.reduce((ss,t)=>ss+t.members.length,0),0);
   const seren = DATA.serendipity_group ? DATA.serendipity_group.tables.reduce((s,t)=>s+t.members.length,0) : 0;
-  document.getElementById('nav-info').textContent = `${DATA.groups.length}グループ / ${total+seren}名`;
+  document.getElementById('nav-info').textContent = `${DATA.groups.length} Groups / ${total+seren} Members`;
   buildListView();
   // ハッシュルーティング: #search でアクセスした場合は検索モードを表示
   if (window.location.hash === '#search') {
@@ -794,14 +794,14 @@ function prevGroup() {
 
 function toggleAutoPlay() {
   const btn = document.getElementById('auto-btn');
-  if (autoPlayInterval) { clearInterval(autoPlayInterval); autoPlayInterval=null; btn.textContent='▶ 自動再生'; }
+  if (autoPlayInterval) { clearInterval(autoPlayInterval); autoPlayInterval=null; btn.textContent='▶ Auto'; }
   else {
     autoPlayInterval = setInterval(()=>{
       const all = getAllGroups();
       if (currentGroupIndex < all.length-1) nextGroup();
-      else { clearInterval(autoPlayInterval); autoPlayInterval=null; btn.textContent='▶ 自動再生'; }
+      else { clearInterval(autoPlayInterval); autoPlayInterval=null; btn.textContent='▶ Auto'; }
     }, 5000);
-    btn.textContent = '⏸ 停止';
+    btn.textContent = '⏸ Stop';
   }
 }
 
@@ -999,7 +999,7 @@ function searchByNameOrPhone() {
 
     res.innerHTML = `
       <div class="search-group-number">${isSeren?'✨':'Group '+found.group.group_number}</div>
-      <div class="search-label">${found.member.name} さんのグループ ${discBadge(found.member)}</div>
+      <div class="search-label">${found.member.name}'s Group ${discBadge(found.member)}</div>
       <div style="background:var(--card-bg);border-radius:16px;padding:20px;border:1px solid var(--border)">
         <h3 style="font-size:1rem;color:var(--bni-gold);margin-bottom:8px">${found.group.group_name||''}</h3>
         ${found.group.disc_balance ? discBarHtml(found.group.disc_balance) : ''}
