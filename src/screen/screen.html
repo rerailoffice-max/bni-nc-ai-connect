@@ -74,7 +74,7 @@
     max-height: 0; overflow: hidden; opacity: 0;
     transition: max-height 0.8s ease, opacity 0.6s ease;
   }
-  .reveal-section.revealed { max-height: 600px; opacity: 1; }
+  .reveal-section.revealed { max-height: 1200px; opacity: 1; }
 
   .reveal-btn {
     display: block; margin: 24px auto 0; padding: 14px 40px; border-radius: 14px; border: 2px solid var(--bni-gold);
@@ -121,13 +121,17 @@
     background: rgba(255,255,255,0.03); border-radius: 8px; display: inline-block;
   }
 
-  /* Revealセクション: PC横並び */
-  .reveal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; }
+  /* Revealセクション: 3カラム（パワーチーム | Table分析1 | Table分析2） */
+  .reveal-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-top: 16px; }
+  .reveal-grid > div { min-width: 0; }
 
-  @media (max-width: 900px) {
-    .tables-row { flex-direction: column; gap: 16px; }
+  /* メンバーリスト間隔を詰める */
+  .member-list { display: flex; flex-direction: column; gap: 4px; }
+
+  @media (max-width: 1100px) {
+    .tables-row { flex-direction: column; gap: 12px; }
     .reveal-grid { grid-template-columns: 1fr; }
-    .presentation-card { padding: 24px 20px; }
+    .presentation-card { padding: 20px 16px; max-width: 100%; }
   }
 
   /* 発表モード */
@@ -136,8 +140,8 @@
     min-height: calc(100vh - 80px); padding: 40px;
   }
   .presentation-card {
-    background: var(--card-bg); border-radius: 24px; padding: 40px 48px;
-    max-width: 1400px; width: 100%; border: 1px solid var(--border);
+    background: var(--card-bg); border-radius: 24px; padding: 32px 40px;
+    max-width: 1800px; width: 100%; border: 1px solid var(--border);
     animation: cardIn 0.6s ease-out; position: relative; overflow: hidden;
   }
   .presentation-card::before {
@@ -242,9 +246,18 @@
   }
 
   .member-info { flex: 1; min-width: 0; }
-  .member-name { font-size: 1.2rem; font-weight: 700; }
-  .member-name-en { font-size: 0.82rem; color: var(--text-dim); font-weight: 400; margin-left: 8px; }
-  .member-meta { font-size: 0.9rem; color: var(--text-dim); margin-top: 2px; }
+  .member-name { font-size: 1.15rem; font-weight: 700; white-space: nowrap; }
+  .member-name-en { font-size: 0.75rem; color: var(--text-dim); font-weight: 400; display: block; }
+  .member-meta { font-size: 0.78rem; color: var(--text-dim); white-space: nowrap; }
+  .member-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 6px 12px; background: rgba(255,255,255,0.03);
+    border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);
+    animation: memberIn 0.4s ease-out; animation-fill-mode: both;
+  }
+  .member-info { flex: 1; min-width: 0; display: flex; align-items: center; gap: 12px; }
+  .member-info-name { min-width: 0; }
+  .member-avatar { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; flex-shrink: 0; }
   .member-industry {
     display: inline-block; background: rgba(207,32,48,0.12); color: #FF6B7A;
     padding: 2px 8px; border-radius: 100px; font-size: 0.72rem; font-weight: 600; white-space: nowrap;
@@ -538,11 +551,14 @@ function discBarHtml(bal) {
   </div>`;
 }
 
-// 発表モード用: Reveal前はDISCバッジ非表示、名前+チャプター+業種のみ
+// 発表モード用: Reveal前はDISCバッジ非表示
 function memberHtmlSimple(m) {
   return `<div class="member-item">
     <div class="member-avatar">${m.name.charAt(0)}</div>
-    <div class="member-info"><div class="member-name">${m.name}${m.name_en ? `<span class="member-name-en">${m.name_en}</span>` : ''}</div><div class="member-meta">${m.chapter}</div></div>
+    <div class="member-info">
+      <div class="member-info-name"><div class="member-name">${m.name}</div>${m.name_en ? `<span class="member-name-en">${m.name_en}</span>` : ''}</div>
+      <div class="member-meta">${m.chapter}</div>
+    </div>
     <span class="member-industry">${m.industry}</span>
   </div>`;
 }
@@ -554,7 +570,10 @@ function memberHtmlFull(m, opts={}) {
   const avStyle = avCss ? '' : 'style="background:var(--bni-gold)"';
   return `<div class="member-item${hl}">
     <div class="member-avatar ${avCss}" ${avStyle}>${m.name.charAt(0)}</div>
-    <div class="member-info"><div class="member-name">${m.name}${m.name_en ? `<span class="member-name-en">${m.name_en}</span>` : ''}</div><div class="member-meta">${m.chapter}</div></div>
+    <div class="member-info">
+      <div class="member-info-name"><div class="member-name">${m.name}</div>${m.name_en ? `<span class="member-name-en">${m.name_en}</span>` : ''}</div>
+      <div class="member-meta">${m.chapter}</div>
+    </div>
     <span class="member-disc-badge">${discBadge(m)}</span>
     <span class="member-industry">${m.industry}</span>
   </div>`;
@@ -686,15 +705,14 @@ function renderGroup(index) {
       ${g.disc_balance ? discBarHtml(g.disc_balance) : ''}
       <div class="reveal-grid">
         <div>
-          ${g.disc_balance ? discDetailHtml(g.disc_balance) : ''}
-        </div>
-        <div>
-          <div class="synergy-box">
-            <h4>🏆 パワーチーム: ${g.group_name}</h4>
+          <div class="synergy-box" style="margin-top:0">
+            <h4>🏆 ${g.group_name}</h4>
             <p>${g.synergy_reason || ''}</p>
           </div>
-          ${tableAnalysisHtml(g.tables)}
+          ${g.disc_balance ? discDetailHtml(g.disc_balance) : ''}
         </div>
+        ${g.tables[0] ? `<div>${tableAnalysisHtml([g.tables[0]])}</div>` : ''}
+        ${g.tables[1] ? `<div>${tableAnalysisHtml([g.tables[1]])}</div>` : ''}
       </div>
     </div>
   `;
