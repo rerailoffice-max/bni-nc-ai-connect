@@ -267,11 +267,12 @@ function render(data){
   const pc=dc(ps.disc_label);
   el.innerHTML=`
     <div class="result-group-number">Group ${ps.group_number}</div>
-    <div class="result-group-name">${gr.group_name||''}</div>
     <div class="result-table">Table ${ps.table_number}</div>
     <div class="result-person-badge"><span class="disc-badge ${pc}">${de(ps.disc_label)} ${ps.disc_label||''}</span></div>
-    <div class="result-card"><h3>グループメンバー (${ms.length}名)</h3>${bar}${mh}</div>
-    ${gr.synergy_reason?`<div class="synergy-box"><h4>💡 ${gr.group_name}</h4><p>${gr.synergy_reason}</p></div>`:''}`;
+    <div class="result-card"><h3>グループメンバー / Members (${ms.length}名)</h3>${bar}${mh}</div>
+    <div style="text-align:center;margin-top:16px;padding:16px;background:var(--gold-glow);border-radius:14px;border:1px solid rgba(201,168,76,0.18)">
+      <p style="font-size:0.88rem;color:var(--gold);font-weight:600">🎉 グループテーマは当日発表！<br><span style="font-size:0.8rem;font-weight:400">The group theme will be revealed at the event!</span></p>
+    </div>`;
   el.classList.add('visible');
 }
 </script>
