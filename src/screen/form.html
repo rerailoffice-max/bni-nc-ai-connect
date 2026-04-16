@@ -355,7 +355,12 @@ function send(e) {
   fetch(GAS_URL, { method:'POST', body:new URLSearchParams(p), headers:{'Content-Type':'application/x-www-form-urlencoded'} })
   .then(r => r.json()).then(res => {
     document.getElementById('loading').classList.remove('active');
-    if (res.success) {
+    if (res.success && res.already_answered) {
+      // 既に回答済み → result.htmlへ（回答済みフラグ付き）
+      const dc = res.disc || {};
+      window.location.href = `result.html?name=${encodeURIComponent(res.name||p.name)}&disc_emoji=${encodeURIComponent(dc.emoji||'')}&disc_label=${encodeURIComponent(dc.label||'')}&already=1`;
+    } else if (res.success) {
+      // 新規回答 → result.htmlへ
       const dc = res.disc || {};
       window.location.href = `result.html?name=${encodeURIComponent(p.name)}&disc_emoji=${encodeURIComponent(dc.emoji||'')}&disc_label=${encodeURIComponent(dc.label||'')}`;
     } else { f.style.display = 'block'; document.getElementById('btn').disabled = false; ma.innerHTML = `<div class="msg error">${res.error || 'Error'}</div>`; }

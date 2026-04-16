@@ -63,26 +63,43 @@ function doPost(e) {
     // 重複チェック（電話番号ベース）
     const data = sheet.getDataRange().getValues();
     let existingRow = -1;
+    let existingName = '';
     for (let i = 1; i < data.length; i++) {
       const rowPhone = normalizePhone(String(data[i][4] || ''));
       if (rowPhone && rowPhone === normalizedPhone) {
-        existingRow = i + 1; // 1-indexed
+        existingRow = i + 1;
+        existingName = String(data[i][1] || '');
         break;
       }
     }
 
+    // 既に回答済みの場合は上書きせず、回答済みを通知
+    if (existingRow > 0) {
+      // 既存の回答からDISC判定
+      const existQ7 = String(data[existingRow - 1][7] || '');
+      const existQ8 = String(data[existingRow - 1][8] || '');
+      const existQ9 = String(data[existingRow - 1][9] || '');
+      const disc = calculateDiscType(existQ7, existQ8, existQ9);
+
+      return jsonResponse_({
+        success: true,
+        already_answered: true,
+        message: 'すでに回答済みです',
+        name: existingName,
+        disc: {
+          main: disc.disc_main,
+          label: disc.disc_label,
+          emoji: CONFIG.DISC.TYPE_NAMES[disc.disc_main].emoji,
+          description: CONFIG.DISC.TYPE_NAMES[disc.disc_main].ja
+        }
+      });
+    }
+
+    // 新規追加
     const timestamp = new Date().toISOString();
     const rowData = [timestamp, name, chapter, category, phone, industry, targetCustomers, q7, q8, q9];
-
-    if (existingRow > 0) {
-      // 既存回答を上書き
-      sheet.getRange(existingRow, 1, 1, rowData.length).setValues([rowData]);
-      Logger.log(`回答更新: ${name} (${normalizedPhone})`);
-    } else {
-      // 新規追加
-      sheet.appendRow(rowData);
-      Logger.log(`新規回答: ${name} (${normalizedPhone})`);
-    }
+    sheet.appendRow(rowData);
+    Logger.log(`新規回答: ${name} (${normalizedPhone})`);
 
     // DISC判定結果を即時計算
     const disc = calculateDiscType(q7, q8, q9);

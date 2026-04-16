@@ -193,12 +193,19 @@ let st=null;
 document.addEventListener('DOMContentLoaded',()=>{
   const p=new URLSearchParams(location.search);
   if(p.get('name')){
-    // フォームからの遷移 → 感謝画面のみ表示、検索欄は非表示
     document.getElementById('thank-you').classList.add('visible');
     document.getElementById('search-section').style.display='none';
     const e=p.get('disc_emoji'), l=p.get('disc_label');
     if(e) document.getElementById('disc-emoji').textContent=e;
     if(l) document.getElementById('disc-label-text').textContent='Your Style: '+l;
+
+    // 回答済みの場合はメッセージを差し替え
+    if(p.get('already')==='1'){
+      document.querySelector('#thank-you .msg').innerHTML=
+        'この電話番号はすでに回答済みです。<br>You have already submitted your response.<br><br>'+
+        '当日のグループ発表をお楽しみに！<br>Look forward to the group announcement!<br><br>'+
+        '<small>※内容を変更したい場合は運営にご連絡ください<br>Contact the organizer to update your response</small>';
+    }
   }
 });
 
