@@ -114,15 +114,15 @@
 
   /* 3カラムレイアウト: 情報 | Table1 | Table2 */
   .three-col {
-    display: grid; grid-template-columns: 280px 1fr 1fr; gap: 24px;
-    min-height: calc(100vh - 200px); align-items: start;
+    display: grid; grid-template-columns: 260px 1fr 1fr; gap: 28px;
+    align-items: start;
   }
   .col-info {
-    display: flex; flex-direction: column; position: sticky; top: 0;
+    display: flex; flex-direction: column; gap: 8px;
   }
-  .col-info .group-number { font-size: 3rem; }
-  .col-info .group-name { font-size: 1.6rem; margin-bottom: 12px; }
-  .col-info .reveal-btn { margin-top: auto; }
+  .col-info .group-number { font-size: 2.8rem; line-height: 1; margin-bottom: 0; }
+  .col-info .group-name { font-size: 1.4rem; margin-bottom: 8px; }
+  .col-info .reveal-btn { margin-top: 16px; }
   .col-table { min-width: 0; }
   .table-col-header {
     font-size: 0.88rem; font-weight: 700; color: var(--text-dim);
@@ -250,18 +250,21 @@
   }
 
   .member-info { flex: 1; min-width: 0; }
-  .member-name { font-size: 1.15rem; font-weight: 700; white-space: nowrap; }
-  .member-name-en { font-size: 0.75rem; color: var(--text-dim); font-weight: 400; display: block; }
-  .member-meta { font-size: 0.78rem; color: var(--text-dim); white-space: nowrap; }
   .member-item {
-    display: flex; align-items: center; gap: 10px;
-    padding: 6px 12px; background: rgba(255,255,255,0.03);
+    display: grid; grid-template-columns: 32px 1fr auto auto; align-items: center; gap: 10px;
+    padding: 7px 12px; background: rgba(255,255,255,0.03);
     border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);
-    animation: memberIn 0.4s ease-out; animation-fill-mode: both;
+    animation: memberIn 0.3s ease-out; animation-fill-mode: both;
   }
-  .member-info { flex: 1; min-width: 0; display: flex; align-items: center; gap: 12px; }
-  .member-info-name { min-width: 0; }
-  .member-avatar { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; flex-shrink: 0; }
+  .member-avatar {
+    width: 32px; height: 32px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.8rem; font-weight: 700; flex-shrink: 0;
+  }
+  .member-info { min-width: 0; }
+  .member-name { font-size: 1.05rem; font-weight: 700; line-height: 1.2; }
+  .member-name-en { font-size: 0.7rem; color: var(--text-muted, #555); font-weight: 400; }
+  .member-meta { font-size: 0.75rem; color: var(--text-dim); white-space: nowrap; text-align: right; }
   .member-industry {
     display: inline-block; background: rgba(207,32,48,0.12); color: #FF6B7A;
     padding: 2px 8px; border-radius: 100px; font-size: 0.72rem; font-weight: 600; white-space: nowrap;
@@ -559,10 +562,8 @@ function discBarHtml(bal) {
 function memberHtmlSimple(m) {
   return `<div class="member-item">
     <div class="member-avatar">${m.name.charAt(0)}</div>
-    <div class="member-info">
-      <div class="member-info-name"><div class="member-name">${m.name}</div>${m.name_en ? `<span class="member-name-en">${m.name_en}</span>` : ''}</div>
-      <div class="member-meta">${m.chapter}</div>
-    </div>
+    <div class="member-info"><div class="member-name">${m.name}</div><div class="member-name-en">${m.name_en||''}</div></div>
+    <div class="member-meta">${m.chapter}</div>
     <span class="member-industry">${m.industry}</span>
   </div>`;
 }
@@ -572,12 +573,10 @@ function memberHtmlFull(m, opts={}) {
   const hl = opts.highlight ? ' highlight' : '';
   const avCss = m.disc_css || '';
   const avStyle = avCss ? '' : 'style="background:var(--bni-gold)"';
-  return `<div class="member-item${hl}">
+  return `<div class="member-item${hl}" style="grid-template-columns:32px 1fr auto auto auto">
     <div class="member-avatar ${avCss}" ${avStyle}>${m.name.charAt(0)}</div>
-    <div class="member-info">
-      <div class="member-info-name"><div class="member-name">${m.name}</div>${m.name_en ? `<span class="member-name-en">${m.name_en}</span>` : ''}</div>
-      <div class="member-meta">${m.chapter}</div>
-    </div>
+    <div class="member-info"><div class="member-name">${m.name}</div><div class="member-name-en">${m.name_en||''}</div></div>
+    <div class="member-meta">${m.chapter}</div>
     <span class="member-disc-badge">${discBadge(m)}</span>
     <span class="member-industry">${m.industry}</span>
   </div>`;
