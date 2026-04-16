@@ -14,160 +14,129 @@
     --text: #FFFFFF;
     --text-dim: #888888;
     --border: #333333;
-    /* 四元素カラー */
-    --fire: #CF2030;
-    --fire-bg: rgba(207,32,48,0.15);
-    --fire-text: #FF6B7A;
-    --wind: #2196F3;
-    --wind-bg: rgba(33,150,243,0.15);
-    --wind-text: #64B5F6;
-    --earth: #FFC107;
-    --earth-bg: rgba(255,193,7,0.15);
-    --earth-text: #FFD54F;
-    --water: #4CAF50;
-    --water-bg: rgba(76,175,80,0.15);
-    --water-text: #81C784;
+    --fire: #CF2030; --fire-bg: rgba(207,32,48,0.15); --fire-text: #FF6B7A;
+    --wind: #2196F3; --wind-bg: rgba(33,150,243,0.15); --wind-text: #64B5F6;
+    --earth: #FFC107; --earth-bg: rgba(255,193,7,0.15); --earth-text: #FFD54F;
+    --water: #4CAF50; --water-bg: rgba(76,175,80,0.15); --water-text: #81C784;
   }
-
   * { margin: 0; padding: 0; box-sizing: border-box; }
-
   body {
     font-family: "Helvetica Neue", "Hiragino Sans", "Noto Sans JP", sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    overflow-x: hidden;
+    background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden;
   }
 
-  /* ===== ナビゲーション ===== */
+  /* ナビ */
   .nav {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    background: rgba(13,13,13,0.95);
-    backdrop-filter: blur(20px);
+    position: fixed; top: 0; left: 0; right: 0;
+    background: rgba(13,13,13,0.95); backdrop-filter: blur(20px);
     border-bottom: 1px solid var(--border);
-    padding: 12px 32px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    z-index: 100;
+    padding: 12px 32px; display: flex; justify-content: space-between; align-items: center; z-index: 100;
   }
-
-  .nav-brand {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
+  .nav-brand { display: flex; align-items: center; gap: 12px; }
   .nav-brand .logo {
-    width: 36px; height: 36px;
-    background: var(--bni-red);
-    border-radius: 8px;
-    display: flex; align-items: center; justify-content: center;
-    font-weight: 800; font-size: 0.9rem;
+    width: 36px; height: 36px; background: var(--bni-red); border-radius: 8px;
+    display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.9rem;
   }
-
-  .nav-brand h1 { font-size: 1.1rem; font-weight: 700; letter-spacing: 0.05em; }
-
-  .nav-tabs {
-    display: flex; gap: 4px;
-    background: #222; border-radius: 10px; padding: 3px;
-  }
-
+  .nav-brand h1 { font-size: 1.1rem; font-weight: 700; }
+  .nav-tabs { display: flex; gap: 4px; background: #222; border-radius: 10px; padding: 3px; }
   .nav-tab {
-    padding: 8px 20px; border-radius: 8px; border: none;
-    background: transparent; color: var(--text-dim);
-    font-size: 0.88rem; font-weight: 600; cursor: pointer; transition: all 0.2s;
+    padding: 8px 20px; border-radius: 8px; border: none; background: transparent;
+    color: var(--text-dim); font-size: 0.88rem; font-weight: 600; cursor: pointer; transition: all 0.2s;
   }
-
   .nav-tab.active { background: var(--bni-red); color: var(--text); }
-
   .nav-info { font-size: 0.82rem; color: var(--text-dim); }
 
-  /* ===== メインコンテンツ ===== */
   .main { padding-top: 80px; }
 
-  /* ===== DISCバッジ ===== */
+  /* DISCバッジ */
   .disc-badge {
     display: inline-flex; align-items: center; gap: 4px;
-    padding: 2px 10px; border-radius: 100px;
-    font-size: 0.75rem; font-weight: 700;
+    padding: 2px 10px; border-radius: 100px; font-size: 0.75rem; font-weight: 700;
   }
   .disc-badge.fire { background: var(--fire-bg); color: var(--fire-text); }
   .disc-badge.wind { background: var(--wind-bg); color: var(--wind-text); }
   .disc-badge.earth { background: var(--earth-bg); color: var(--earth-text); }
   .disc-badge.water { background: var(--water-bg); color: var(--water-text); }
 
-  /* ===== DISC構成バー ===== */
-  .disc-bar {
-    display: flex; gap: 4px; margin: 12px 0;
-    height: 8px; border-radius: 4px; overflow: hidden;
-  }
-  .disc-bar-seg { height: 100%; transition: width 0.3s; }
+  /* DISC構成バー */
+  .disc-bar { display: flex; gap: 4px; margin: 12px 0; height: 8px; border-radius: 4px; overflow: hidden; }
+  .disc-bar-seg { height: 100%; }
   .disc-bar-seg.fire { background: var(--fire); }
   .disc-bar-seg.wind { background: var(--wind); }
   .disc-bar-seg.earth { background: var(--earth); }
   .disc-bar-seg.water { background: var(--water); }
-
-  .disc-bar-labels {
-    display: flex; gap: 16px; font-size: 0.78rem; color: var(--text-dim);
-    margin-bottom: 16px;
-  }
+  .disc-bar-labels { display: flex; gap: 16px; font-size: 0.78rem; color: var(--text-dim); margin-bottom: 16px; }
   .disc-bar-labels span { display: flex; align-items: center; gap: 4px; }
   .disc-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
 
-  /* ===== 発表モード ===== */
+  /* Reveal関連 */
+  .reveal-section {
+    max-height: 0; overflow: hidden; opacity: 0;
+    transition: max-height 0.8s ease, opacity 0.6s ease;
+  }
+  .reveal-section.revealed { max-height: 600px; opacity: 1; }
+
+  .reveal-btn {
+    display: block; margin: 24px auto 0; padding: 14px 40px; border-radius: 14px; border: 2px solid var(--bni-gold);
+    background: transparent; color: var(--bni-gold); font-size: 1rem; font-weight: 700;
+    cursor: pointer; transition: all 0.3s; letter-spacing: 0.05em;
+  }
+  .reveal-btn:hover { background: var(--bni-gold); color: #000; }
+  .reveal-btn.revealed { display: none; }
+
+  .synergy-box {
+    background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.25);
+    border-radius: 14px; padding: 20px; margin-top: 16px;
+  }
+  .synergy-box h4 { font-size: 1rem; font-weight: 700; color: var(--bni-gold); margin-bottom: 8px; }
+  .synergy-box p { font-size: 0.88rem; color: var(--bni-gold); line-height: 1.6; opacity: 0.9; }
+  .synergy-box::before { content: "💡 "; }
+
+  /* 発表モード */
   #presentation-mode {
     display: flex; flex-direction: column; align-items: center; justify-content: center;
     min-height: calc(100vh - 80px); padding: 40px;
   }
-
   .presentation-card {
-    background: var(--card-bg); border-radius: 24px;
-    padding: 40px 48px; max-width: 900px; width: 100%;
-    border: 1px solid var(--border);
-    animation: cardIn 0.6s ease-out;
-    position: relative; overflow: hidden;
+    background: var(--card-bg); border-radius: 24px; padding: 40px 48px;
+    max-width: 900px; width: 100%; border: 1px solid var(--border);
+    animation: cardIn 0.6s ease-out; position: relative; overflow: hidden;
   }
-
   .presentation-card::before {
     content: ""; position: absolute; top: 0; left: 0; right: 0; height: 4px;
     background: linear-gradient(90deg, var(--bni-red), var(--bni-gold));
   }
-
   .presentation-card.serendipity { border-color: var(--bni-gold); }
-  .presentation-card.serendipity::before {
-    background: linear-gradient(90deg, var(--bni-gold), #FFD700);
-  }
+  .presentation-card.serendipity::before { background: linear-gradient(90deg, var(--bni-gold), #FFD700); }
 
   @keyframes cardIn {
     from { opacity: 0; transform: translateY(40px) scale(0.96); }
     to { opacity: 1; transform: translateY(0) scale(1); }
   }
+  @keyframes revealPulse {
+    0% { box-shadow: 0 0 0 0 rgba(201,168,76,0.4); }
+    70% { box-shadow: 0 0 0 12px rgba(201,168,76,0); }
+    100% { box-shadow: 0 0 0 0 rgba(201,168,76,0); }
+  }
+  .reveal-flash { animation: revealPulse 0.8s ease-out; }
 
   .group-number {
     font-size: 4rem; font-weight: 900;
     background: linear-gradient(135deg, var(--bni-red), var(--bni-gold));
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    background-clip: text; line-height: 1; margin-bottom: 4px;
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    line-height: 1; margin-bottom: 4px;
   }
-
-  .group-name {
-    font-size: 1.2rem; font-weight: 600; color: var(--bni-gold); margin-bottom: 8px;
-  }
+  .group-name { font-size: 1.2rem; font-weight: 600; color: var(--bni-gold); margin-bottom: 12px; }
 
   /* テーブルタブ */
-  .table-tabs {
-    display: flex; gap: 4px; margin-bottom: 16px;
-  }
+  .table-tabs { display: flex; gap: 4px; margin-bottom: 12px; }
   .table-tab {
     padding: 6px 16px; border-radius: 8px; border: 1px solid var(--border);
-    background: transparent; color: var(--text-dim);
-    font-size: 0.82rem; font-weight: 600; cursor: pointer;
+    background: transparent; color: var(--text-dim); font-size: 0.82rem; font-weight: 600; cursor: pointer;
   }
   .table-tab.active { background: rgba(207,32,48,0.2); color: var(--fire-text); border-color: var(--bni-red); }
 
-  .member-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+  .member-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
 
   .member-item {
     display: flex; align-items: center; gap: 12px;
@@ -175,12 +144,10 @@
     border-radius: 10px; border: 1px solid rgba(255,255,255,0.05);
     animation: memberIn 0.4s ease-out; animation-fill-mode: both;
   }
-
   @keyframes memberIn {
     from { opacity: 0; transform: translateX(-20px); }
     to { opacity: 1; transform: translateX(0); }
   }
-
   .member-item:nth-child(1) { animation-delay: 0.05s; }
   .member-item:nth-child(2) { animation-delay: 0.1s; }
   .member-item:nth-child(3) { animation-delay: 0.15s; }
@@ -191,7 +158,6 @@
   .member-item:nth-child(8) { animation-delay: 0.4s; }
   .member-item:nth-child(9) { animation-delay: 0.45s; }
   .member-item:nth-child(10) { animation-delay: 0.5s; }
-  .member-item:nth-child(11) { animation-delay: 0.55s; }
 
   .member-item.highlight { background: rgba(201,168,76,0.15); border-color: var(--bni-gold); }
 
@@ -199,38 +165,27 @@
     width: 36px; height: 36px; border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
     font-size: 0.9rem; font-weight: 700; flex-shrink: 0;
+    background: var(--bni-red); /* デフォルト。Reveal後にDISC色に変わる */
+    transition: background 0.4s;
   }
-  .member-avatar.fire { background: var(--fire); }
-  .member-avatar.wind { background: var(--wind); }
-  .member-avatar.earth { background: var(--earth); }
-  .member-avatar.water { background: var(--water); }
 
   .member-info { flex: 1; min-width: 0; }
   .member-name { font-size: 0.95rem; font-weight: 700; }
   .member-meta { font-size: 0.78rem; color: var(--text-dim); margin-top: 1px; }
-
   .member-industry {
     display: inline-block; background: rgba(207,32,48,0.12); color: #FF6B7A;
-    padding: 2px 8px; border-radius: 100px; font-size: 0.72rem; font-weight: 600;
-    white-space: nowrap;
+    padding: 2px 8px; border-radius: 100px; font-size: 0.72rem; font-weight: 600; white-space: nowrap;
   }
 
-  .synergy-reason {
-    background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.2);
-    border-radius: 12px; padding: 14px 18px;
-    font-size: 0.85rem; color: var(--bni-gold); line-height: 1.6;
-  }
-  .synergy-reason::before { content: "💡 "; }
+  /* Reveal前は業種バッジも非表示にするオプション */
+  .member-disc-badge { transition: opacity 0.4s; }
 
   /* コントロール */
-  .presentation-controls {
-    display: flex; gap: 12px; margin-top: 28px; justify-content: center;
-  }
-
+  .presentation-controls { display: flex; gap: 12px; margin-top: 28px; justify-content: center; }
   .ctrl-btn {
     padding: 12px 28px; border-radius: 12px; border: 1px solid var(--border);
-    background: var(--card-bg); color: var(--text);
-    font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.2s;
+    background: var(--card-bg); color: var(--text); font-size: 0.9rem; font-weight: 600;
+    cursor: pointer; transition: all 0.2s;
   }
   .ctrl-btn:hover { border-color: var(--bni-red); }
   .ctrl-btn.primary { background: var(--bni-red); border-color: var(--bni-red); }
@@ -246,59 +201,39 @@
   }
   .counter { font-size: 0.85rem; color: var(--text-dim); margin-top: 10px; }
 
-  /* ===== 一覧モード ===== */
-  #list-mode {
-    display: none; padding: 32px; max-width: 1400px; margin: 0 auto;
-  }
-
-  .group-grid {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
-    gap: 20px;
-  }
-
+  /* 一覧モード */
+  #list-mode { display: none; padding: 32px; max-width: 1400px; margin: 0 auto; }
+  .group-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 20px; }
   .group-card {
     background: var(--card-bg); border-radius: 16px; padding: 24px;
     border: 1px solid var(--border); transition: border-color 0.2s;
   }
   .group-card:hover { border-color: var(--bni-red); }
   .group-card.serendipity { border-color: var(--bni-gold); }
-
   .group-card-header {
     display: flex; align-items: baseline; gap: 12px;
     margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px solid var(--border);
   }
   .group-card-number { font-size: 1.6rem; font-weight: 900; color: var(--bni-red); }
   .group-card-name { font-size: 0.85rem; color: var(--bni-gold); font-weight: 600; }
-
   .group-card-members { display: flex; flex-direction: column; gap: 4px; }
-
-  .group-card-member {
-    display: flex; align-items: center; gap: 8px; font-size: 0.82rem; padding: 3px 0;
-  }
-
+  .group-card-member { display: flex; align-items: center; gap: 8px; font-size: 0.82rem; padding: 3px 0; }
   .mini-avatar {
     width: 24px; height: 24px; border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
     font-size: 0.6rem; font-weight: 700; flex-shrink: 0;
   }
-
   .group-card-synergy {
     margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border);
     font-size: 0.78rem; color: var(--text-dim); line-height: 1.5;
   }
-
-  /* テーブル区切り */
   .table-divider {
     font-size: 0.72rem; color: var(--text-dim); margin: 6px 0 4px;
-    padding: 2px 8px; background: rgba(255,255,255,0.03); border-radius: 4px;
-    display: inline-block;
+    padding: 2px 8px; background: rgba(255,255,255,0.03); border-radius: 4px; display: inline-block;
   }
 
-  /* ===== 検索モード ===== */
-  #search-mode {
-    display: none; padding: 32px; max-width: 600px; margin: 0 auto;
-  }
-
+  /* 検索モード */
+  #search-mode { display: none; padding: 32px; max-width: 600px; margin: 0 auto; }
   .search-box {
     width: 100%; padding: 16px 24px; border-radius: 16px;
     border: 2px solid var(--border); background: var(--card-bg);
@@ -307,40 +242,29 @@
   }
   .search-box:focus { border-color: var(--bni-red); }
   .search-box::placeholder { color: var(--text-dim); }
-
   .search-result { display: none; animation: cardIn 0.4s ease-out; }
   .search-result.visible { display: block; }
-
   .search-group-number {
     font-size: 5rem; font-weight: 900; text-align: center;
     background: linear-gradient(135deg, var(--bni-red), var(--bni-gold));
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    background-clip: text; line-height: 1.1; margin-bottom: 4px;
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    line-height: 1.1; margin-bottom: 4px;
   }
+  .search-label { text-align: center; font-size: 1rem; color: var(--text-dim); margin-bottom: 24px; }
+  .no-result { text-align: center; color: var(--text-dim); padding: 40px; font-size: 1rem; display: none; }
 
-  .search-label {
-    text-align: center; font-size: 1rem; color: var(--text-dim); margin-bottom: 24px;
-  }
-
-  .no-result {
-    text-align: center; color: var(--text-dim); padding: 40px; font-size: 1rem; display: none;
-  }
-
-  /* ===== ウェルカム画面 ===== */
+  /* ウェルカム */
   .welcome {
     display: flex; flex-direction: column; align-items: center; justify-content: center;
     min-height: calc(100vh - 80px); text-align: center; padding: 40px;
   }
-
   .welcome h2 {
     font-size: 3rem; font-weight: 900;
     background: linear-gradient(135deg, var(--bni-red), var(--bni-gold));
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    background-clip: text; margin-bottom: 16px;
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    margin-bottom: 16px;
   }
-
   .welcome p { font-size: 1.2rem; color: var(--text-dim); margin-bottom: 40px; }
-
   .welcome .start-btn {
     padding: 16px 48px; border-radius: 16px; border: none;
     background: var(--bni-red); color: var(--text);
@@ -348,7 +272,6 @@
   }
   .welcome .start-btn:hover { background: var(--bni-red-dark); }
 
-  /* ===== レスポンシブ ===== */
   @media (max-width: 768px) {
     .nav { padding: 10px 16px; flex-wrap: wrap; gap: 8px; }
     .nav-info { display: none; }
@@ -361,12 +284,8 @@
 </head>
 <body>
 
-<!-- ナビゲーション -->
 <nav class="nav">
-  <div class="nav-brand">
-    <div class="logo">AI</div>
-    <h1>AI Connect</h1>
-  </div>
+  <div class="nav-brand"><div class="logo">AI</div><h1>AI Connect</h1></div>
   <div class="nav-tabs">
     <button class="nav-tab active" onclick="showMode('presentation')">発表</button>
     <button class="nav-tab" onclick="showMode('list')">一覧</button>
@@ -375,14 +294,12 @@
   <div class="nav-info" id="nav-info"></div>
 </nav>
 
-<!-- メイン -->
 <div class="main">
-
   <!-- 発表モード -->
   <div id="presentation-mode">
     <div class="welcome" id="welcome">
       <h2>AI Connect</h2>
-      <p>行動特性 × 業種 AIグループ編成システム</p>
+      <p>パワーチーム × 行動特性 AIグループ編成</p>
       <button class="start-btn" onclick="startPresentation()">発表を開始する</button>
     </div>
     <div id="presentation-content" style="display:none;width:100%;max-width:900px;margin:0 auto">
@@ -398,9 +315,7 @@
   </div>
 
   <!-- 一覧モード -->
-  <div id="list-mode">
-    <div class="group-grid" id="group-grid"></div>
-  </div>
+  <div id="list-mode"><div class="group-grid" id="group-grid"></div></div>
 
   <!-- 検索モード -->
   <div id="search-mode">
@@ -408,18 +323,31 @@
     <div class="search-result" id="search-result"></div>
     <div class="no-result" id="no-result">該当する参加者が見つかりません / No participant found</div>
   </div>
-
 </div>
 
 <script>
-// ===== デモデータ（200名 + セレンディピティ10名） =====
+// ===== デモデータ生成 =====
 const DATA = generateDemoData();
 
 function generateDemoData() {
   const lastNames = ["佐藤","鈴木","高橋","田中","伊藤","渡辺","山本","中村","小林","加藤","吉田","山田","佐々木","松本","井上","木村","林","斎藤","清水","山崎","森","池田","橋本","阿部","石川","前田","藤田","小川","岡田","後藤","長谷川","石井","村上","近藤","坂本","遠藤","青木","藤井","西村","福田","太田","三浦","岡本","松田","中川","中野","原田","小野","竹内","金子","和田","中山","石田","上田","柴田","宮崎","酒井","宮本","工藤","横山","高木","安藤","内田","谷口","大野","丸山","今井","河野","武田","藤原","杉山","増田","小島","平野","土屋","大塚","千葉","久保","菅原","岩崎","松井","木下","佐野","野口","菊地","杉本","渡部","古川","市川","望月","北村","吉川","片山","野村","新井","中田","桜井","浜田","三宅"];
   const firstNames = ["太郎","花子","健太","由美","大輔","美咲","陽子","翔太","麻衣","拓也","真由美","直樹","裕子","達也","恵子","雄一","智子","和也","理恵","俊介","綾子","修","明美","誠","久美子","浩二","裕太","恵美","啓介","千尋","隆司","沙織","正人","典子","康太","優子","剛","瞳","博","さくら","亮","美穂","哲也","彩","勇気","奈々","光","結衣","翼","舞"];
   const chapters = ["アンカー","ライジング","フェニックス","ドリーム","サクセス","風神","UKA","パイオニア","ビクトリー","フォルテ","レガシー","ジャンヌ","インフィニティ","ブリリアント","エクセレンス","アドバンス","トリニティ","グローリー","ネクサス","ホライズン","クレスト","サミット","ステラ","グランツ","フラッグ"];
-  const industries = ["不動産売買","リフォーム・リノベーション","建築設計・施工","Web制作・デザイン","AI・DX支援","SNSマーケティング","経営コンサルティング","税理士・会計士","社会保険労務士","弁護士","生命保険","損害保険","ファイナンシャルプランナー","美容室・ヘアサロン","パーソナルトレーニング","歯科","飲食店経営","研修・セミナー","コーチング","グラフィックデザイン","写真・映像","動画制作・映像","広告・PR","清掃・ハウスクリーニング","行政書士","融資・資金調達","エステ・リラクゼーション","インテリア・内装","システム開発","人材紹介・派遣"];
+
+  // パワーチーム テーマ別の業種セット
+  const powerTeams = [
+    { name: "住宅ワンストップ", industries: ["不動産売買","リフォーム・リノベーション","生命保険","税理士・会計士","インテリア・内装","建築設計・施工","外構・エクステリア","損害保険","行政書士","司法書士","融資・資金調達","不動産賃貸・管理","清掃・ハウスクリーニング","電気・設備工事","ファイナンシャルプランナー","写真・映像","引越し・物流","Web制作・デザイン","広告・PR","経営コンサルティング"], synergy: "住宅購入をきっかけにした紹介チェーン。不動産→リフォーム→保険→税務→内装まで一気通貫" },
+    { name: "中小企業の成長支援", industries: ["経営コンサルティング","Web制作・デザイン","融資・資金調達","社会保険労務士","研修・セミナー","AI・DX支援","SNSマーケティング","税理士・会計士","弁護士","人材紹介・派遣","広告・PR","動画制作・映像","システム開発","コーチング","中小企業診断士","グラフィックデザイン","印刷・出版","IT機器・サポート","損害保険","投資・資産運用"], synergy: "中小企業の経営課題を入口に、資金→Web→人材→法務を一気通貫で提案する最強チーム" },
+    { name: "美容×富裕層ライフスタイル", industries: ["美容室・ヘアサロン","パーソナルトレーニング","ファイナンシャルプランナー","歯科","写真・映像","エステ・リラクゼーション","整体・鍼灸・接骨","生命保険","投資・資産運用","コーチング","ライティング・編集","グラフィックデザイン","医療・クリニック","冠婚葬祭","飲食店経営","ケータリング・仕出し","広告・PR","SNSマーケティング","語学・翻訳","動画制作・映像"], synergy: "高所得者層への美・健康・資産管理を横断するライフスタイル提案。相互紹介で顧客共有" },
+    { name: "IT×クリエイティブ連合", industries: ["AI・DX支援","グラフィックデザイン","SNSマーケティング","広告・PR","コーチング","Web制作・デザイン","動画制作・映像","システム開発","写真・映像","ライティング・編集","印刷・出版","IT機器・サポート","研修・セミナー","人材・組織コンサルティング","経営コンサルティング","融資・資金調達","語学・翻訳","学習塾・スクール","人材紹介・派遣","税理士・会計士"], synergy: "企業のブランディングをAI・デザイン・SNS・PRが連携して包括支援。DX案件の複合提案" },
+    { name: "店舗オーナー支援チーム", industries: ["飲食店経営","損害保険","行政書士","清掃・ハウスクリーニング","動画制作・映像","建築設計・施工","インテリア・内装","不動産賃貸・管理","Web制作・デザイン","SNSマーケティング","税理士・会計士","社会保険労務士","食品製造・販売","ケータリング・仕出し","グラフィックデザイン","電気・設備工事","人材紹介・派遣","融資・資金調達","広告・PR","経営コンサルティング"], synergy: "飲食・小売店舗の開業→許認可→施工→集客→運営まで、店舗ビジネスに必要な全てを網羅" },
+    { name: "医療・ヘルスケア総合", industries: ["医療・クリニック","歯科","整体・鍼灸・接骨","パーソナルトレーニング","生命保険","損害保険","弁護士","税理士・会計士","Web制作・デザイン","AI・DX支援","システム開発","人材紹介・派遣","清掃・ハウスクリーニング","建築設計・施工","研修・セミナー","広告・PR","写真・映像","動画制作・映像","コーチング","ファイナンシャルプランナー"], synergy: "医療機関の開業・運営・集客・法務・採用を総合支援。ヘルスケア領域の紹介ネットワーク" },
+    { name: "資産形成アドバイザリー", industries: ["ファイナンシャルプランナー","不動産売買","不動産賃貸・管理","投資・資産運用","生命保険","損害保険","税理士・会計士","弁護士","司法書士","中小企業診断士","融資・資金調達","Web制作・デザイン","SNSマーケティング","写真・映像","経営コンサルティング","人材・組織コンサルティング","コーチング","行政書士","リフォーム・リノベーション","広告・PR"], synergy: "富裕層・不動産オーナーの資産形成を入口に、法務・税務・保険・投資を横断する紹介チェーン" },
+    { name: "教育×人材開発", industries: ["研修・セミナー","コーチング","学習塾・スクール","語学・翻訳","人材紹介・派遣","人材・組織コンサルティング","経営コンサルティング","社会保険労務士","AI・DX支援","Web制作・デザイン","動画制作・映像","ライティング・編集","グラフィックデザイン","広告・PR","印刷・出版","システム開発","融資・資金調達","税理士・会計士","SNSマーケティング","弁護士"], synergy: "企業の人材育成・組織開発を入口にした研修×コーチング×採用の複合提案チーム" },
+    { name: "ライフイベントサポート", industries: ["冠婚葬祭","写真・映像","美容室・ヘアサロン","飲食店経営","ケータリング・仕出し","不動産売買","引越し・物流","インテリア・内装","生命保険","ファイナンシャルプランナー","行政書士","司法書士","エステ・リラクゼーション","リフォーム・リノベーション","動画制作・映像","グラフィックデザイン","広告・PR","清掃・ハウスクリーニング","外構・エクステリア","ペット関連"], synergy: "結婚・出産・住宅・相続などライフイベントの各段階で相互紹介が生まれるチーム" },
+    { name: "地域密着ビジネスネットワーク", industries: ["自動車販売・整備","ペット関連","食品製造・販売","清掃・ハウスクリーニング","電気・設備工事","外構・エクステリア","リフォーム・リノベーション","不動産賃貸・管理","損害保険","飲食店経営","美容室・ヘアサロン","整体・鍼灸・接骨","歯科","印刷・出版","Web制作・デザイン","税理士・会計士","行政書士","SNSマーケティング","広告・PR","コーチング"], synergy: "地域の住民・店舗を顧客とする業種が集結。口コミと紹介で地域経済を回すネットワーク" }
+  ];
+
   const discTypes = [
     {main:"D",label:"炎",emoji:"🔥",css:"fire"},
     {main:"D",label:"炎風",emoji:"🔥",css:"fire"},
@@ -434,7 +362,6 @@ function generateDemoData() {
     {main:"C",label:"水炎",emoji:"💧",css:"water"},
     {main:"D",label:"炎水",emoji:"🔥",css:"fire"}
   ];
-  const groupNames = ["炎の開拓者たち","風が巻き起こす未来","大地に根ざす信頼","水のごとく流れる知","情熱のクロスロード","革新と調和のチーム","シナジーの泉","パワーチーム鳳凰","ビジョナリーズ","リファーラルの星"];
 
   function rand(arr) { return arr[Math.floor(Math.random()*arr.length)]; }
   function randPhone() { return String(1000 + Math.floor(Math.random()*9000)); }
@@ -444,17 +371,24 @@ function generateDemoData() {
   const usedNames = new Set();
 
   for (let g = 0; g < 10; g++) {
+    const pt = powerTeams[g];
     const tables = [{table_number: g*2+1, members: []}, {table_number: g*2+2, members: []}];
     const balance = {D:0, I:0, S:0, C:0};
+    const usedIndustries = new Set();
 
     for (let t = 0; t < 2; t++) {
-      const count = 10;
-      for (let m = 0; m < count; m++) {
+      for (let m = 0; m < 10; m++) {
         let name;
         do { name = rand(lastNames) + " " + rand(firstNames); } while (usedNames.has(name));
         usedNames.add(name);
 
-        // DISCバランスを意識した割当
+        // 業種をパワーチームテーマから選択（重複少なめ）
+        let industry;
+        const available = pt.industries.filter(i => !usedIndustries.has(i));
+        if (available.length > 0) { industry = rand(available); usedIndustries.add(industry); }
+        else { industry = rand(pt.industries); }
+
+        // DISCバランス
         let disc;
         if (m < 2) disc = discTypes.filter(d=>d.main==="D")[Math.floor(Math.random()*2)];
         else if (m < 5) disc = discTypes.filter(d=>d.main==="I")[Math.floor(Math.random()*3)];
@@ -463,312 +397,258 @@ function generateDemoData() {
         else disc = rand(discTypes);
 
         balance[disc.main]++;
-        tables[t].members.push({
-          id: id++,
-          name: name,
-          chapter: rand(chapters),
-          industry: rand(industries),
-          disc_label: disc.label,
-          disc_emoji: disc.emoji,
-          disc_css: disc.css,
-          disc_main: disc.main,
-          phone: randPhone()
-        });
+        tables[t].members.push({ id: id++, name, chapter: rand(chapters), industry, disc_label: disc.label, disc_emoji: disc.emoji, disc_css: disc.css, disc_main: disc.main, phone: randPhone() });
       }
     }
 
     groups.push({
       group_number: g + 1,
-      group_name: groupNames[g],
+      group_name: pt.name,
       disc_balance: balance,
-      tables: tables,
-      synergy_reason: `グループ${g+1}は${Object.entries(balance).map(([k,v])=>({D:"炎",I:"風",S:"大地",C:"水"}[k])+":"+v).join(" ")}のバランスで構成。異業種間の紹介チェーンとタイプの多様性を両立`
+      tables,
+      synergy_reason: pt.synergy,
+      disc_comment: `${Object.entries(balance).map(([k,v])=>({D:"🔥炎",I:"🌀風",S:"🌿大地",C:"💧水"}[k])+":"+v).join(" ")} — 多様な行動スタイルでチーム力を最大化`
     });
   }
 
-  // セレンディピティグループ
-  const serenMembers1 = [], serenMembers2 = [];
-  for (let i = 0; i < 5; i++) {
-    let name;
-    do { name = rand(lastNames) + " " + rand(firstNames); } while (usedNames.has(name));
-    usedNames.add(name);
-    serenMembers1.push({id: id++, name, chapter: rand(chapters), industry: rand(industries), disc_label:"?", disc_emoji:"✨", disc_css:"", disc_main:"?", phone: randPhone()});
-  }
-  for (let i = 0; i < 5; i++) {
-    let name;
-    do { name = rand(lastNames) + " " + rand(firstNames); } while (usedNames.has(name));
-    usedNames.add(name);
-    serenMembers2.push({id: id++, name, chapter: rand(chapters), industry: rand(industries), disc_label:"?", disc_emoji:"✨", disc_css:"", disc_main:"?", phone: randPhone()});
+  // セレンディピティ
+  const serenTables = [{table_number:21,members:[]},{table_number:22,members:[]}];
+  for (let t = 0; t < 2; t++) {
+    for (let i = 0; i < 5; i++) {
+      let name;
+      do { name = rand(lastNames) + " " + rand(firstNames); } while (usedNames.has(name));
+      usedNames.add(name);
+      serenTables[t].members.push({id:id++,name,chapter:rand(chapters),industry:rand(powerTeams[0].industries),disc_label:"?",disc_emoji:"✨",disc_css:"",disc_main:"?",phone:randPhone()});
+    }
   }
 
   return {
-    groups: groups,
-    serendipity_group: {
-      group_name: "セレンディピティ — 予期せぬ出会い",
-      tables: [
-        {table_number: 21, members: serenMembers1},
-        {table_number: 22, members: serenMembers2}
-      ]
-    },
-    stats: {
-      total_participants: id - 1,
-      total_groups: 10,
-      disc_distribution: groups.reduce((acc, g) => {
-        acc.D += g.disc_balance.D; acc.I += g.disc_balance.I;
-        acc.S += g.disc_balance.S; acc.C += g.disc_balance.C;
-        return acc;
-      }, {D:0, I:0, S:0, C:0})
-    },
+    groups,
+    serendipity_group: { group_name: "セレンディピティ — 予期せぬ出会い", tables: serenTables },
+    stats: { total_participants: id-1, total_groups: 10 },
     generated_at: new Date().toISOString()
   };
 }
 
 // ===== ヘルパー =====
-function getDiscBadgeHtml(member) {
-  if (!member.disc_css) return `<span class="disc-badge" style="background:rgba(201,168,76,0.15);color:var(--bni-gold)">${member.disc_emoji} ${member.disc_label}</span>`;
-  return `<span class="disc-badge ${member.disc_css}">${member.disc_emoji} ${member.disc_label}</span>`;
+function discBadge(m) {
+  if (!m.disc_css) return `<span class="disc-badge" style="background:rgba(201,168,76,0.15);color:var(--bni-gold)">${m.disc_emoji} ${m.disc_label}</span>`;
+  return `<span class="disc-badge ${m.disc_css}">${m.disc_emoji} ${m.disc_label}</span>`;
 }
 
-function getDiscBarHtml(balance) {
-  const total = balance.D + balance.I + balance.S + balance.C;
-  if (!total) return '';
-  return `
-    <div class="disc-bar">
-      <div class="disc-bar-seg fire" style="width:${balance.D/total*100}%"></div>
-      <div class="disc-bar-seg wind" style="width:${balance.I/total*100}%"></div>
-      <div class="disc-bar-seg earth" style="width:${balance.S/total*100}%"></div>
-      <div class="disc-bar-seg water" style="width:${balance.C/total*100}%"></div>
-    </div>
-    <div class="disc-bar-labels">
-      <span><span class="disc-dot" style="background:var(--fire)"></span>🔥炎:${balance.D}</span>
-      <span><span class="disc-dot" style="background:var(--wind)"></span>🌀風:${balance.I}</span>
-      <span><span class="disc-dot" style="background:var(--earth)"></span>🌿大地:${balance.S}</span>
-      <span><span class="disc-dot" style="background:var(--water)"></span>💧水:${balance.C}</span>
-    </div>
-  `;
+function discBarHtml(bal) {
+  if (!bal) return '';
+  const t = bal.D+bal.I+bal.S+bal.C;
+  if (!t) return '';
+  return `<div class="disc-bar">
+    <div class="disc-bar-seg fire" style="width:${bal.D/t*100}%"></div>
+    <div class="disc-bar-seg wind" style="width:${bal.I/t*100}%"></div>
+    <div class="disc-bar-seg earth" style="width:${bal.S/t*100}%"></div>
+    <div class="disc-bar-seg water" style="width:${bal.C/t*100}%"></div>
+  </div>
+  <div class="disc-bar-labels">
+    <span><span class="disc-dot" style="background:var(--fire)"></span>🔥${bal.D}</span>
+    <span><span class="disc-dot" style="background:var(--wind)"></span>🌀${bal.I}</span>
+    <span><span class="disc-dot" style="background:var(--earth)"></span>🌿${bal.S}</span>
+    <span><span class="disc-dot" style="background:var(--water)"></span>💧${bal.C}</span>
+  </div>`;
 }
 
-function getMemberHtml(m, opts = {}) {
-  const highlight = opts.highlight ? ' highlight' : '';
-  const avatarCss = m.disc_css || '';
-  const avatarStyle = avatarCss ? '' : 'style="background:var(--bni-gold)"';
-  return `
-    <div class="member-item${highlight}">
-      <div class="member-avatar ${avatarCss}" ${avatarStyle}>${m.name.charAt(0)}</div>
-      <div class="member-info">
-        <div class="member-name">${m.name}</div>
-        <div class="member-meta">${m.chapter || ''}</div>
-      </div>
-      ${getDiscBadgeHtml(m)}
-      <span class="member-industry">${m.industry}</span>
-    </div>
-  `;
+// 発表モード用: Reveal前はDISCバッジ非表示、名前+チャプター+業種のみ
+function memberHtmlSimple(m) {
+  return `<div class="member-item">
+    <div class="member-avatar">${m.name.charAt(0)}</div>
+    <div class="member-info"><div class="member-name">${m.name}</div><div class="member-meta">${m.chapter}</div></div>
+    <span class="member-industry">${m.industry}</span>
+  </div>`;
+}
+
+// Reveal後 / 一覧 / 検索用: フル情報
+function memberHtmlFull(m, opts={}) {
+  const hl = opts.highlight ? ' highlight' : '';
+  const avCss = m.disc_css || '';
+  const avStyle = avCss ? '' : 'style="background:var(--bni-gold)"';
+  return `<div class="member-item${hl}">
+    <div class="member-avatar ${avCss}" ${avStyle}>${m.name.charAt(0)}</div>
+    <div class="member-info"><div class="member-name">${m.name}</div><div class="member-meta">${m.chapter}</div></div>
+    <span class="member-disc-badge">${discBadge(m)}</span>
+    <span class="member-industry">${m.industry}</span>
+  </div>`;
 }
 
 function getAllGroups() {
   const all = [...DATA.groups];
-  // セレンディピティを最後に追加
   if (DATA.serendipity_group) {
-    const sm = DATA.serendipity_group.tables.flatMap(t => t.members);
+    const sm = DATA.serendipity_group.tables.flatMap(t=>t.members);
     if (sm.length > 0) {
-      all.push({
-        group_number: "✨",
-        group_name: DATA.serendipity_group.group_name,
-        disc_balance: null,
-        tables: DATA.serendipity_group.tables,
-        synergy_reason: "アンケート未回答の参加者による運命のグループ。予期せぬ出会いが新たなビジネスチャンスを生む",
-        _isSerendipity: true
-      });
+      all.push({ group_number:"✨", group_name:DATA.serendipity_group.group_name, disc_balance:null, tables:DATA.serendipity_group.tables, synergy_reason:"運命が引き寄せた予期せぬ出会い。ここから新しいビジネスが生まれるかもしれません", disc_comment:null, _isSerendipity:true });
     }
   }
   return all;
 }
 
-// ===== 状態管理 =====
+// ===== 状態 =====
 let currentGroupIndex = 0;
 let autoPlayInterval = null;
 let currentTableTab = 0;
+let revealedGroups = new Set(); // Reveal済みグループ
 
 // ===== 初期化 =====
 document.addEventListener('DOMContentLoaded', () => {
-  const totalMembers = DATA.groups.reduce((sum, g) => sum + g.tables.reduce((s, t) => s + t.members.length, 0), 0);
-  const serenCount = DATA.serendipity_group ? DATA.serendipity_group.tables.reduce((s, t) => s + t.members.length, 0) : 0;
-  document.getElementById('nav-info').textContent = `${DATA.groups.length}グループ / ${totalMembers + serenCount}名`;
+  const total = DATA.groups.reduce((s,g)=>s+g.tables.reduce((ss,t)=>ss+t.members.length,0),0);
+  const seren = DATA.serendipity_group ? DATA.serendipity_group.tables.reduce((s,t)=>s+t.members.length,0) : 0;
+  document.getElementById('nav-info').textContent = `${DATA.groups.length}グループ / ${total+seren}名`;
   buildListView();
 });
 
 // ===== モード切替 =====
 function showMode(mode) {
-  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
   event.target.classList.add('active');
-  document.getElementById('presentation-mode').style.display = mode === 'presentation' ? 'flex' : 'none';
-  document.getElementById('list-mode').style.display = mode === 'list' ? 'block' : 'none';
-  document.getElementById('search-mode').style.display = mode === 'search' ? 'block' : 'none';
-  if (mode === 'search') setTimeout(() => document.getElementById('search-input').focus(), 100);
+  document.getElementById('presentation-mode').style.display = mode==='presentation' ? 'flex' : 'none';
+  document.getElementById('list-mode').style.display = mode==='list' ? 'block' : 'none';
+  document.getElementById('search-mode').style.display = mode==='search' ? 'block' : 'none';
+  if (mode==='search') setTimeout(()=>document.getElementById('search-input').focus(),100);
 }
 
 // ===== 発表モード =====
 function startPresentation() {
   document.getElementById('welcome').style.display = 'none';
   document.getElementById('presentation-content').style.display = 'block';
-  currentGroupIndex = 0;
-  currentTableTab = 0;
+  currentGroupIndex = 0; currentTableTab = 0;
   renderGroup(currentGroupIndex);
 }
 
 function renderGroup(index) {
   const allGroups = getAllGroups();
-  if (index < 0 || index >= allGroups.length) return;
-
-  const group = allGroups[index];
+  if (index<0 || index>=allGroups.length) return;
+  const g = allGroups[index];
   const container = document.getElementById('card-container');
-  const isSeren = group._isSerendipity;
+  const isSeren = g._isSerendipity;
+  const isRevealed = revealedGroups.has(index);
 
   // テーブルタブ
-  const tabsHtml = group.tables.length > 1 ? `
-    <div class="table-tabs">
-      ${group.tables.map((t, i) => `<button class="table-tab ${i===currentTableTab?'active':''}" onclick="switchTableTab(${i})">Table ${t.table_number}</button>`).join('')}
-      <button class="table-tab ${currentTableTab===-1?'active':''}" onclick="switchTableTab(-1)">全員</button>
-    </div>
-  ` : '';
+  const tabsHtml = g.tables.length > 1 ? `<div class="table-tabs">
+    ${g.tables.map((t,i)=>`<button class="table-tab ${i===currentTableTab?'active':''}" onclick="switchTableTab(${i})">Table ${t.table_number}</button>`).join('')}
+    <button class="table-tab ${currentTableTab===-1?'active':''}" onclick="switchTableTab(-1)">全員</button>
+  </div>` : '';
 
-  // メンバー表示
+  // メンバー（Reveal前: シンプル / Reveal後: フル）
   let membersHtml;
+  const renderFn = (isRevealed || isSeren) ? memberHtmlFull : memberHtmlSimple;
   if (currentTableTab === -1) {
-    // 全員表示
-    membersHtml = group.tables.map(t =>
+    membersHtml = g.tables.map(t =>
       `<div class="table-divider">Table ${t.table_number}</div>` +
-      t.members.map(m => getMemberHtml(m)).join('')
+      t.members.map(m => renderFn(m)).join('')
     ).join('');
   } else {
-    const table = group.tables[currentTableTab] || group.tables[0];
-    membersHtml = table.members.map(m => getMemberHtml(m)).join('');
+    const table = g.tables[currentTableTab] || g.tables[0];
+    membersHtml = table.members.map(m => renderFn(m)).join('');
   }
 
-  const discBarHtml = group.disc_balance ? getDiscBarHtml(group.disc_balance) : '';
-
-  container.innerHTML = `
-    <div class="presentation-card ${isSeren ? 'serendipity' : ''}">
-      <div class="group-number">${isSeren ? '✨' : 'Group ' + group.group_number}</div>
-      <div class="group-name">${group.group_name || ''}</div>
-      ${discBarHtml}
-      ${tabsHtml}
-      <div class="member-list">${membersHtml}</div>
-      ${group.synergy_reason ? `<div class="synergy-reason">${group.synergy_reason}</div>` : ''}
+  // Revealセクション（非公開→ボタンクリックで表示）
+  const revealSectionHtml = isSeren ? '' : `
+    <button class="reveal-btn ${isRevealed?'revealed':''}" id="reveal-btn-${index}" onclick="revealGroup(${index})">🎉 Reveal! — このグループの秘密を公開</button>
+    <div class="reveal-section ${isRevealed?'revealed':''}" id="reveal-section-${index}">
+      ${g.disc_balance ? discBarHtml(g.disc_balance) : ''}
+      <div class="synergy-box">
+        <h4>パワーチーム: ${g.group_name}</h4>
+        <p>${g.synergy_reason || ''}</p>
+      </div>
+      ${g.disc_comment ? `<div style="margin-top:12px;font-size:0.82rem;color:var(--text-dim)">${g.disc_comment}</div>` : ''}
     </div>
   `;
 
+  container.innerHTML = `<div class="presentation-card ${isSeren?'serendipity':''}" id="pcard-${index}">
+    <div class="group-number">${isSeren ? '✨' : 'Group '+g.group_number}</div>
+    <div class="group-name">${isSeren ? g.group_name : (isRevealed ? g.group_name : '???')}</div>
+    ${tabsHtml}
+    <div class="member-list">${membersHtml}</div>
+    ${isSeren ? `<div class="synergy-box"><p>${g.synergy_reason}</p></div>` : ''}
+    ${revealSectionHtml}
+  </div>`;
+
   const total = allGroups.length;
-  const progress = ((index + 1) / total) * 100;
-  document.getElementById('progress').style.width = `${progress}%`;
-  document.getElementById('counter').textContent = `Group ${index + 1} / ${total}`;
+  document.getElementById('progress').style.width = `${(index+1)/total*100}%`;
+  document.getElementById('counter').textContent = `Group ${index+1} / ${total}`;
 }
 
-function switchTableTab(tabIndex) {
-  currentTableTab = tabIndex;
-  renderGroup(currentGroupIndex);
+function revealGroup(index) {
+  revealedGroups.add(index);
+  const card = document.getElementById('pcard-'+index);
+  if (card) card.classList.add('reveal-flash');
+  // Re-render with full info
+  renderGroup(index);
 }
+
+function switchTableTab(i) { currentTableTab = i; renderGroup(currentGroupIndex); }
 
 function nextGroup() {
-  const allGroups = getAllGroups();
-  if (currentGroupIndex < allGroups.length - 1) {
-    currentGroupIndex++;
-    currentTableTab = 0;
-    renderGroup(currentGroupIndex);
-  }
+  const all = getAllGroups();
+  if (currentGroupIndex < all.length-1) { currentGroupIndex++; currentTableTab=0; renderGroup(currentGroupIndex); }
 }
-
 function prevGroup() {
-  if (currentGroupIndex > 0) {
-    currentGroupIndex--;
-    currentTableTab = 0;
-    renderGroup(currentGroupIndex);
-  }
+  if (currentGroupIndex > 0) { currentGroupIndex--; currentTableTab=0; renderGroup(currentGroupIndex); }
 }
 
 function toggleAutoPlay() {
   const btn = document.getElementById('auto-btn');
-  if (autoPlayInterval) {
-    clearInterval(autoPlayInterval);
-    autoPlayInterval = null;
-    btn.textContent = '▶ 自動再生';
-  } else {
-    autoPlayInterval = setInterval(() => {
-      const allGroups = getAllGroups();
-      if (currentGroupIndex < allGroups.length - 1) {
-        nextGroup();
-      } else {
-        clearInterval(autoPlayInterval);
-        autoPlayInterval = null;
-        btn.textContent = '▶ 自動再生';
-      }
+  if (autoPlayInterval) { clearInterval(autoPlayInterval); autoPlayInterval=null; btn.textContent='▶ 自動再生'; }
+  else {
+    autoPlayInterval = setInterval(()=>{
+      const all = getAllGroups();
+      if (currentGroupIndex < all.length-1) nextGroup();
+      else { clearInterval(autoPlayInterval); autoPlayInterval=null; btn.textContent='▶ 自動再生'; }
     }, 5000);
     btn.textContent = '⏸ 停止';
   }
 }
 
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nextGroup(); }
-  if (e.key === 'ArrowLeft') { e.preventDefault(); prevGroup(); }
+document.addEventListener('keydown', e => {
+  if (e.key==='ArrowRight' || e.key===' ') { e.preventDefault(); nextGroup(); }
+  if (e.key==='ArrowLeft') { e.preventDefault(); prevGroup(); }
+  if (e.key==='r' || e.key==='R') { revealGroup(currentGroupIndex); }
 });
 
-// ===== 一覧モード =====
+// ===== 一覧モード（常にフル表示） =====
 function buildListView() {
   const grid = document.getElementById('group-grid');
-  const allGroups = getAllGroups();
+  grid.innerHTML = getAllGroups().map(g => {
+    const isSeren = g._isSerendipity;
+    const membersHtml = g.tables.map(t =>
+      `<div class="table-divider">Table ${t.table_number}</div>` +
+      t.members.map(m => `<div class="group-card-member">
+        <div class="mini-avatar ${m.disc_css||''}" ${!m.disc_css?'style="background:var(--bni-gold)"':''}>${m.name.charAt(0)}</div>
+        <span>${m.name}</span>
+        ${discBadge(m)}
+        <span style="color:var(--text-dim);font-size:0.72rem;margin-left:auto;white-space:nowrap">${m.industry}</span>
+      </div>`).join('')
+    ).join('');
 
-  grid.innerHTML = allGroups.map(group => {
-    const isSeren = group._isSerendipity;
-    const discBarHtml = group.disc_balance ? getDiscBarHtml(group.disc_balance) : '';
-
-    const membersHtml = group.tables.map(t => `
-      <div class="table-divider">Table ${t.table_number}</div>
-      ${t.members.map(m => `
-        <div class="group-card-member">
-          <div class="mini-avatar ${m.disc_css || ''}" ${!m.disc_css?'style="background:var(--bni-gold)"':''}>${m.name.charAt(0)}</div>
-          <span>${m.name}</span>
-          ${getDiscBadgeHtml(m)}
-          <span style="color:var(--text-dim);font-size:0.72rem;margin-left:auto;white-space:nowrap">${m.industry}</span>
-        </div>
-      `).join('')}
-    `).join('');
-
-    return `
-      <div class="group-card ${isSeren ? 'serendipity' : ''}">
-        <div class="group-card-header">
-          <span class="group-card-number">${isSeren ? '✨' : '#' + group.group_number}</span>
-          <span class="group-card-name">${group.group_name || ''}</span>
-        </div>
-        ${discBarHtml}
-        <div class="group-card-members">${membersHtml}</div>
-        ${group.synergy_reason ? `<div class="group-card-synergy">${group.synergy_reason}</div>` : ''}
+    return `<div class="group-card ${isSeren?'serendipity':''}">
+      <div class="group-card-header">
+        <span class="group-card-number">${isSeren?'✨':'#'+g.group_number}</span>
+        <span class="group-card-name">${g.group_name||''}</span>
       </div>
-    `;
+      ${g.disc_balance ? discBarHtml(g.disc_balance) : ''}
+      <div class="group-card-members">${membersHtml}</div>
+      ${g.synergy_reason ? `<div class="group-card-synergy">💡 ${g.synergy_reason}</div>` : ''}
+    </div>`;
   }).join('');
 }
 
 // ===== 検索モード =====
 function searchByPhone() {
-  const query = document.getElementById('search-input').value.trim().replace(/[-\s+]/g, '');
-  const resultDiv = document.getElementById('search-result');
-  const noResultDiv = document.getElementById('no-result');
+  const q = document.getElementById('search-input').value.trim().replace(/[-\s+]/g,'');
+  const res = document.getElementById('search-result');
+  const noRes = document.getElementById('no-result');
+  if (!q || q.length<3) { res.classList.remove('visible'); noRes.style.display='none'; return; }
 
-  if (!query || query.length < 3) {
-    resultDiv.classList.remove('visible');
-    noResultDiv.style.display = 'none';
-    return;
-  }
-
-  // 全グループ + セレンディピティから検索
   let found = null;
-  const allGroups = getAllGroups();
-  for (const group of allGroups) {
-    for (const table of group.tables) {
-      for (const member of table.members) {
-        if (member.phone && member.phone.includes(query)) {
-          found = { group, table, member };
-          break;
-        }
+  for (const g of getAllGroups()) {
+    for (const t of g.tables) {
+      for (const m of t.members) {
+        if (m.phone && m.phone.includes(q)) { found = {group:g, table:t, member:m}; break; }
       }
       if (found) break;
     }
@@ -776,33 +656,28 @@ function searchByPhone() {
   }
 
   if (found) {
-    noResultDiv.style.display = 'none';
+    noRes.style.display='none';
     const isSeren = found.group._isSerendipity;
-    const discBarHtml = found.group.disc_balance ? getDiscBarHtml(found.group.disc_balance) : '';
-
-    // 同グループ全メンバー
     const allMembers = found.group.tables.map(t =>
       `<div class="table-divider">Table ${t.table_number}</div>` +
-      t.members.map(m => getMemberHtml(m, {highlight: m.phone === found.member.phone})).join('')
+      t.members.map(m => memberHtmlFull(m, {highlight: m.phone===found.member.phone})).join('')
     ).join('');
 
-    resultDiv.innerHTML = `
-      <div class="search-group-number">${isSeren ? '✨' : 'Group ' + found.group.group_number}</div>
-      <div class="search-label">${found.member.name} さんのグループ ${getDiscBadgeHtml(found.member)}</div>
+    res.innerHTML = `
+      <div class="search-group-number">${isSeren?'✨':'Group '+found.group.group_number}</div>
+      <div class="search-label">${found.member.name} さんのグループ ${discBadge(found.member)}</div>
       <div style="background:var(--card-bg);border-radius:16px;padding:20px;border:1px solid var(--border)">
-        <h3 style="font-size:1rem;color:var(--bni-gold);margin-bottom:8px">${found.group.group_name || ''}</h3>
-        ${discBarHtml}
+        <h3 style="font-size:1rem;color:var(--bni-gold);margin-bottom:8px">${found.group.group_name||''}</h3>
+        ${found.group.disc_balance ? discBarHtml(found.group.disc_balance) : ''}
         <div class="member-list">${allMembers}</div>
-        ${found.group.synergy_reason ? `<div class="synergy-reason">${found.group.synergy_reason}</div>` : ''}
-      </div>
-    `;
-    resultDiv.classList.add('visible');
+        ${found.group.synergy_reason ? `<div class="synergy-box"><p>${found.group.synergy_reason}</p></div>` : ''}
+      </div>`;
+    res.classList.add('visible');
   } else {
-    resultDiv.classList.remove('visible');
-    noResultDiv.style.display = 'block';
+    res.classList.remove('visible');
+    noRes.style.display = 'block';
   }
 }
 </script>
-
 </body>
 </html>

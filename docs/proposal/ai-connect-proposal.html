@@ -5,9 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AI Connect v2 — BNI前夜祭 AIグループ編成システム</title>
 <style>
-  /* ============================================
-     BNI ブランドカラー + 四元素カラー
-     ============================================ */
   :root {
     --bni-red: #CF2030;
     --bni-red-dark: #A81A28;
@@ -18,17 +15,12 @@
     --bni-gold: #C9A84C;
     --bni-white: #FFFFFF;
     --shadow: 0 4px 24px rgba(0,0,0,0.08);
-    --shadow-strong: 0 8px 40px rgba(0,0,0,0.12);
-    /* 四元素カラー */
     --fire: #CF2030;
     --wind: #2196F3;
     --earth: #FFC107;
     --water: #4CAF50;
   }
 
-  /* ============================================
-     ベースリセット
-     ============================================ */
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
   body {
@@ -39,9 +31,6 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  /* ============================================
-     ヘッダー（ヒーロー）
-     ============================================ */
   .hero {
     background: linear-gradient(135deg, var(--bni-red) 0%, var(--bni-red-dark) 100%);
     color: var(--bni-white);
@@ -50,29 +39,12 @@
     position: relative;
     overflow: hidden;
   }
-
   .hero::before {
     content: "";
-    position: absolute;
-    top: -50%;
-    right: -20%;
-    width: 600px;
-    height: 600px;
-    border-radius: 50%;
+    position: absolute; top: -50%; right: -20%;
+    width: 600px; height: 600px; border-radius: 50%;
     background: rgba(255,255,255,0.04);
   }
-
-  .hero::after {
-    content: "";
-    position: absolute;
-    bottom: -30%;
-    left: -10%;
-    width: 400px;
-    height: 400px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.03);
-  }
-
   .hero-badge {
     display: inline-block;
     background: rgba(255,255,255,0.15);
@@ -84,224 +56,101 @@
     letter-spacing: 0.1em;
     margin-bottom: 24px;
   }
-
   .hero h1 {
-    font-size: 2.8rem;
-    font-weight: 800;
-    letter-spacing: -0.02em;
-    margin-bottom: 12px;
-    position: relative;
+    font-size: 2.8rem; font-weight: 800;
+    letter-spacing: -0.02em; margin-bottom: 12px; position: relative;
   }
-
   .hero h1 span {
-    display: block;
-    font-size: 1.1rem;
-    font-weight: 400;
-    opacity: 0.85;
-    letter-spacing: 0.08em;
-    margin-top: 8px;
+    display: block; font-size: 1.1rem; font-weight: 400;
+    opacity: 0.85; letter-spacing: 0.08em; margin-top: 8px;
   }
-
   .hero-meta {
     margin-top: 32px;
-    display: flex;
-    justify-content: center;
-    gap: 32px;
-    flex-wrap: wrap;
+    display: flex; justify-content: center; gap: 32px; flex-wrap: wrap;
     position: relative;
   }
-
   .hero-meta-item {
     background: rgba(255,255,255,0.1);
-    border-radius: 12px;
-    padding: 16px 28px;
+    border-radius: 12px; padding: 16px 28px;
     backdrop-filter: blur(4px);
     border: 1px solid rgba(255,255,255,0.15);
   }
-
   .hero-meta-item .label {
-    font-size: 0.75rem;
-    opacity: 0.7;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
+    font-size: 0.75rem; opacity: 0.7;
+    text-transform: uppercase; letter-spacing: 0.1em;
   }
-
   .hero-meta-item .value {
-    font-size: 1.3rem;
-    font-weight: 700;
-    margin-top: 4px;
+    font-size: 1.3rem; font-weight: 700; margin-top: 4px;
   }
 
-  /* ============================================
-     セクション共通
-     ============================================ */
-  .container {
-    max-width: 960px;
-    margin: 0 auto;
-    padding: 0 32px;
-  }
-
-  section {
-    padding: 72px 0;
-  }
-
-  section:nth-child(even) {
-    background: var(--bni-gray-light);
-  }
+  .container { max-width: 960px; margin: 0 auto; padding: 0 32px; }
+  section { padding: 72px 0; }
+  section:nth-child(even) { background: var(--bni-gray-light); }
 
   .section-number {
-    display: inline-block;
-    background: var(--bni-red);
-    color: var(--bni-white);
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    text-align: center;
-    line-height: 36px;
-    font-size: 0.9rem;
-    font-weight: 700;
-    margin-bottom: 12px;
+    display: inline-block; background: var(--bni-red); color: var(--bni-white);
+    width: 36px; height: 36px; border-radius: 50%;
+    text-align: center; line-height: 36px;
+    font-size: 0.9rem; font-weight: 700; margin-bottom: 12px;
   }
-
   .section-title {
-    font-size: 1.8rem;
-    font-weight: 800;
-    color: var(--bni-gray-dark);
-    margin-bottom: 8px;
-    letter-spacing: -0.01em;
+    font-size: 1.8rem; font-weight: 800;
+    color: var(--bni-gray-dark); margin-bottom: 8px;
   }
-
   .section-subtitle {
-    font-size: 1rem;
-    color: var(--bni-gray);
-    margin-bottom: 40px;
+    font-size: 1rem; color: var(--bni-gray); margin-bottom: 40px;
   }
 
-  /* ============================================
-     課題セクション
-     ============================================ */
+  /* 課題カード */
   .problem-cards {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-    margin-top: 32px;
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 20px; margin-top: 32px;
   }
-
   .problem-card {
-    background: var(--bni-white);
-    border-radius: 16px;
-    padding: 28px 24px;
-    box-shadow: var(--shadow);
-    border-top: 4px solid var(--bni-red);
-    text-align: center;
+    background: var(--bni-white); border-radius: 16px;
+    padding: 28px 24px; box-shadow: var(--shadow);
+    border-top: 4px solid var(--bni-red); text-align: center;
   }
-
-  .problem-card .icon {
-    font-size: 2.4rem;
-    margin-bottom: 12px;
-  }
-
+  .problem-card .icon { font-size: 2.4rem; margin-bottom: 12px; }
   .problem-card h3 {
-    font-size: 1rem;
-    font-weight: 700;
-    margin-bottom: 8px;
-    color: var(--bni-red);
+    font-size: 1rem; font-weight: 700; margin-bottom: 8px; color: var(--bni-red);
   }
+  .problem-card p { font-size: 0.88rem; color: var(--bni-gray); line-height: 1.7; }
 
-  .problem-card p {
-    font-size: 0.88rem;
-    color: var(--bni-gray);
-    line-height: 1.7;
-  }
-
-  /* ============================================
-     フロー図
-     ============================================ */
+  /* フロー */
   .flow {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    margin: 40px 0;
-    flex-wrap: wrap;
+    display: flex; align-items: center; justify-content: center;
+    gap: 12px; margin: 40px 0; flex-wrap: wrap;
   }
-
   .flow-step {
-    background: var(--bni-white);
-    border-radius: 16px;
-    padding: 24px 20px;
-    text-align: center;
-    box-shadow: var(--shadow);
-    min-width: 160px;
-    flex: 1;
-    max-width: 200px;
-    position: relative;
+    background: var(--bni-white); border-radius: 16px;
+    padding: 24px 20px; text-align: center; box-shadow: var(--shadow);
+    min-width: 150px; flex: 1; max-width: 190px; position: relative;
   }
-
   .flow-step .step-num {
-    position: absolute;
-    top: -14px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: var(--bni-red);
-    color: var(--bni-white);
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    font-size: 0.8rem;
-    font-weight: 700;
-    line-height: 28px;
+    position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+    background: var(--bni-red); color: var(--bni-white);
+    width: 28px; height: 28px; border-radius: 50%;
+    font-size: 0.8rem; font-weight: 700; line-height: 28px;
   }
+  .flow-step .step-icon { font-size: 2rem; margin-bottom: 8px; margin-top: 4px; }
+  .flow-step h4 { font-size: 0.9rem; font-weight: 700; margin-bottom: 4px; }
+  .flow-step p { font-size: 0.78rem; color: var(--bni-gray); }
+  .flow-arrow { font-size: 1.5rem; color: var(--bni-red); flex-shrink: 0; }
 
-  .flow-step .step-icon {
-    font-size: 2rem;
-    margin-bottom: 8px;
-    margin-top: 4px;
-  }
-
-  .flow-step h4 {
-    font-size: 0.9rem;
-    font-weight: 700;
-    margin-bottom: 4px;
-  }
-
-  .flow-step p {
-    font-size: 0.78rem;
-    color: var(--bni-gray);
-  }
-
-  .flow-arrow {
-    font-size: 1.5rem;
-    color: var(--bni-red);
-    flex-shrink: 0;
-  }
-
-  /* ============================================
-     四元素タイプカード
-     ============================================ */
+  /* 四元素カード */
   .element-cards {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
-    margin-top: 32px;
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 20px; margin-top: 32px;
   }
-
   .element-card {
-    border-radius: 16px;
-    padding: 28px 20px;
-    text-align: center;
-    box-shadow: var(--shadow);
-    position: relative;
-    overflow: hidden;
+    border-radius: 16px; padding: 24px 16px;
+    text-align: center; box-shadow: var(--shadow);
+    position: relative; overflow: hidden;
   }
-
   .element-card::before {
-    content: "";
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 4px;
+    content: ""; position: absolute; top: 0; left: 0; right: 0; height: 4px;
   }
-
   .element-card.fire { background: #FFF5F5; }
   .element-card.fire::before { background: var(--fire); }
   .element-card.wind { background: #F0F7FF; }
@@ -310,603 +159,262 @@
   .element-card.earth::before { background: var(--earth); }
   .element-card.water { background: #F0FFF4; }
   .element-card.water::before { background: var(--water); }
-
-  .element-card .elem-icon {
-    font-size: 2.8rem;
-    margin-bottom: 8px;
-  }
-
-  .element-card .elem-name {
-    font-size: 1.3rem;
-    font-weight: 800;
-    margin-bottom: 4px;
-  }
-
+  .element-card .elem-icon { font-size: 2.4rem; margin-bottom: 6px; }
+  .element-card .elem-name { font-size: 1.2rem; font-weight: 800; margin-bottom: 2px; }
   .element-card.fire .elem-name { color: var(--fire); }
   .element-card.wind .elem-name { color: var(--wind); }
   .element-card.earth .elem-name { color: #F57F17; }
   .element-card.water .elem-name { color: var(--water); }
-
   .element-card .elem-en {
-    font-size: 0.78rem;
-    color: var(--bni-gray);
-    margin-bottom: 12px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
+    font-size: 0.72rem; color: var(--bni-gray);
+    letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px;
   }
-
   .element-card .elem-desc {
-    font-size: 0.85rem;
-    color: var(--bni-gray);
-    line-height: 1.6;
+    font-size: 0.82rem; color: var(--bni-gray); line-height: 1.5;
   }
 
-  /* ============================================
-     アンケート設計
-     ============================================ */
+  /* アンケートテーブル */
   .survey-table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: var(--shadow);
-    margin-top: 24px;
+    width: 100%; border-collapse: separate; border-spacing: 0;
+    border-radius: 12px; overflow: hidden;
+    box-shadow: var(--shadow); margin-top: 24px;
   }
-
   .survey-table th {
-    background: var(--bni-red);
-    color: var(--bni-white);
-    padding: 14px 20px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    text-align: left;
-    letter-spacing: 0.05em;
+    background: var(--bni-red); color: var(--bni-white);
+    padding: 14px 20px; font-size: 0.85rem; font-weight: 600;
+    text-align: left; letter-spacing: 0.05em;
   }
-
   .survey-table td {
-    background: var(--bni-white);
-    padding: 14px 20px;
-    font-size: 0.9rem;
-    border-bottom: 1px solid #eee;
-    vertical-align: top;
+    background: var(--bni-white); padding: 14px 20px;
+    font-size: 0.9rem; border-bottom: 1px solid #eee; vertical-align: top;
   }
-
-  .survey-table tr:last-child td {
-    border-bottom: none;
-  }
-
-  .survey-table .q-num {
-    font-weight: 700;
-    color: var(--bni-red);
-    white-space: nowrap;
-  }
-
-  .survey-table .disc-row td {
-    background: #FAFAFA;
-  }
+  .survey-table tr:last-child td { border-bottom: none; }
+  .survey-table .q-num { font-weight: 700; color: var(--bni-red); white-space: nowrap; }
+  .survey-table .disc-row td { background: #FAFAFA; }
 
   .badge {
-    display: inline-block;
-    padding: 2px 10px;
-    border-radius: 100px;
-    font-size: 0.75rem;
-    font-weight: 600;
+    display: inline-block; padding: 2px 10px;
+    border-radius: 100px; font-size: 0.75rem; font-weight: 600;
   }
-
   .badge-select { background: #E8F5E9; color: #2E7D32; }
   .badge-text { background: #E3F2FD; color: #1565C0; }
   .badge-check { background: #FFF3E0; color: #E65100; }
   .badge-radio { background: #F3E5F5; color: #7B1FA2; }
 
   .survey-purpose {
-    font-size: 0.8rem;
-    color: var(--bni-gray);
-    margin-top: 4px;
-    font-style: italic;
+    font-size: 0.8rem; color: var(--bni-gray);
+    margin-top: 4px; font-style: italic;
   }
 
-  /* ============================================
-     マッチングルール
-     ============================================ */
+  /* マッチングルール */
   .rules-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
-    margin-top: 32px;
+    display: grid; grid-template-columns: repeat(2, 1fr);
+    gap: 20px; margin-top: 32px;
   }
-
-  .rules-grid .rule-card:first-child {
-    grid-column: 1 / -1;
-    border: 2px solid var(--bni-gold);
-  }
-
+  .rules-grid .rule-card:first-child { grid-column: 1 / -1; border: 2px solid var(--bni-gold); }
   .rule-card {
-    background: var(--bni-white);
-    border-radius: 16px;
-    padding: 28px 24px;
-    box-shadow: var(--shadow);
-    display: flex;
-    gap: 16px;
-    align-items: flex-start;
+    background: var(--bni-white); border-radius: 16px;
+    padding: 28px 24px; box-shadow: var(--shadow);
+    display: flex; gap: 16px; align-items: flex-start;
   }
-
   .rule-priority {
-    background: var(--bni-red);
-    color: var(--bni-white);
-    width: 40px;
-    height: 40px;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.1rem;
-    font-weight: 800;
-    flex-shrink: 0;
+    background: var(--bni-red); color: var(--bni-white);
+    width: 40px; height: 40px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem; font-weight: 800; flex-shrink: 0;
   }
+  .rule-priority.gold { background: var(--bni-gold); }
+  .rule-card h4 { font-size: 1rem; font-weight: 700; margin-bottom: 6px; }
+  .rule-card p { font-size: 0.88rem; color: var(--bni-gray); }
 
-  .rule-priority.gold {
-    background: var(--bni-gold);
-  }
-
-  .rule-card h4 {
-    font-size: 1rem;
-    font-weight: 700;
-    margin-bottom: 6px;
-    color: var(--bni-gray-dark);
-  }
-
-  .rule-card p {
-    font-size: 0.88rem;
-    color: var(--bni-gray);
-  }
-
-  /* ============================================
-     シナジー例
-     ============================================ */
+  /* シナジー例 */
   .synergy-cards {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-    margin-top: 32px;
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 20px; margin-top: 32px;
   }
-
   .synergy-card {
-    background: var(--bni-white);
-    border-radius: 16px;
-    padding: 28px 24px;
-    box-shadow: var(--shadow);
+    background: var(--bni-white); border-radius: 16px;
+    padding: 28px 24px; box-shadow: var(--shadow);
     border-left: 4px solid var(--bni-gold);
   }
-
-  .synergy-card h4 {
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: var(--bni-gray-dark);
-    margin-bottom: 12px;
-  }
-
-  .synergy-members {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-bottom: 12px;
-  }
-
+  .synergy-card h4 { font-size: 0.95rem; font-weight: 700; margin-bottom: 12px; }
+  .synergy-members { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
   .synergy-member {
-    background: var(--bni-red-light);
-    color: var(--bni-red-dark);
-    padding: 3px 10px;
-    border-radius: 100px;
-    font-size: 0.75rem;
-    font-weight: 600;
+    background: var(--bni-red-light); color: var(--bni-red-dark);
+    padding: 3px 10px; border-radius: 100px;
+    font-size: 0.75rem; font-weight: 600;
   }
-
   .synergy-card .reason {
-    font-size: 0.82rem;
-    color: var(--bni-gray);
-    line-height: 1.6;
-    border-top: 1px solid #eee;
-    padding-top: 12px;
+    font-size: 0.82rem; color: var(--bni-gray); line-height: 1.6;
+    border-top: 1px solid #eee; padding-top: 12px;
+  }
+  .synergy-disc {
+    display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap;
+  }
+  .synergy-disc-tag {
+    padding: 2px 8px; border-radius: 100px;
+    font-size: 0.72rem; font-weight: 700;
   }
 
-  /* ============================================
-     セレンディピティカード
-     ============================================ */
+  /* ゲーム演出 */
+  .game-flow {
+    display: flex; gap: 16px; margin-top: 32px; flex-wrap: wrap;
+    justify-content: center;
+  }
+  .game-step {
+    background: var(--bni-white); border-radius: 16px;
+    padding: 28px 24px; box-shadow: var(--shadow);
+    text-align: center; flex: 1; min-width: 200px; max-width: 280px;
+    position: relative;
+  }
+  .game-step .game-num {
+    position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+    background: var(--bni-gold); color: var(--bni-white);
+    width: 28px; height: 28px; border-radius: 50%;
+    font-size: 0.8rem; font-weight: 700; line-height: 28px;
+  }
+  .game-step .game-icon { font-size: 2.5rem; margin-bottom: 8px; margin-top: 4px; }
+  .game-step h4 { font-size: 0.95rem; font-weight: 700; margin-bottom: 4px; }
+  .game-step p { font-size: 0.82rem; color: var(--bni-gray); }
+
+  /* セレンディピティ */
   .serendipity-card {
     background: linear-gradient(135deg, #FFFDF0 0%, #FFF8E1 100%);
-    border-radius: 16px;
-    padding: 40px;
-    box-shadow: var(--shadow);
-    border: 2px solid var(--bni-gold);
-    margin-top: 32px;
-    text-align: center;
+    border-radius: 16px; padding: 40px; box-shadow: var(--shadow);
+    border: 2px solid var(--bni-gold); margin-top: 32px; text-align: center;
   }
-
-  .serendipity-card .seren-icon {
-    font-size: 3rem;
-    margin-bottom: 12px;
-  }
-
-  .serendipity-card h3 {
-    font-size: 1.3rem;
-    font-weight: 800;
-    color: var(--bni-gold);
-    margin-bottom: 8px;
-  }
-
+  .serendipity-card .seren-icon { font-size: 3rem; margin-bottom: 12px; }
+  .serendipity-card h3 { font-size: 1.3rem; font-weight: 800; color: var(--bni-gold); margin-bottom: 8px; }
   .serendipity-card p {
-    font-size: 0.92rem;
-    color: var(--bni-gray);
-    max-width: 600px;
-    margin: 0 auto;
-    line-height: 1.7;
+    font-size: 0.92rem; color: var(--bni-gray);
+    max-width: 600px; margin: 0 auto; line-height: 1.7;
   }
 
-  /* ============================================
-     会場レイアウト
-     ============================================ */
+  /* タイムライン */
+  .timeline { margin-top: 32px; position: relative; padding-left: 40px; }
+  .timeline::before {
+    content: ""; position: absolute; left: 15px; top: 0; bottom: 0;
+    width: 3px; background: var(--bni-red-light); border-radius: 3px;
+  }
+  .timeline-item { position: relative; margin-bottom: 28px; padding-left: 20px; }
+  .timeline-item::before {
+    content: ""; position: absolute; left: -30px; top: 6px;
+    width: 14px; height: 14px; border-radius: 50%;
+    background: var(--bni-red); border: 3px solid var(--bni-white);
+    box-shadow: 0 0 0 2px var(--bni-red);
+  }
+  .timeline-item.highlight::before {
+    width: 18px; height: 18px; left: -32px; top: 4px;
+    background: var(--bni-gold); box-shadow: 0 0 0 2px var(--bni-gold);
+  }
+  .timeline-date { font-size: 0.82rem; font-weight: 700; color: var(--bni-red); margin-bottom: 2px; }
+  .timeline-item.highlight .timeline-date { color: var(--bni-gold); }
+  .timeline-title { font-size: 1rem; font-weight: 700; }
+  .timeline-desc { font-size: 0.85rem; color: var(--bni-gray); margin-top: 2px; }
+
+  /* 会場レイアウト */
   .venue-grid {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 10px;
-    margin-top: 32px;
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
+    display: grid; grid-template-columns: repeat(5, 1fr);
+    gap: 10px; margin-top: 32px; max-width: 600px;
+    margin-left: auto; margin-right: auto;
   }
-
   .venue-island {
-    border-radius: 10px;
-    padding: 12px 8px;
-    text-align: center;
-    font-size: 0.75rem;
-    font-weight: 600;
-    border: 2px solid;
+    border-radius: 10px; padding: 12px 8px;
+    text-align: center; font-size: 0.75rem; font-weight: 600; border: 2px solid;
   }
+  .venue-island .island-num { font-size: 1rem; font-weight: 800; display: block; margin-bottom: 2px; }
+  .venue-legend { display: flex; justify-content: center; gap: 20px; margin-top: 20px; flex-wrap: wrap; }
+  .venue-legend-item { display: flex; align-items: center; gap: 6px; font-size: 0.82rem; color: var(--bni-gray); }
+  .venue-legend-dot { width: 12px; height: 12px; border-radius: 3px; }
 
-  .venue-island .island-num {
-    font-size: 1rem;
-    font-weight: 800;
-    display: block;
-    margin-bottom: 2px;
-  }
-
-  .venue-legend {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    margin-top: 20px;
-    flex-wrap: wrap;
-  }
-
-  .venue-legend-item {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 0.82rem;
-    color: var(--bni-gray);
-  }
-
-  .venue-legend-dot {
-    width: 12px;
-    height: 12px;
-    border-radius: 3px;
-  }
-
-  /* ============================================
-     システム構成図
-     ============================================ */
+  /* システム構成 */
   .architecture {
-    background: var(--bni-white);
-    border-radius: 16px;
-    padding: 40px;
-    box-shadow: var(--shadow);
-    margin-top: 32px;
-    text-align: center;
+    background: var(--bni-white); border-radius: 16px;
+    padding: 40px; box-shadow: var(--shadow); margin-top: 32px; text-align: center;
   }
-
   .arch-flow {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    flex-wrap: wrap;
-    margin-bottom: 24px;
+    display: flex; align-items: center; justify-content: center;
+    gap: 8px; flex-wrap: wrap; margin-bottom: 24px;
   }
-
   .arch-box {
-    border-radius: 12px;
-    padding: 16px 20px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    text-align: center;
-    min-width: 140px;
+    border-radius: 12px; padding: 16px 20px;
+    font-size: 0.85rem; font-weight: 600; text-align: center; min-width: 140px;
   }
-
   .arch-box.input { background: #E3F2FD; color: #1565C0; border: 2px solid #90CAF9; }
   .arch-box.process { background: var(--bni-red-light); color: var(--bni-red-dark); border: 2px solid var(--bni-red); }
   .arch-box.ai { background: #FFF8E1; color: #F57F17; border: 2px solid var(--bni-gold); }
   .arch-box.output { background: #E8F5E9; color: #2E7D32; border: 2px solid #81C784; }
+  .arch-arrow { font-size: 1.3rem; color: var(--bni-gray); }
+  .arch-outputs { display: flex; justify-content: center; gap: 16px; margin-top: 8px; }
+  .arch-note { margin-top: 20px; font-size: 0.85rem; color: var(--bni-gray); }
 
-  .arch-arrow {
-    font-size: 1.3rem;
-    color: var(--bni-gray);
-  }
-
-  .arch-outputs {
-    display: flex;
-    justify-content: center;
-    gap: 16px;
-    margin-top: 8px;
-  }
-
-  .arch-note {
-    margin-top: 20px;
-    font-size: 0.85rem;
-    color: var(--bni-gray);
-  }
-
-  /* ============================================
-     当日運営フロー
-     ============================================ */
-  .timeline {
-    margin-top: 32px;
-    position: relative;
-    padding-left: 40px;
-  }
-
-  .timeline::before {
-    content: "";
-    position: absolute;
-    left: 15px;
-    top: 0;
-    bottom: 0;
-    width: 3px;
-    background: var(--bni-red-light);
-    border-radius: 3px;
-  }
-
-  .timeline-item {
-    position: relative;
-    margin-bottom: 28px;
-    padding-left: 20px;
-  }
-
-  .timeline-item::before {
-    content: "";
-    position: absolute;
-    left: -30px;
-    top: 6px;
-    width: 14px;
-    height: 14px;
-    border-radius: 50%;
-    background: var(--bni-red);
-    border: 3px solid var(--bni-white);
-    box-shadow: 0 0 0 2px var(--bni-red);
-  }
-
-  .timeline-item.highlight::before {
-    width: 18px;
-    height: 18px;
-    left: -32px;
-    top: 4px;
-    background: var(--bni-gold);
-    box-shadow: 0 0 0 2px var(--bni-gold);
-  }
-
-  .timeline-date {
-    font-size: 0.82rem;
-    font-weight: 700;
-    color: var(--bni-red);
-    margin-bottom: 2px;
-  }
-
-  .timeline-item.highlight .timeline-date {
-    color: var(--bni-gold);
-  }
-
-  .timeline-title {
-    font-size: 1rem;
-    font-weight: 700;
-  }
-
-  .timeline-desc {
-    font-size: 0.85rem;
-    color: var(--bni-gray);
-    margin-top: 2px;
-  }
-
-  /* ============================================
-     効果（KPI）
-     ============================================ */
+  /* KPI */
   .kpi-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
-    margin-top: 32px;
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 20px; margin-top: 32px;
   }
-
   .kpi-card {
-    background: var(--bni-white);
-    border-radius: 16px;
-    padding: 28px 20px;
-    text-align: center;
-    box-shadow: var(--shadow);
+    background: var(--bni-white); border-radius: 16px;
+    padding: 28px 20px; text-align: center; box-shadow: var(--shadow);
   }
+  .kpi-card .kpi-icon { font-size: 2rem; margin-bottom: 8px; }
+  .kpi-card .kpi-before { font-size: 0.8rem; color: var(--bni-gray); margin-bottom: 4px; }
+  .kpi-card .kpi-value { font-size: 2rem; font-weight: 800; color: var(--bni-red); line-height: 1.2; }
+  .kpi-card .kpi-label { font-size: 0.82rem; font-weight: 600; margin-top: 8px; }
 
-  .kpi-card .kpi-icon {
-    font-size: 2rem;
-    margin-bottom: 8px;
-  }
-
-  .kpi-card .kpi-before {
-    font-size: 0.8rem;
-    color: var(--bni-gray);
-    margin-bottom: 4px;
-  }
-
-  .kpi-card .kpi-value {
-    font-size: 2rem;
-    font-weight: 800;
-    color: var(--bni-red);
-    line-height: 1.2;
-  }
-
-  .kpi-card .kpi-label {
-    font-size: 0.82rem;
-    font-weight: 600;
-    margin-top: 8px;
-    color: var(--bni-gray-dark);
-  }
-
-  /* ============================================
-     費用
-     ============================================ */
-  .cost-highlight {
-    background: var(--bni-white);
-    border-radius: 16px;
-    padding: 40px;
-    box-shadow: var(--shadow);
-    text-align: center;
-    margin-top: 32px;
-    border: 2px solid var(--bni-red-light);
-  }
-
-  /* ============================================
-     スケジュール
-     ============================================ */
+  /* スケジュール */
   .schedule-table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: var(--shadow);
-    margin-top: 24px;
+    width: 100%; border-collapse: separate; border-spacing: 0;
+    border-radius: 12px; overflow: hidden; box-shadow: var(--shadow); margin-top: 24px;
   }
-
   .schedule-table th {
-    background: var(--bni-gray-dark);
-    color: var(--bni-white);
-    padding: 14px 20px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    text-align: left;
+    background: var(--bni-gray-dark); color: var(--bni-white);
+    padding: 14px 20px; font-size: 0.85rem; font-weight: 600; text-align: left;
   }
-
   .schedule-table td {
-    background: var(--bni-white);
-    padding: 14px 20px;
-    font-size: 0.9rem;
-    border-bottom: 1px solid #eee;
+    background: var(--bni-white); padding: 14px 20px;
+    font-size: 0.9rem; border-bottom: 1px solid #eee;
   }
-
   .schedule-table tr:last-child td { border-bottom: none; }
+  .schedule-table tr.milestone td { background: var(--bni-red-light); font-weight: 700; }
+  .schedule-table .date-col { white-space: nowrap; font-weight: 600; }
 
-  .schedule-table tr.milestone td {
-    background: var(--bni-red-light);
-    font-weight: 700;
-  }
-
-  .schedule-table .date-col {
-    white-space: nowrap;
-    font-weight: 600;
-    color: var(--bni-gray-dark);
-  }
-
-  /* ============================================
-     担当
-     ============================================ */
-  .roles-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 24px;
-    margin-top: 32px;
-  }
-
-  .role-card {
-    background: var(--bni-white);
-    border-radius: 16px;
-    padding: 32px 28px;
-    box-shadow: var(--shadow);
-  }
-
+  /* 担当 */
+  .roles-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin-top: 32px; }
+  .role-card { background: var(--bni-white); border-radius: 16px; padding: 32px 28px; box-shadow: var(--shadow); }
   .role-card h4 {
-    font-size: 1.1rem;
-    font-weight: 700;
-    margin-bottom: 16px;
-    padding-bottom: 12px;
-    border-bottom: 2px solid var(--bni-red);
-    color: var(--bni-gray-dark);
+    font-size: 1.1rem; font-weight: 700; margin-bottom: 16px;
+    padding-bottom: 12px; border-bottom: 2px solid var(--bni-red);
   }
-
-  .role-card ul {
-    list-style: none;
-    padding: 0;
-  }
-
+  .role-card ul { list-style: none; padding: 0; }
   .role-card li {
-    padding: 6px 0;
-    font-size: 0.9rem;
-    color: var(--bni-gray);
-    padding-left: 20px;
-    position: relative;
+    padding: 6px 0; font-size: 0.9rem; color: var(--bni-gray);
+    padding-left: 20px; position: relative;
   }
-
   .role-card li::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 13px;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--bni-red);
+    content: ""; position: absolute; left: 0; top: 13px;
+    width: 8px; height: 8px; border-radius: 50%; background: var(--bni-red);
   }
 
-  /* ============================================
-     CTA（フッター）
-     ============================================ */
+  /* CTA */
   .cta {
     background: linear-gradient(135deg, var(--bni-gray-dark) 0%, #1a1a1a 100%);
-    color: var(--bni-white);
-    padding: 64px 40px;
-    text-align: center;
+    color: var(--bni-white); padding: 64px 40px; text-align: center;
   }
+  .cta h2 { font-size: 1.8rem; font-weight: 800; margin-bottom: 16px; }
+  .cta p { font-size: 1rem; opacity: 0.7; margin-bottom: 32px; }
+  .footer-credit { margin-top: 40px; font-size: 0.8rem; opacity: 0.4; }
 
-  .cta h2 {
-    font-size: 1.8rem;
-    font-weight: 800;
-    margin-bottom: 16px;
-  }
-
-  .cta p {
-    font-size: 1rem;
-    opacity: 0.7;
-    margin-bottom: 32px;
-  }
-
-  .footer-credit {
-    margin-top: 40px;
-    font-size: 0.8rem;
-    opacity: 0.4;
-  }
-
-  /* ============================================
-     レスポンシブ
-     ============================================ */
   @media (max-width: 768px) {
     .hero { padding: 60px 24px 48px; }
     .hero h1 { font-size: 2rem; }
     .hero-meta { gap: 12px; }
-    .hero-meta-item { padding: 12px 20px; }
     .problem-cards, .synergy-cards { grid-template-columns: 1fr; }
     .element-cards { grid-template-columns: repeat(2, 1fr); }
     .rules-grid { grid-template-columns: 1fr; }
     .kpi-grid { grid-template-columns: repeat(2, 1fr); }
     .roles-grid { grid-template-columns: 1fr; }
-    .flow { flex-direction: column; }
+    .flow, .game-flow { flex-direction: column; align-items: center; }
     .flow-arrow { transform: rotate(90deg); }
     .arch-flow { flex-direction: column; }
     .arch-arrow { transform: rotate(90deg); }
@@ -914,9 +422,6 @@
     .venue-grid { grid-template-columns: repeat(4, 1fr); }
   }
 
-  /* ============================================
-     印刷対応
-     ============================================ */
   @media print {
     .hero { background: var(--bni-red) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     section { page-break-inside: avoid; padding: 40px 0; }
@@ -926,14 +431,12 @@
 </head>
 <body>
 
-<!-- ============================================
-     ヒーロー
-     ============================================ -->
+<!-- ヒーロー -->
 <header class="hero">
   <div class="hero-badge">BNI AIラボチーム 提案</div>
   <h1>
     AI Connect <small style="font-size:0.4em;opacity:0.7">v2</small>
-    <span>行動特性 × 業種 AIグループ編成システム</span>
+    <span>パワーチーム × 行動特性 AIグループ編成システム</span>
   </h1>
   <div class="hero-meta">
     <div class="hero-meta-item">
@@ -955,376 +458,178 @@
   </div>
 </header>
 
-<!-- ============================================
-     1. 背景・課題
-     ============================================ -->
+<!-- 1. 背景・課題 -->
 <section>
   <div class="container">
     <div class="section-number">1</div>
     <h2 class="section-title">背景・課題</h2>
     <p class="section-subtitle">前夜祭のネットワーキングを「運任せ」から「AI最適化」へ</p>
-
     <div class="problem-cards">
       <div class="problem-card">
         <div class="icon">🎲</div>
         <h3>ランダムな席決め</h3>
-        <p>受付順やくじ引きでの席決めでは、ビジネスシナジーの高い人同士が出会える確率が極めて低い</p>
+        <p>受付順やくじ引きでは、ビジネスシナジーの高い人同士が出会える確率が極めて低い</p>
       </div>
       <div class="problem-card">
         <div class="icon">👥</div>
         <h3>同業種・知人で固まる</h3>
-        <p>自由席では同チャプターの仲間や同業種で固まりがち。せっかくの全国規模の場が活かされない</p>
+        <p>自由席では同チャプターや同業種で固まりがち。全国規模の場が活かされない</p>
       </div>
       <div class="problem-card">
         <div class="icon">🧩</div>
         <h3>人力マッチングは不可能</h3>
-        <p>200名 × 業種 × 行動タイプ × 紹介ニーズの最適組み合わせを人力で行うのは物理的に不可能</p>
+        <p>200名 × 業種 × 行動タイプの最適組み合わせを人力で行うのは物理的に不可能</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ============================================
-     2. AI Connectとは
-     ============================================ -->
+<!-- 2. AI Connectとは -->
 <section>
   <div class="container">
     <div class="section-number">2</div>
     <h2 class="section-title">AI Connect とは</h2>
-    <p class="section-subtitle">アンケート12問 × 行動スタイル診断 × AI分析で、最強のグループを自動編成</p>
+    <p class="section-subtitle">アンケート10問 × AI分析で、パワーチームを自動編成。さらに行動特性で多様性を最大化</p>
 
     <div class="flow">
       <div class="flow-step">
         <div class="step-num">1</div>
         <div class="step-icon">📋</div>
         <h4>事前アンケート</h4>
-        <p>Googleフォーム<br>12問・約5分</p>
+        <p>Googleフォーム<br>10問・約4分</p>
       </div>
       <div class="flow-arrow">→</div>
       <div class="flow-step">
         <div class="step-num">2</div>
-        <div class="step-icon">🔥</div>
-        <h4>行動タイプ判定</h4>
-        <p>四元素タイプを<br>自動診断</p>
+        <div class="step-icon">🤖</div>
+        <h4>AI分析</h4>
+        <p>業種シナジー ×<br>行動タイプを総合判定</p>
       </div>
       <div class="flow-arrow">→</div>
       <div class="flow-step">
         <div class="step-num">3</div>
-        <div class="step-icon">🤖</div>
-        <h4>AIグループ編成</h4>
-        <p>Gemini Flashが<br>10グループを最適配置</p>
+        <div class="step-icon">📺</div>
+        <h4>当日発表</h4>
+        <p>スクリーン +<br>WhatsApp + QR</p>
       </div>
       <div class="flow-arrow">→</div>
       <div class="flow-step">
         <div class="step-num">4</div>
-        <div class="step-icon">📺</div>
-        <h4>当日発表</h4>
-        <p>スクリーン +<br>WhatsApp + QR</p>
+        <div class="step-icon">🎉</div>
+        <h4>Reveal!</h4>
+        <p>「実はこのグループは<br>こんなチームでした！」</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ============================================
-     3. 行動スタイル診断 — 四元素タイプ
-     ============================================ -->
+<!-- 3. パワーチーム × 行動特性 = 最強のグループ -->
 <section>
   <div class="container">
     <div class="section-number">3</div>
-    <h2 class="section-title">行動スタイル診断 — 四元素タイプ</h2>
-    <p class="section-subtitle">5問の簡易診断で行動スタイルを4つの元素に分類。グループの多様性を最大化します</p>
+    <h2 class="section-title">パワーチーム × 行動特性 = 最強のグループ</h2>
+    <p class="section-subtitle">業種の組み合わせでビジネスを生み、行動タイプの多様性でチームを活性化</p>
 
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:40px">
+      <div style="background:var(--bni-white);border-radius:16px;padding:28px;box-shadow:var(--shadow);border-top:4px solid var(--bni-red)">
+        <h3 style="font-size:1.1rem;font-weight:700;color:var(--bni-red);margin-bottom:12px">🤝 パワーチーム（主軸）</h3>
+        <p style="font-size:0.9rem;color:var(--bni-gray);line-height:1.7">
+          業種 × ターゲット × 紹介ニーズをAIが分析し、<strong>リファーラルが実際に生まれる組み合わせ</strong>を自動編成。
+          「不動産×保険×税理士」のような紹介チェーンを10グループに最適配置します。
+        </p>
+      </div>
+      <div style="background:var(--bni-white);border-radius:16px;padding:28px;box-shadow:var(--shadow);border-top:4px solid var(--bni-gold)">
+        <h3 style="font-size:1.1rem;font-weight:700;color:var(--bni-gold);margin-bottom:12px">🔥🌀🌿💧 行動特性（多様性強化）</h3>
+        <p style="font-size:0.9rem;color:var(--bni-gray);line-height:1.7">
+          3問の簡易診断で行動スタイルを4タイプに分類。パワーチームの中に<strong>推進力・社交力・安定感・分析力</strong>がバランスよく混ざることで、
+          より深いビジネスの会話が生まれます。
+        </p>
+      </div>
+    </div>
+
+    <h3 style="font-size:1.15rem;font-weight:700;margin-bottom:16px">行動スタイル診断 — 四元素タイプ</h3>
     <div class="element-cards">
       <div class="element-card fire">
         <div class="elem-icon">🔥</div>
         <div class="elem-name">炎</div>
         <div class="elem-en">Fire</div>
-        <div class="elem-desc">情熱・決断・推進力。<br>炎のように周囲を動かすリーダー</div>
+        <div class="elem-desc">決断・推進力。<br>炎のように動かすリーダー</div>
       </div>
       <div class="element-card wind">
         <div class="elem-icon">🌀</div>
         <div class="elem-name">風</div>
         <div class="elem-en">Wind</div>
-        <div class="elem-desc">社交・巻き込み・拡散力。<br>風のように人と人をつなぐ</div>
+        <div class="elem-desc">社交・拡散力。<br>風のように人をつなぐ</div>
       </div>
       <div class="element-card earth">
         <div class="elem-icon">🌿</div>
         <div class="elem-name">大地</div>
         <div class="elem-en">Earth</div>
-        <div class="elem-desc">安定・信頼・継続力。<br>大地のようにチームを支える</div>
+        <div class="elem-desc">安定・信頼。<br>大地のように支える</div>
       </div>
       <div class="element-card water">
         <div class="elem-icon">💧</div>
         <div class="elem-name">水</div>
         <div class="elem-en">Water</div>
-        <div class="elem-desc">分析・正確・適応力。<br>水のように深く流れる知性</div>
+        <div class="elem-desc">分析・正確さ。<br>水のように深く流れる</div>
       </div>
-    </div>
-
-    <div style="background:var(--bni-white);border-radius:16px;padding:28px;box-shadow:var(--shadow);margin-top:32px">
-      <h3 style="font-size:1rem;font-weight:700;margin-bottom:12px;color:var(--bni-gray-dark)">なぜ行動タイプを組み合わせるのか？</h3>
-      <p style="font-size:0.9rem;color:var(--bni-gray);line-height:1.8">
-        BNIメンバーは「炎」「風」タイプに偏る傾向があります。同じタイプばかりのグループでは会話が一方向に偏りがちですが、
-        <strong>4つの元素がバランスよく混ざったグループ</strong>では、リーダーシップ × 社交力 × 安定感 × 分析力が補完し合い、
-        より深いビジネスの会話が生まれます。
-      </p>
     </div>
   </div>
 </section>
 
-<!-- ============================================
-     4. アンケート設計
-     ============================================ -->
+<!-- 4. アンケート設計 -->
 <section>
   <div class="container">
     <div class="section-number">4</div>
     <h2 class="section-title">アンケート設計</h2>
-    <p class="section-subtitle">12問の回答からAIが行動プロファイル＋ビジネスプロファイルを構築</p>
+    <p class="section-subtitle">10問の回答からAIがパワーチーム＋行動プロファイルを構築</p>
 
-    <!-- 基本情報 -->
-    <h3 style="font-size:1.05rem;font-weight:700;margin-bottom:12px;color:var(--bni-gray-dark)">基本情報（3問）</h3>
+    <h3 style="font-size:1.05rem;font-weight:700;margin-bottom:12px">基本情報（3問）</h3>
     <table class="survey-table">
-      <thead>
-        <tr>
-          <th style="width:60px">No.</th>
-          <th>質問</th>
-          <th style="width:110px">形式</th>
-          <th>AIでの活用</th>
-        </tr>
-      </thead>
+      <thead><tr><th style="width:60px">No.</th><th>質問</th><th style="width:110px">形式</th><th>活用</th></tr></thead>
       <tbody>
-        <tr>
-          <td class="q-num">Q1</td>
-          <td>氏名 / Name</td>
-          <td><span class="badge badge-text">記述</span></td>
-          <td class="survey-purpose">参加者識別</td>
-        </tr>
-        <tr>
-          <td class="q-num">Q2</td>
-          <td>チャプター名 / Chapter</td>
-          <td><span class="badge badge-text">記述</span></td>
-          <td class="survey-purpose">同チャプター分散の判定</td>
-        </tr>
-        <tr>
-          <td class="q-num">Q3</td>
-          <td>電話番号 / Phone<br><span style="font-size:0.82rem;color:#888">国番号含む（例: 090-xxxx-xxxx, +81-90-xxxx-xxxx）</span></td>
-          <td><span class="badge badge-text">記述</span></td>
-          <td class="survey-purpose">結果検索キー・重複チェック</td>
-        </tr>
+        <tr><td class="q-num">Q1</td><td>氏名 / Name</td><td><span class="badge badge-text">記述</span></td><td class="survey-purpose">参加者識別</td></tr>
+        <tr><td class="q-num">Q2</td><td>チャプター名 / Chapter</td><td><span class="badge badge-text">記述</span></td><td class="survey-purpose">同チャプター分散</td></tr>
+        <tr><td class="q-num">Q3</td><td>電話番号 / Phone<br><span style="font-size:0.82rem;color:#888">国番号含む</span></td><td><span class="badge badge-text">記述</span></td><td class="survey-purpose">結果検索キー・重複チェック</td></tr>
       </tbody>
     </table>
 
-    <!-- 行動スタイル診断 -->
-    <h3 style="font-size:1.05rem;font-weight:700;margin-top:40px;margin-bottom:12px;color:var(--bni-gray-dark)">行動スタイル診断（5問・4択・日英バイリンガル）</h3>
+    <h3 style="font-size:1.05rem;font-weight:700;margin-top:36px;margin-bottom:12px">行動スタイル診断（3問・4択・日英バイリンガル）</h3>
     <table class="survey-table">
-      <thead>
-        <tr>
-          <th style="width:60px">No.</th>
-          <th>質問</th>
-          <th style="width:110px">形式</th>
-          <th>AIでの活用</th>
-        </tr>
-      </thead>
+      <thead><tr><th style="width:60px">No.</th><th>質問</th><th style="width:110px">形式</th><th>判定</th></tr></thead>
       <tbody>
-        <tr class="disc-row">
-          <td class="q-num">Q4</td>
-          <td>ビジネスの場で最もワクワクする瞬間は？<br><span style="font-size:0.8rem;color:#888">When do you feel most excited in business?</span></td>
-          <td><span class="badge badge-radio">4択</span></td>
-          <td class="survey-purpose">🔥炎 / 🌀風 / 🌿大地 / 💧水</td>
-        </tr>
-        <tr class="disc-row">
-          <td class="q-num">Q5</td>
-          <td>プロジェクトで壁にぶつかった時あなたは？<br><span style="font-size:0.8rem;color:#888">When you hit a wall in a project, you:</span></td>
-          <td><span class="badge badge-radio">4択</span></td>
-          <td class="survey-purpose">行動スタイルの傾向判定</td>
-        </tr>
-        <tr class="disc-row">
-          <td class="q-num">Q6</td>
-          <td>ビジネスパートナーに最も求めるものは？<br><span style="font-size:0.8rem;color:#888">What do you value most in a partner?</span></td>
-          <td><span class="badge badge-radio">4択</span></td>
-          <td class="survey-purpose">行動スタイルの傾向判定</td>
-        </tr>
-        <tr class="disc-row">
-          <td class="q-num">Q7</td>
-          <td>週末のリフレッシュ方法は？<br><span style="font-size:0.8rem;color:#888">How do you recharge on weekends?</span></td>
-          <td><span class="badge badge-radio">4択</span></td>
-          <td class="survey-purpose">行動スタイルの傾向判定</td>
-        </tr>
-        <tr class="disc-row">
-          <td class="q-num">Q8</td>
-          <td>あなたを一言で表すなら？<br><span style="font-size:0.8rem;color:#888">In one word, you are:</span></td>
-          <td><span class="badge badge-radio">4択</span></td>
-          <td class="survey-purpose">行動スタイルの傾向判定</td>
-        </tr>
+        <tr class="disc-row"><td class="q-num">Q4</td><td>ビジネスで最もワクワクする瞬間は？<br><span style="font-size:0.8rem;color:#888">When do you feel most excited in business?</span></td><td><span class="badge badge-radio">4択</span></td><td class="survey-purpose">🔥炎 / 🌀風 / 🌿大地 / 💧水</td></tr>
+        <tr class="disc-row"><td class="q-num">Q5</td><td>壁にぶつかった時あなたは？<br><span style="font-size:0.8rem;color:#888">When you hit a wall, you:</span></td><td><span class="badge badge-radio">4択</span></td><td class="survey-purpose">行動スタイル傾向</td></tr>
+        <tr class="disc-row"><td class="q-num">Q6</td><td>あなたを一言で表すなら？<br><span style="font-size:0.8rem;color:#888">In one word, you are:</span></td><td><span class="badge badge-radio">4択</span></td><td class="survey-purpose">行動スタイル傾向</td></tr>
       </tbody>
     </table>
 
-    <!-- ビジネス情報 -->
-    <h3 style="font-size:1.05rem;font-weight:700;margin-top:40px;margin-bottom:12px;color:var(--bni-gray-dark)">ビジネス情報（4問）</h3>
+    <h3 style="font-size:1.05rem;font-weight:700;margin-top:36px;margin-bottom:12px">ビジネス情報（4問）</h3>
     <table class="survey-table">
-      <thead>
-        <tr>
-          <th style="width:60px">No.</th>
-          <th>質問</th>
-          <th style="width:110px">形式</th>
-          <th>AIでの活用</th>
-        </tr>
-      </thead>
+      <thead><tr><th style="width:60px">No.</th><th>質問</th><th style="width:110px">形式</th><th>活用</th></tr></thead>
       <tbody>
-        <tr>
-          <td class="q-num">Q9</td>
-          <td><strong>業種</strong><br><span style="font-size:0.82rem;color:#888">50業種から選択（詳細は下記）</span></td>
-          <td><span class="badge badge-select">プルダウン</span></td>
-          <td class="survey-purpose">同業種回避の判定軸</td>
-        </tr>
-        <tr>
-          <td class="q-num">Q10</td>
-          <td><strong>カテゴリー（専門分野の詳細）</strong><br><span style="font-size:0.82rem;color:#888">例：「富裕層向け相続対策の生命保険」</span></td>
-          <td><span class="badge badge-text">自由入力</span></td>
-          <td class="survey-purpose">AIが意味解析で補完関係を発見</td>
-        </tr>
-        <tr>
-          <td class="q-num">Q11</td>
-          <td><strong>ターゲット顧客層</strong>（最大3つ）<br><span style="font-size:0.82rem;color:#888">10選択肢から選択（詳細は下記）</span></td>
-          <td><span class="badge badge-check">チェック</span></td>
-          <td class="survey-purpose">同顧客層の異業種マッチング</td>
-        </tr>
-        <tr>
-          <td class="q-num">Q12</td>
-          <td><strong>紹介してほしい業種</strong>（最大3つ）<br><span style="font-size:0.82rem;color:#888">10大分類から選択（詳細は下記）</span></td>
-          <td><span class="badge badge-check">チェック</span></td>
-          <td class="survey-purpose">需要 × 供給のマッチング</td>
-        </tr>
+        <tr><td class="q-num">Q7</td><td><strong>業種</strong>（50業種・10大分類）</td><td><span class="badge badge-select">プルダウン</span></td><td class="survey-purpose">パワーチーム編成の主軸</td></tr>
+        <tr><td class="q-num">Q8</td><td><strong>専門分野の詳細</strong><br><span style="font-size:0.82rem;color:#888">例：「富裕層向け相続対策の生命保険」</span></td><td><span class="badge badge-text">自由入力</span></td><td class="survey-purpose">AIが補完関係を発見</td></tr>
+        <tr><td class="q-num">Q9</td><td><strong>ターゲット顧客層</strong>（最大3つ）</td><td><span class="badge badge-check">チェック</span></td><td class="survey-purpose">同顧客層の異業種マッチング</td></tr>
+        <tr><td class="q-num">Q10</td><td><strong>紹介してほしい業種</strong>（最大3つ）</td><td><span class="badge badge-check">チェック</span></td><td class="survey-purpose">需要 × 供給マッチング</td></tr>
       </tbody>
     </table>
-
-    <!-- Q9 業種プルダウン 詳細 -->
-    <h3 style="font-size:1.15rem;font-weight:700;margin-top:48px;margin-bottom:8px;color:var(--bni-gray-dark)">Q9 — 業種プルダウン（50業種・10大分類）</h3>
-    <p style="font-size:0.88rem;color:var(--bni-gray);margin-bottom:20px">参加者は以下のプルダウンから自分の業種を1つ選択します。同じ大分類の人は同グループに3-4名までに制限します。</p>
-    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px">
-
-      <div style="background:var(--bni-white);border-radius:12px;padding:20px 24px;box-shadow:var(--shadow)">
-        <h4 style="font-size:0.9rem;font-weight:700;color:var(--bni-red);margin-bottom:8px">🏗️ 建設・不動産（7業種）</h4>
-        <ul style="list-style:none;padding:0;font-size:0.85rem;color:var(--bni-gray);line-height:2">
-          <li>建築設計・施工</li><li>リフォーム・リノベーション</li><li>不動産売買</li><li>不動産賃貸・管理</li><li>インテリア・内装</li><li>外構・エクステリア</li><li>電気・設備工事</li>
-        </ul>
-      </div>
-
-      <div style="background:var(--bni-white);border-radius:12px;padding:20px 24px;box-shadow:var(--shadow)">
-        <h4 style="font-size:0.9rem;font-weight:700;color:var(--bni-red);margin-bottom:8px">💻 IT・デジタル（6業種）</h4>
-        <ul style="list-style:none;padding:0;font-size:0.85rem;color:var(--bni-gray);line-height:2">
-          <li>Web制作・デザイン</li><li>システム開発</li><li>AI・DX支援</li><li>SNSマーケティング</li><li>動画制作・映像</li><li>IT機器・サポート</li>
-        </ul>
-      </div>
-
-      <div style="background:var(--bni-white);border-radius:12px;padding:20px 24px;box-shadow:var(--shadow)">
-        <h4 style="font-size:0.9rem;font-weight:700;color:var(--bni-red);margin-bottom:8px">⚖️ 士業・コンサルティング（8業種）</h4>
-        <ul style="list-style:none;padding:0;font-size:0.85rem;color:var(--bni-gray);line-height:2">
-          <li>弁護士</li><li>税理士・会計士</li><li>社会保険労務士</li><li>行政書士</li><li>司法書士</li><li>中小企業診断士</li><li>経営コンサルティング</li><li>人材・組織コンサルティング</li>
-        </ul>
-      </div>
-
-      <div style="background:var(--bni-white);border-radius:12px;padding:20px 24px;box-shadow:var(--shadow)">
-        <h4 style="font-size:0.9rem;font-weight:700;color:var(--bni-red);margin-bottom:8px">💰 金融・保険（5業種）</h4>
-        <ul style="list-style:none;padding:0;font-size:0.85rem;color:var(--bni-gray);line-height:2">
-          <li>生命保険</li><li>損害保険</li><li>ファイナンシャルプランナー</li><li>融資・資金調達</li><li>投資・資産運用</li>
-        </ul>
-      </div>
-
-      <div style="background:var(--bni-white);border-radius:12px;padding:20px 24px;box-shadow:var(--shadow)">
-        <h4 style="font-size:0.9rem;font-weight:700;color:var(--bni-red);margin-bottom:8px">💆 美容・健康（6業種）</h4>
-        <ul style="list-style:none;padding:0;font-size:0.85rem;color:var(--bni-gray);line-height:2">
-          <li>美容室・ヘアサロン</li><li>エステ・リラクゼーション</li><li>整体・鍼灸・接骨</li><li>パーソナルトレーニング</li><li>歯科</li><li>医療・クリニック</li>
-        </ul>
-      </div>
-
-      <div style="background:var(--bni-white);border-radius:12px;padding:20px 24px;box-shadow:var(--shadow)">
-        <h4 style="font-size:0.9rem;font-weight:700;color:var(--bni-red);margin-bottom:8px">🍽️ 飲食・食品（3業種）</h4>
-        <ul style="list-style:none;padding:0;font-size:0.85rem;color:var(--bni-gray);line-height:2">
-          <li>飲食店経営</li><li>ケータリング・仕出し</li><li>食品製造・販売</li>
-        </ul>
-      </div>
-
-      <div style="background:var(--bni-white);border-radius:12px;padding:20px 24px;box-shadow:var(--shadow)">
-        <h4 style="font-size:0.9rem;font-weight:700;color:var(--bni-red);margin-bottom:8px">📚 教育・研修（4業種）</h4>
-        <ul style="list-style:none;padding:0;font-size:0.85rem;color:var(--bni-gray);line-height:2">
-          <li>語学・翻訳</li><li>研修・セミナー</li><li>コーチング</li><li>学習塾・スクール</li>
-        </ul>
-      </div>
-
-      <div style="background:var(--bni-white);border-radius:12px;padding:20px 24px;box-shadow:var(--shadow)">
-        <h4 style="font-size:0.9rem;font-weight:700;color:var(--bni-red);margin-bottom:8px">🎨 クリエイティブ（4業種）</h4>
-        <ul style="list-style:none;padding:0;font-size:0.85rem;color:var(--bni-gray);line-height:2">
-          <li>グラフィックデザイン</li><li>写真・映像</li><li>ライティング・編集</li><li>印刷・出版</li>
-        </ul>
-      </div>
-
-      <div style="background:var(--bni-white);border-radius:12px;padding:20px 24px;box-shadow:var(--shadow)">
-        <h4 style="font-size:0.9rem;font-weight:700;color:var(--bni-red);margin-bottom:8px">🏠 生活サービス（5業種）</h4>
-        <ul style="list-style:none;padding:0;font-size:0.85rem;color:var(--bni-gray);line-height:2">
-          <li>清掃・ハウスクリーニング</li><li>引越し・物流</li><li>冠婚葬祭</li><li>ペット関連</li><li>自動車販売・整備</li>
-        </ul>
-      </div>
-
-      <div style="background:var(--bni-white);border-radius:12px;padding:20px 24px;box-shadow:var(--shadow)">
-        <h4 style="font-size:0.9rem;font-weight:700;color:var(--bni-red);margin-bottom:8px">📦 その他（4業種）</h4>
-        <ul style="list-style:none;padding:0;font-size:0.85rem;color:var(--bni-gray);line-height:2">
-          <li>人材紹介・派遣</li><li>広告・PR</li><li>通信・インフラ</li><li>その他（自由記述）</li>
-        </ul>
-      </div>
-
-    </div>
-
-    <!-- Q11 ターゲット顧客層 詳細 -->
-    <h3 style="font-size:1.15rem;font-weight:700;margin-top:48px;margin-bottom:8px;color:var(--bni-gray-dark)">Q11 — ターゲット顧客層（10選択肢・最大3つ選択）</h3>
-    <p style="font-size:0.88rem;color:var(--bni-gray);margin-bottom:20px">同じ顧客層を持つ異業種同士はシナジーが高いため、同グループに配置されやすくなります。</p>
-    <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:8px">
-      <span style="background:var(--bni-white);border:2px solid var(--bni-red-light);border-radius:100px;padding:8px 20px;font-size:0.88rem;font-weight:600;color:var(--bni-gray-dark)">1. 個人（一般消費者）</span>
-      <span style="background:var(--bni-white);border:2px solid var(--bni-red-light);border-radius:100px;padding:8px 20px;font-size:0.88rem;font-weight:600;color:var(--bni-gray-dark)">2. 個人事業主・フリーランス</span>
-      <span style="background:var(--bni-white);border:2px solid var(--bni-red-light);border-radius:100px;padding:8px 20px;font-size:0.88rem;font-weight:600;color:var(--bni-gray-dark)">3. 中小企業（30名以下）</span>
-      <span style="background:var(--bni-white);border:2px solid var(--bni-red-light);border-radius:100px;padding:8px 20px;font-size:0.88rem;font-weight:600;color:var(--bni-gray-dark)">4. 中堅企業（31-300名）</span>
-      <span style="background:var(--bni-white);border:2px solid var(--bni-red-light);border-radius:100px;padding:8px 20px;font-size:0.88rem;font-weight:600;color:var(--bni-gray-dark)">5. 大企業（301名以上）</span>
-      <span style="background:var(--bni-white);border:2px solid var(--bni-red-light);border-radius:100px;padding:8px 20px;font-size:0.88rem;font-weight:600;color:var(--bni-gray-dark)">6. 飲食・小売店舗</span>
-      <span style="background:var(--bni-white);border:2px solid var(--bni-red-light);border-radius:100px;padding:8px 20px;font-size:0.88rem;font-weight:600;color:var(--bni-gray-dark)">7. 医療・福祉施設</span>
-      <span style="background:var(--bni-white);border:2px solid var(--bni-red-light);border-radius:100px;padding:8px 20px;font-size:0.88rem;font-weight:600;color:var(--bni-gray-dark)">8. 不動産オーナー</span>
-      <span style="background:var(--bni-white);border:2px solid var(--bni-red-light);border-radius:100px;padding:8px 20px;font-size:0.88rem;font-weight:600;color:var(--bni-gray-dark)">9. 富裕層・高所得者</span>
-      <span style="background:var(--bni-white);border:2px solid var(--bni-red-light);border-radius:100px;padding:8px 20px;font-size:0.88rem;font-weight:600;color:var(--bni-gray-dark)">10. 海外企業・外国人</span>
-    </div>
-
-    <!-- Q12 紹介してほしい業種 詳細 -->
-    <h3 style="font-size:1.15rem;font-weight:700;margin-top:48px;margin-bottom:8px;color:var(--bni-gray-dark)">Q12 — 紹介してほしい業種（10大分類・最大3つ選択）</h3>
-    <p style="font-size:0.88rem;color:var(--bni-gray);margin-bottom:20px">「紹介してほしい業種」と「実際の業種」がマッチする人同士を同グループに配置します。</p>
-    <div style="display:flex;flex-wrap:wrap;gap:10px">
-      <span style="background:var(--bni-red);color:var(--bni-white);border-radius:100px;padding:8px 20px;font-size:0.88rem;font-weight:600">1. 建設・不動産</span>
-      <span style="background:var(--bni-red);color:var(--bni-white);border-radius:100px;padding:8px 20px;font-size:0.88rem;font-weight:600">2. IT・デジタル</span>
-      <span style="background:var(--bni-red);color:var(--bni-white);border-radius:100px;padding:8px 20px;font-size:0.88rem;font-weight:600">3. 士業・コンサルティング</span>
-      <span style="background:var(--bni-red);color:var(--bni-white);border-radius:100px;padding:8px 20px;font-size:0.88rem;font-weight:600">4. 金融・保険</span>
-      <span style="background:var(--bni-red);color:var(--bni-white);border-radius:100px;padding:8px 20px;font-size:0.88rem;font-weight:600">5. 美容・健康</span>
-      <span style="background:var(--bni-red);color:var(--bni-white);border-radius:100px;padding:8px 20px;font-size:0.88rem;font-weight:600">6. 飲食・食品</span>
-      <span style="background:var(--bni-red);color:var(--bni-white);border-radius:100px;padding:8px 20px;font-size:0.88rem;font-weight:600">7. 教育・研修</span>
-      <span style="background:var(--bni-red);color:var(--bni-white);border-radius:100px;padding:8px 20px;font-size:0.88rem;font-weight:600">8. クリエイティブ</span>
-      <span style="background:var(--bni-red);color:var(--bni-white);border-radius:100px;padding:8px 20px;font-size:0.88rem;font-weight:600">9. 生活サービス</span>
-      <span style="background:var(--bni-red);color:var(--bni-white);border-radius:100px;padding:8px 20px;font-size:0.88rem;font-weight:600">10. その他</span>
-    </div>
-
   </div>
 </section>
 
-<!-- ============================================
-     5. AIマッチングの5つのルール
-     ============================================ -->
+<!-- 5. AIマッチングのルール -->
 <section>
   <div class="container">
     <div class="section-number">5</div>
-    <h2 class="section-title">AIマッチングの5つのルール</h2>
-    <p class="section-subtitle">行動スタイルの多様性 × ビジネスシナジーで最適なグループを自動編成</p>
+    <h2 class="section-title">AIマッチングのルール</h2>
+    <p class="section-subtitle">パワーチーム編成が主軸。行動特性で多様性を補強</p>
 
     <div class="rules-grid">
       <div class="rule-card">
         <div class="rule-priority gold">1</div>
         <div>
-          <h4>🔥🌀🌿💧 四元素バランス（最重要）</h4>
-          <p>各グループに炎・風・大地・水の全4タイプを含める。BNIでは希少な大地・水タイプを各グループに最低2名ずつ保証し、行動スタイルの多様性を最大化</p>
+          <h4>🤝 パワーチーム編成（最重要）</h4>
+          <p>紹介希望業種 × 実業種のマッチ、同じ顧客層を持つ異業種同士、専門分野の補完関係をAIが発見。<strong>「このグループならリファーラルが生まれる」</strong>組み合わせを最優先で編成</p>
         </div>
       </div>
       <div class="rule-card">
@@ -1337,40 +642,31 @@
       <div class="rule-card">
         <div class="rule-priority">3</div>
         <div>
-          <h4>シナジーを最大化</h4>
-          <p>紹介希望業種 × 実業種のマッチ、同じ顧客層を持つ異業種同士、専門分野の補完関係をAIが発見</p>
+          <h4>🔥🌀🌿💧 行動タイプの多様性</h4>
+          <p>各グループに4タイプを含め、希少な大地・水タイプを最低2名ずつ保証。チームの会話に多様性を</p>
         </div>
       </div>
       <div class="rule-card">
         <div class="rule-priority">4</div>
         <div>
-          <h4>新しい出会いを優先</h4>
-          <p>同チャプターのメンバーは同グループに3名まで。全国から集まる貴重な機会を最大限活用</p>
-        </div>
-      </div>
-      <div class="rule-card">
-        <div class="rule-priority">5</div>
-        <div>
-          <h4>グループを均等に</h4>
-          <p>10グループ × 約20名（2テーブル構成）で均等配分。全員が活発に会話できる人数に最適化</p>
+          <h4>チャプター分散 + 均等化</h4>
+          <p>同チャプター3名まで。10グループ × 約20名（2テーブル）で均等配分</p>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ============================================
-     6. シナジー例
-     ============================================ -->
+<!-- 6. シナジー例 -->
 <section>
   <div class="container">
     <div class="section-number">6</div>
-    <h2 class="section-title">AIが見つけるシナジーの例</h2>
-    <p class="section-subtitle">実際にこのようなグループ編成をAIが自動で行います</p>
+    <h2 class="section-title">AIが見つけるパワーチームの例</h2>
+    <p class="section-subtitle">業種シナジー × 行動特性 — このグループならどんなビジネスが生まれるか</p>
 
     <div class="synergy-cards">
       <div class="synergy-card">
-        <h4>🏠 住宅購入者向けワンストップ</h4>
+        <h4>🏠 住宅購入ワンストップ</h4>
         <div class="synergy-members">
           <span class="synergy-member">不動産売買</span>
           <span class="synergy-member">リフォーム</span>
@@ -1378,7 +674,11 @@
           <span class="synergy-member">税理士</span>
           <span class="synergy-member">インテリア</span>
         </div>
-        <p class="reason">住宅購入をきっかけにした相互紹介チェーン。1件の不動産取引から5名全員にビジネスが広がる</p>
+        <p class="reason">1件の不動産取引から5名全員にビジネスが広がる紹介チェーン</p>
+        <div class="synergy-disc">
+          <span class="synergy-disc-tag" style="background:rgba(207,32,48,0.15);color:#FF6B7A">🔥 炎が商談を推進</span>
+          <span class="synergy-disc-tag" style="background:rgba(76,175,80,0.15);color:#81C784">💧 水が契約を精査</span>
+        </div>
       </div>
       <div class="synergy-card">
         <h4>🏢 中小企業の成長支援</h4>
@@ -1389,129 +689,131 @@
           <span class="synergy-member">社労士</span>
           <span class="synergy-member">研修</span>
         </div>
-        <p class="reason">中小企業の経営課題を入口にした複合提案。資金調達→Web強化→人材育成→労務管理の一気通貫</p>
+        <p class="reason">資金調達→Web強化→人材育成→労務管理の一気通貫提案</p>
+        <div class="synergy-disc">
+          <span class="synergy-disc-tag" style="background:rgba(33,150,243,0.15);color:#64B5F6">🌀 風が人脈を広げる</span>
+          <span class="synergy-disc-tag" style="background:rgba(255,193,7,0.15);color:#FFD54F">🌿 大地が継続支援</span>
+        </div>
       </div>
       <div class="synergy-card">
-        <h4>💎 美容・健康 × 富裕層</h4>
+        <h4>💎 美容×富裕層ライフスタイル</h4>
         <div class="synergy-members">
           <span class="synergy-member">美容室</span>
-          <span class="synergy-member">パーソナルトレーニング</span>
+          <span class="synergy-member">トレーニング</span>
           <span class="synergy-member">FP</span>
           <span class="synergy-member">歯科</span>
           <span class="synergy-member">写真</span>
         </div>
-        <p class="reason">高所得者層への相互紹介。美と健康と資産管理を横断するライフスタイル提案</p>
+        <p class="reason">美と健康と資産管理を横断するライフスタイル提案</p>
+        <div class="synergy-disc">
+          <span class="synergy-disc-tag" style="background:rgba(207,32,48,0.15);color:#FF6B7A">🔥 炎×風で集客力UP</span>
+          <span class="synergy-disc-tag" style="background:rgba(76,175,80,0.15);color:#81C784">💧 水が分析サポート</span>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ============================================
-     7. セレンディピティグループ
-     ============================================ -->
+<!-- 7. ゲーム演出 — Reveal! -->
 <section>
   <div class="container">
     <div class="section-number">7</div>
-    <h2 class="section-title">セレンディピティグループ</h2>
-    <p class="section-subtitle">アンケート未回答者も「予期せぬ出会い」として前向きにフォロー</p>
+    <h2 class="section-title">当日の演出 — Reveal!</h2>
+    <p class="section-subtitle">最初はメンバーだけ表示。最後に「実はこのグループは...」と秘密を明かすゲーム感覚</p>
 
-    <div class="serendipity-card">
-      <div class="seren-icon">✨</div>
-      <h3>セレンディピティ — 予期せぬ出会い</h3>
-      <p>
-        アンケートに回答されなかった参加者は、自動的に「セレンディピティグループ」に配置されます。
-        テーブル21・22番を使用し、運命の出会いを演出。<br>
-        ネガティブな印象を与えず、むしろ特別感のある体験を提供します。
+    <div class="game-flow">
+      <div class="game-step">
+        <div class="game-num">1</div>
+        <div class="game-icon">👤</div>
+        <h4>メンバー発表</h4>
+        <p>グループ番号と<br>メンバー名だけを表示</p>
+      </div>
+      <div class="game-step">
+        <div class="game-num">2</div>
+        <div class="game-icon">🪑</div>
+        <h4>テーブルへ移動</h4>
+        <p>「なぜこのメンバー？」<br>を考えながら自己紹介</p>
+      </div>
+      <div class="game-step">
+        <div class="game-num">3</div>
+        <div class="game-icon">🎉</div>
+        <h4>Reveal!</h4>
+        <p>「実はこのグループは<br>こんなパワーチームでした！」<br>行動特性 + シナジー理由を公開</p>
+      </div>
+    </div>
+
+    <div style="background:var(--bni-white);border-radius:16px;padding:24px;box-shadow:var(--shadow);margin-top:28px;text-align:center">
+      <p style="font-size:0.92rem;color:var(--bni-gray);line-height:1.7">
+        💡 ネットワーキング後に「実はあなたたちはこういう理由で集められたんです」と明かすことで、<br>
+        <strong>「このグループならこんなビジネスができる！」</strong>という気づきと驚きを演出。次のアクションにつなげます。
       </p>
     </div>
   </div>
 </section>
 
-<!-- ============================================
-     8. 当日運営フロー
-     ============================================ -->
+<!-- 8. セレンディピティグループ -->
 <section>
   <div class="container">
     <div class="section-number">8</div>
-    <h2 class="section-title">当日運営フロー</h2>
-    <p class="section-subtitle">乾杯 → 歓談20分 → 照明演出 → AI発表 → グループ移動</p>
-
-    <div class="timeline">
-      <div class="timeline-item">
-        <div class="timeline-date">18:00</div>
-        <div class="timeline-title">受付開始</div>
-        <div class="timeline-desc">WhatsApp未登録者に登録案内</div>
-      </div>
-      <div class="timeline-item">
-        <div class="timeline-date">18:30</div>
-        <div class="timeline-title">開会・挨拶・オープニングアクト</div>
-      </div>
-      <div class="timeline-item">
-        <div class="timeline-date">18:40</div>
-        <div class="timeline-title">乾杯</div>
-      </div>
-      <div class="timeline-item">
-        <div class="timeline-date">18:40 - 19:00</div>
-        <div class="timeline-title">歓談タイム（20分）</div>
-        <div class="timeline-desc">食事・ドリンクを楽しみながら自由交流</div>
-      </div>
-      <div class="timeline-item highlight">
-        <div class="timeline-date">19:00</div>
-        <div class="timeline-title">照明を落とす + 音楽で空気を変える</div>
-        <div class="timeline-desc">会場の雰囲気を一変させる演出</div>
-      </div>
-      <div class="timeline-item highlight">
-        <div class="timeline-date">19:02</div>
-        <div class="timeline-title">AIマッチングイベント開始告知（MC）</div>
-      </div>
-      <div class="timeline-item highlight">
-        <div class="timeline-date">19:03</div>
-        <div class="timeline-title">スクリーンでグループ発表 + WhatsApp配信 + QR表示</div>
-        <div class="timeline-desc">3チャネル同時配信で全参加者に到達</div>
-      </div>
-      <div class="timeline-item">
-        <div class="timeline-date">19:05</div>
-        <div class="timeline-title">参加者がグループのテーブルへ移動</div>
-      </div>
-      <div class="timeline-item">
-        <div class="timeline-date">19:05 - 19:25</div>
-        <div class="timeline-title">グループ内ネットワーキング（20分）</div>
-        <div class="timeline-desc">AIが編成した最適チームでビジネスの会話</div>
-      </div>
-      <div class="timeline-item">
-        <div class="timeline-date">19:25〜</div>
-        <div class="timeline-title">個人マッチングAIプラットフォーム紹介（オプション）</div>
-        <div class="timeline-desc">原沢氏の翻訳AIプラットフォームデモ</div>
-      </div>
+    <h2 class="section-title">セレンディピティグループ</h2>
+    <p class="section-subtitle">アンケート未回答者も「予期せぬ出会い」として前向きにフォロー</p>
+    <div class="serendipity-card">
+      <div class="seren-icon">✨</div>
+      <h3>セレンディピティ — 予期せぬ出会い</h3>
+      <p>
+        アンケート未回答の参加者は「セレンディピティグループ」に自動配置。
+        テーブル21・22番を使用し、運命の出会いを演出。ネガティブな印象を与えず、特別感のある体験を提供します。
+      </p>
     </div>
   </div>
 </section>
 
-<!-- ============================================
-     9. 会場レイアウト
-     ============================================ -->
+<!-- 9. 当日運営フロー -->
 <section>
   <div class="container">
     <div class="section-number">9</div>
-    <h2 class="section-title">会場レイアウト</h2>
-    <p class="section-subtitle">ベルサール汐留 22島 → 10グループ（20島）+ セレンディピティ（2島）</p>
+    <h2 class="section-title">当日運営フロー</h2>
+    <p class="section-subtitle">乾杯 → 歓談20分 → 照明演出 → メンバー発表 → ネットワーキング → Reveal!</p>
 
+    <div class="timeline">
+      <div class="timeline-item"><div class="timeline-date">18:00</div><div class="timeline-title">受付開始</div></div>
+      <div class="timeline-item"><div class="timeline-date">18:30</div><div class="timeline-title">開会・挨拶</div></div>
+      <div class="timeline-item"><div class="timeline-date">18:40</div><div class="timeline-title">乾杯 → 歓談タイム（20分）</div></div>
+      <div class="timeline-item highlight"><div class="timeline-date">19:00</div><div class="timeline-title">照明を落とす + 音楽で空気を変える</div></div>
+      <div class="timeline-item highlight">
+        <div class="timeline-date">19:03</div>
+        <div class="timeline-title">メンバー発表（名前のみ）</div>
+        <div class="timeline-desc">スクリーン + WhatsApp + QR — 行動特性・シナジー理由はまだ非表示</div>
+      </div>
+      <div class="timeline-item"><div class="timeline-date">19:05</div><div class="timeline-title">テーブルへ移動 → 自己紹介開始</div></div>
+      <div class="timeline-item"><div class="timeline-date">19:05 - 19:20</div><div class="timeline-title">グループ内ネットワーキング（15分）</div></div>
+      <div class="timeline-item highlight">
+        <div class="timeline-date">19:20</div>
+        <div class="timeline-title">🎉 Reveal! — パワーチーム × 行動特性を公開</div>
+        <div class="timeline-desc">「実はこのグループは○○のパワーチームで、炎×風×大地×水がバランスよく揃っています！」</div>
+      </div>
+      <div class="timeline-item"><div class="timeline-date">19:25〜</div><div class="timeline-title">原沢氏 翻訳AIプラットフォーム紹介（オプション）</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 10. 会場レイアウト -->
+<section>
+  <div class="container">
+    <div class="section-number">10</div>
+    <h2 class="section-title">会場レイアウト</h2>
+    <p class="section-subtitle">22島 → 10グループ（20島）+ セレンディピティ（2島）</p>
     <div class="venue-grid">
-      <!-- Group 1 -->
       <div class="venue-island" style="background:#FFF5F5;border-color:var(--fire);color:var(--fire)"><span class="island-num">1</span>G1</div>
       <div class="venue-island" style="background:#FFF5F5;border-color:var(--fire);color:var(--fire)"><span class="island-num">2</span>G1</div>
-      <!-- Group 2 -->
       <div class="venue-island" style="background:#F0F7FF;border-color:var(--wind);color:var(--wind)"><span class="island-num">3</span>G2</div>
       <div class="venue-island" style="background:#F0F7FF;border-color:var(--wind);color:var(--wind)"><span class="island-num">4</span>G2</div>
-      <!-- Group 3 -->
       <div class="venue-island" style="background:#F0FFF4;border-color:var(--water);color:var(--water)"><span class="island-num">5</span>G3</div>
-      <!-- Group 3 cont + Group 4 -->
       <div class="venue-island" style="background:#F0FFF4;border-color:var(--water);color:var(--water)"><span class="island-num">6</span>G3</div>
       <div class="venue-island" style="background:#FFFDF0;border-color:var(--earth);color:#F57F17"><span class="island-num">7</span>G4</div>
       <div class="venue-island" style="background:#FFFDF0;border-color:var(--earth);color:#F57F17"><span class="island-num">8</span>G4</div>
       <div class="venue-island" style="background:#FFF5F5;border-color:#E91E63;color:#E91E63"><span class="island-num">9</span>G5</div>
       <div class="venue-island" style="background:#FFF5F5;border-color:#E91E63;color:#E91E63"><span class="island-num">10</span>G5</div>
-      <!-- Group 6-10 -->
       <div class="venue-island" style="background:#F3E5F5;border-color:#9C27B0;color:#9C27B0"><span class="island-num">11</span>G6</div>
       <div class="venue-island" style="background:#F3E5F5;border-color:#9C27B0;color:#9C27B0"><span class="island-num">12</span>G6</div>
       <div class="venue-island" style="background:#E0F2F1;border-color:#009688;color:#009688"><span class="island-num">13</span>G7</div>
@@ -1522,40 +824,34 @@
       <div class="venue-island" style="background:#E8EAF6;border-color:#3F51B5;color:#3F51B5"><span class="island-num">18</span>G9</div>
       <div class="venue-island" style="background:#EFEBE9;border-color:#795548;color:#795548"><span class="island-num">19</span>G10</div>
       <div class="venue-island" style="background:#EFEBE9;border-color:#795548;color:#795548"><span class="island-num">20</span>G10</div>
-      <!-- Serendipity -->
       <div class="venue-island" style="background:#FFF8E1;border-color:var(--bni-gold);color:var(--bni-gold);grid-column:span 2"><span class="island-num">21-22</span>✨ セレンディピティ</div>
     </div>
-
     <div class="venue-legend">
-      <div class="venue-legend-item"><div class="venue-legend-dot" style="background:var(--fire)"></div>G1〜G10: AIマッチンググループ</div>
+      <div class="venue-legend-item"><div class="venue-legend-dot" style="background:var(--fire)"></div>G1〜G10: パワーチームグループ</div>
       <div class="venue-legend-item"><div class="venue-legend-dot" style="background:var(--bni-gold)"></div>セレンディピティ: 未回答者グループ</div>
     </div>
   </div>
 </section>
 
-<!-- ============================================
-     10. システム構成
-     ============================================ -->
+<!-- 11. システム構成 -->
 <section>
   <div class="container">
-    <div class="section-number">10</div>
+    <div class="section-number">11</div>
     <h2 class="section-title">システム構成</h2>
     <p class="section-subtitle">Google Workspace内で完結。追加サーバー不要</p>
-
     <div class="architecture">
       <div class="arch-flow">
-        <div class="arch-box input">📋 Googleフォーム<br><small>12問回答</small></div>
+        <div class="arch-box input">📋 Googleフォーム<br><small>10問回答</small></div>
         <div class="arch-arrow">→</div>
-        <div class="arch-box input">📊 スプレッドシート<br><small>回答集約+DISC判定</small></div>
+        <div class="arch-box input">📊 スプレッドシート<br><small>集約+タイプ判定</small></div>
         <div class="arch-arrow">→</div>
         <div class="arch-box process">⚡ GAS<br><small>実行ボタン1つ</small></div>
         <div class="arch-arrow">→</div>
-        <div class="arch-box ai">🤖 Gemini Flash<br><small>10グループ最適配置</small></div>
+        <div class="arch-box ai">🤖 Gemini Flash<br><small>パワーチーム編成</small></div>
       </div>
       <div style="font-size:1.5rem;color:var(--bni-gray);margin:8px 0">↓</div>
       <div class="arch-outputs">
-        <div class="arch-box output">📊 グループ結果<br><small>スプレッドシート</small></div>
-        <div class="arch-box output">📺 スクリーン<br><small>発表アニメーション</small></div>
+        <div class="arch-box output">📺 スクリーン<br><small>発表+Reveal</small></div>
         <div class="arch-box output">📱 電話番号検索<br><small>スマホ / QR</small></div>
         <div class="arch-box output">💬 WhatsApp<br><small>グループ通知</small></div>
       </div>
@@ -1564,192 +860,65 @@
   </div>
 </section>
 
-<!-- ============================================
-     11. 期待効果
-     ============================================ -->
-<section>
-  <div class="container">
-    <div class="section-number">11</div>
-    <h2 class="section-title">期待される効果</h2>
-    <p class="section-subtitle">ランダム配置と比較した改善予測</p>
-
-    <div class="kpi-grid">
-      <div class="kpi-card">
-        <div class="kpi-icon">🔗</div>
-        <div class="kpi-before">ランダム: 10-15%</div>
-        <div class="kpi-value">40-60%</div>
-        <div class="kpi-label">シナジーペア率</div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-icon">📇</div>
-        <div class="kpi-before">ランダム: 2-3枚</div>
-        <div class="kpi-value">5-6枚</div>
-        <div class="kpi-label">有意義な名刺交換/人</div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-icon">⏱️</div>
-        <div class="kpi-before">人力: 3-5時間</div>
-        <div class="kpi-value">5分</div>
-        <div class="kpi-label">席決め所要時間</div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-icon">🎯</div>
-        <div class="kpi-before">ランダム: 偏りあり</div>
-        <div class="kpi-value">全グループ<br><span style="font-size:0.9rem">4タイプ均等</span></div>
-        <div class="kpi-label">行動タイプ多様性</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============================================
-     12. 費用
-     ============================================ -->
+<!-- 12. 期待効果 -->
 <section>
   <div class="container">
     <div class="section-number">12</div>
-    <h2 class="section-title">費用</h2>
-    <p class="section-subtitle">開発コスト + 運用コストの全体像</p>
-
-    <div style="background:var(--bni-white);border-radius:16px;padding:32px;box-shadow:var(--shadow);margin-bottom:32px">
-      <table style="width:100%;border-collapse:collapse;font-size:0.92rem">
-        <thead>
-          <tr style="border-bottom:2px solid var(--bni-red)">
-            <th style="text-align:left;padding:12px 16px;font-weight:700;color:var(--bni-gray-dark)">項目</th>
-            <th style="text-align:left;padding:12px 16px;font-weight:700;color:var(--bni-gray-dark)">内容</th>
-            <th style="text-align:right;padding:12px 16px;font-weight:700;color:var(--bni-gray-dark)">費用</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr style="border-bottom:1px solid #eee">
-            <td style="padding:12px 16px;font-weight:600">AI開発ツール</td>
-            <td style="padding:12px 16px;color:var(--bni-gray)">Claude Code（Anthropic）— AIプログラミングエージェント</td>
-            <td style="padding:12px 16px;text-align:right;font-weight:700">約 ¥30,000</td>
-          </tr>
-          <tr style="border-bottom:1px solid #eee">
-            <td style="padding:12px 16px;font-weight:600">開発環境</td>
-            <td style="padding:12px 16px;color:var(--bni-gray)">Cursor Pro（AIコードエディタ）月額$20</td>
-            <td style="padding:12px 16px;text-align:right;font-weight:700">約 ¥3,000</td>
-          </tr>
-          <tr style="border-bottom:1px solid #eee">
-            <td style="padding:12px 16px;font-weight:600">Gemini API</td>
-            <td style="padding:12px 16px;color:var(--bni-gray)">開発テスト + 本番実行（200名対応で出力トークン増）</td>
-            <td style="padding:12px 16px;text-align:right;font-weight:700">約 ¥2,000</td>
-          </tr>
-          <tr style="border-bottom:1px solid #eee">
-            <td style="padding:12px 16px;font-weight:600">開発人件費</td>
-            <td style="padding:12px 16px;color:var(--bni-gray)">AIラボチーム内で対応（設計+開発+テスト 約10日間）</td>
-            <td style="padding:12px 16px;text-align:right;font-weight:700">チーム内対応</td>
-          </tr>
-          <tr style="background:var(--bni-gray-light)">
-            <td style="padding:14px 16px;font-weight:800;font-size:1rem" colspan="2">開発コスト 合計</td>
-            <td style="padding:14px 16px;text-align:right;font-weight:800;font-size:1.2rem;color:var(--bni-red)">約 ¥35,000</td>
-          </tr>
-        </tbody>
-      </table>
+    <h2 class="section-title">期待される効果</h2>
+    <p class="section-subtitle">ランダム配置と比較した改善予測</p>
+    <div class="kpi-grid">
+      <div class="kpi-card"><div class="kpi-icon">🔗</div><div class="kpi-before">ランダム: 10-15%</div><div class="kpi-value">40-60%</div><div class="kpi-label">シナジーペア率</div></div>
+      <div class="kpi-card"><div class="kpi-icon">📇</div><div class="kpi-before">ランダム: 2-3枚</div><div class="kpi-value">5-6枚</div><div class="kpi-label">有意義な名刺交換/人</div></div>
+      <div class="kpi-card"><div class="kpi-icon">⏱️</div><div class="kpi-before">人力: 3-5時間</div><div class="kpi-value">5分</div><div class="kpi-label">席決め所要時間</div></div>
+      <div class="kpi-card"><div class="kpi-icon">🎉</div><div class="kpi-before">通常: なし</div><div class="kpi-value">Reveal!</div><div class="kpi-label">ゲーム演出</div></div>
     </div>
-
   </div>
 </section>
 
-<!-- ============================================
-     13. スケジュール
-     ============================================ -->
+<!-- 13. スケジュール -->
 <section>
   <div class="container">
     <div class="section-number">13</div>
     <h2 class="section-title">スケジュール</h2>
     <p class="section-subtitle">4/17提案書完成 → 4/25アンケート締切 → 4/27本番</p>
-
     <table class="schedule-table">
-      <thead>
-        <tr>
-          <th style="width:130px">期間</th>
-          <th>マイルストーン</th>
-          <th>詳細</th>
-        </tr>
-      </thead>
+      <thead><tr><th style="width:130px">期間</th><th>マイルストーン</th><th>詳細</th></tr></thead>
       <tbody>
-        <tr>
-          <td class="date-col">4/16 - 4/17</td>
-          <td>提案書修正・デモ準備</td>
-          <td>v2提案書（行動スタイル診断 + 10グループ構成）+ スクリーンデモ更新</td>
-        </tr>
-        <tr class="milestone">
-          <td class="date-col">⭐ 4/18</td>
-          <td><strong>藤本氏デモ・承認</strong></td>
-          <td>大原さん経由で提案書+デモを提示</td>
-        </tr>
-        <tr>
-          <td class="date-col">4/19</td>
-          <td>中川氏最終確認</td>
-          <td>上川さん経由でナショナル最終承認</td>
-        </tr>
-        <tr>
-          <td class="date-col">4/20 - 4/22</td>
-          <td>フォーム作成 + GAS改修</td>
-          <td>Googleフォーム12問（日英）、DISCタイプ判定、グループマッチング</td>
-        </tr>
-        <tr>
-          <td class="date-col">4/22 - 4/23</td>
-          <td>テスト</td>
-          <td>ダミー200名テスト・エッジケース検証</td>
-        </tr>
-        <tr>
-          <td class="date-col">4/20 - 4/25</td>
-          <td>アンケート配信</td>
-          <td>WhatsApp + メールで配信、受付でも案内</td>
-        </tr>
-        <tr class="milestone">
-          <td class="date-col">⭐ 4/25 21:00</td>
-          <td><strong>アンケート回答締切</strong></td>
-          <td>回答データ確定</td>
-        </tr>
-        <tr>
-          <td class="date-col">4/26</td>
-          <td>本番マッチング実行</td>
-          <td>GASワンクリック → セレンディピティ編成 → 結果HTML生成 → WhatsApp/QR準備</td>
-        </tr>
-        <tr class="milestone">
-          <td class="date-col">⭐ 4/27</td>
-          <td><strong>前夜祭本番</strong></td>
-          <td>スクリーン発表 + WhatsApp配信 + 電話番号検索 → グループネットワーキング！</td>
-        </tr>
+        <tr><td class="date-col">4/16 - 4/17</td><td>提案書修正・デモ準備</td><td>v2提案書 + スクリーンデモ更新</td></tr>
+        <tr class="milestone"><td class="date-col">⭐ 4/18</td><td><strong>藤本氏デモ・承認</strong></td><td>大原さん経由で提示</td></tr>
+        <tr><td class="date-col">4/19</td><td>中川氏最終確認</td><td>上川さん経由</td></tr>
+        <tr><td class="date-col">4/20 - 4/22</td><td>フォーム + GAS改修</td><td>Googleフォーム10問（日英）+ マッチングエンジン</td></tr>
+        <tr><td class="date-col">4/22 - 4/23</td><td>テスト</td><td>ダミー200名テスト</td></tr>
+        <tr class="milestone"><td class="date-col">⭐ 4/25 21:00</td><td><strong>アンケート締切</strong></td><td>回答データ確定</td></tr>
+        <tr><td class="date-col">4/26</td><td>本番マッチング</td><td>GASワンクリック → 結果HTML生成</td></tr>
+        <tr class="milestone"><td class="date-col">⭐ 4/27</td><td><strong>前夜祭本番</strong></td><td>メンバー発表 → ネットワーキング → Reveal!</td></tr>
       </tbody>
     </table>
   </div>
 </section>
 
-<!-- ============================================
-     14. 役割分担
-     ============================================ -->
+<!-- 14. 役割分担 -->
 <section>
   <div class="container">
     <div class="section-number">14</div>
     <h2 class="section-title">役割分担</h2>
-    <p class="section-subtitle">AIラボチームとBNI運営の分業体制</p>
-
     <div class="roles-grid">
       <div class="role-card">
         <h4>🤖 AIラボチーム（開発）</h4>
         <ul>
-          <li>アンケートフォーム（Googleフォーム12問・日英）の作成</li>
-          <li>DISC行動タイプ判定エンジンの開発</li>
-          <li>AIグループマッチングエンジンの開発</li>
-          <li>スクリーン表示HTMLの制作</li>
-          <li>電話番号検索HTMLの制作</li>
-          <li>マッチング結果のスプレッドシート出力</li>
-          <li>当日のスクリーン操作サポート</li>
+          <li>Googleフォーム10問（日英）作成</li>
+          <li>行動タイプ判定 + パワーチーム編成エンジン</li>
+          <li>スクリーンHTML（発表+Reveal演出）</li>
+          <li>電話番号検索HTML</li>
+          <li>当日スクリーン操作</li>
         </ul>
       </div>
       <div class="role-card">
         <h4>🏢 BNIナショナル運営</h4>
         <ul>
-          <li>参加者へのWhatsApp配信・催促</li>
-          <li>DISC質問の英語翻訳チェック（横浜チーム）</li>
-          <li>マッチング結果のWhatsApp配信</li>
-          <li>QRコードの準備・設置</li>
-          <li>テーブル番号カード（グループ番号）の設置</li>
+          <li>WhatsApp配信・催促</li>
+          <li>英語翻訳チェック（横浜チーム）</li>
+          <li>QRコード・テーブル番号設置</li>
           <li>受付・案内運用</li>
           <li>会場プロジェクター・Wi-Fi確認</li>
         </ul>
@@ -1758,12 +927,10 @@
   </div>
 </section>
 
-<!-- ============================================
-     CTA
-     ============================================ -->
+<!-- CTA -->
 <footer class="cta">
-  <h2>AIで、前夜祭を最高のネットワーキングに。</h2>
-  <p>200名の行動プロファイル × ビジネスプロファイルをAIが分析し、<br>最もリファーラルが生まれるグループを自動編成します。</p>
+  <h2>AIで、最強のパワーチームを。</h2>
+  <p>200名の業種 × 行動特性をAIが分析し、リファーラルが生まれるグループを自動編成。<br>さらにReveal演出で「なぜこのチームか」を体感してもらいます。</p>
   <div class="footer-credit">AI Connect v2 by BNI AIラボチーム / Powered by Gemini Flash</div>
 </footer>
 
