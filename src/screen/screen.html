@@ -112,6 +112,24 @@
   .table-analysis .flavor { font-size: 0.82rem; color: var(--bni-gold); font-weight: 600; }
   .table-analysis .flavor-desc { font-size: 0.78rem; color: var(--text-dim); margin-top: 2px; }
 
+  /* PC: テーブル2カラム横並び */
+  .tables-row { display: flex; gap: 24px; }
+  .table-col { flex: 1; min-width: 0; }
+  .table-col-header {
+    font-size: 0.85rem; font-weight: 700; color: var(--text-dim);
+    padding: 6px 12px; margin-bottom: 8px;
+    background: rgba(255,255,255,0.03); border-radius: 8px; display: inline-block;
+  }
+
+  /* Revealセクション: PC横並び */
+  .reveal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; }
+
+  @media (max-width: 900px) {
+    .tables-row { flex-direction: column; gap: 16px; }
+    .reveal-grid { grid-template-columns: 1fr; }
+    .presentation-card { padding: 24px 20px; }
+  }
+
   /* 発表モード */
   #presentation-mode {
     display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -119,7 +137,7 @@
   }
   .presentation-card {
     background: var(--card-bg); border-radius: 24px; padding: 40px 48px;
-    max-width: 900px; width: 100%; border: 1px solid var(--border);
+    max-width: 1400px; width: 100%; border: 1px solid var(--border);
     animation: cardIn 0.6s ease-out; position: relative; overflow: hidden;
   }
   .presentation-card::before {
@@ -652,44 +670,39 @@ function renderGroup(index) {
   const isSeren = g._isSerendipity;
   const isRevealed = revealedGroups.has(index);
 
-  // テーブルタブ
-  const tabsHtml = g.tables.length > 1 ? `<div class="table-tabs">
-    ${g.tables.map((t,i)=>`<button class="table-tab ${i===currentTableTab?'active':''}" onclick="switchTableTab(${i})">Table ${t.table_number}</button>`).join('')}
-    <button class="table-tab ${currentTableTab===-1?'active':''}" onclick="switchTableTab(-1)">全員</button>
-  </div>` : '';
-
-  // メンバー（Reveal前: シンプル / Reveal後: フル）
-  let membersHtml;
+  // メンバー（Reveal前: シンプル / Reveal後: フル）— 2カラム横並び
   const renderFn = (isRevealed || isSeren) ? memberHtmlFull : memberHtmlSimple;
-  if (currentTableTab === -1) {
-    membersHtml = g.tables.map(t =>
-      `<div class="table-divider">Table ${t.table_number}</div>` +
-      t.members.map(m => renderFn(m)).join('')
-    ).join('');
-  } else {
-    const table = g.tables[currentTableTab] || g.tables[0];
-    membersHtml = table.members.map(m => renderFn(m)).join('');
-  }
+  const membersHtml = g.tables.length > 1
+    ? `<div class="tables-row">${g.tables.map(t => `<div class="table-col">
+        <div class="table-col-header">Table ${t.table_number}（${t.members.length}名）</div>
+        <div class="member-list">${t.members.map(m => renderFn(m)).join('')}</div>
+      </div>`).join('')}</div>`
+    : `<div class="member-list">${g.tables[0].members.map(m => renderFn(m)).join('')}</div>`;
 
   // Revealセクション（非公開→ボタンクリックで表示）
   const revealSectionHtml = isSeren ? '' : `
     <button class="reveal-btn ${isRevealed?'revealed':''}" id="reveal-btn-${index}" onclick="revealGroup(${index})">🎉 Reveal! — このグループの秘密を公開</button>
     <div class="reveal-section ${isRevealed?'revealed':''}" id="reveal-section-${index}">
       ${g.disc_balance ? discBarHtml(g.disc_balance) : ''}
-      ${g.disc_balance ? discDetailHtml(g.disc_balance) : ''}
-      <div class="synergy-box">
-        <h4>🏆 パワーチーム: ${g.group_name}</h4>
-        <p>${g.synergy_reason || ''}</p>
+      <div class="reveal-grid">
+        <div>
+          ${g.disc_balance ? discDetailHtml(g.disc_balance) : ''}
+        </div>
+        <div>
+          <div class="synergy-box">
+            <h4>🏆 パワーチーム: ${g.group_name}</h4>
+            <p>${g.synergy_reason || ''}</p>
+          </div>
+          ${tableAnalysisHtml(g.tables)}
+        </div>
       </div>
-      ${tableAnalysisHtml(g.tables)}
     </div>
   `;
 
   container.innerHTML = `<div class="presentation-card ${isSeren?'serendipity':''}" id="pcard-${index}">
     <div class="group-number">${isSeren ? '✨' : 'Group '+g.group_number}</div>
     <div class="group-name">${isSeren ? g.group_name : (isRevealed ? g.group_name : '???')}</div>
-    ${tabsHtml}
-    <div class="member-list">${membersHtml}</div>
+    ${membersHtml}
     ${isSeren ? `<div class="synergy-box"><p>${g.synergy_reason}</p></div>` : ''}
     ${revealSectionHtml}
   </div>`;
