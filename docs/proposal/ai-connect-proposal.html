@@ -489,14 +489,14 @@
   <div class="container">
     <div class="section-number">2</div>
     <h2 class="section-title">AI Connect とは</h2>
-    <p class="section-subtitle">アンケート10問 × AI分析で、パワーチームを自動編成。さらに行動特性で多様性を最大化</p>
+    <p class="section-subtitle">アンケート9問 × AI分析で、パワーチームを自動編成。さらに行動特性で多様性を最大化</p>
 
     <div class="flow">
       <div class="flow-step">
         <div class="step-num">1</div>
         <div class="step-icon">📋</div>
         <h4>事前アンケート</h4>
-        <p>Googleフォーム<br>10問・約4分</p>
+        <p>Googleフォーム<br>9問・約4分</p>
       </div>
       <div class="flow-arrow">→</div>
       <div class="flow-step">
@@ -582,15 +582,25 @@
   <div class="container">
     <div class="section-number">4</div>
     <h2 class="section-title">アンケート設計</h2>
-    <p class="section-subtitle">10問の回答からAIがパワーチーム＋行動プロファイルを構築</p>
+    <p class="section-subtitle">9問の回答からAIがパワーチーム＋行動プロファイルを構築</p>
 
-    <h3 style="font-size:1.05rem;font-weight:700;margin-bottom:12px">基本情報（3問）</h3>
+    <h3 style="font-size:1.05rem;font-weight:700;margin-bottom:12px">基本情報（4問）</h3>
     <table class="survey-table">
       <thead><tr><th style="width:60px">No.</th><th>質問</th><th style="width:110px">形式</th><th>活用</th></tr></thead>
       <tbody>
         <tr><td class="q-num">Q1</td><td>氏名 / Name</td><td><span class="badge badge-text">記述</span></td><td class="survey-purpose">参加者識別</td></tr>
         <tr><td class="q-num">Q2</td><td>チャプター名 / Chapter</td><td><span class="badge badge-text">記述</span></td><td class="survey-purpose">同チャプター分散</td></tr>
-        <tr><td class="q-num">Q3</td><td>電話番号 / Phone<br><span style="font-size:0.82rem;color:#888">国番号含む</span></td><td><span class="badge badge-text">記述</span></td><td class="survey-purpose">結果検索キー・重複チェック</td></tr>
+        <tr><td class="q-num">Q3</td><td>カテゴリー名 / Category<br><span style="font-size:0.82rem;color:#888">例：「業務自動化のAI顧問」「富裕層向け相続対策の生命保険」</span></td><td><span class="badge badge-text">記述</span></td><td class="survey-purpose">AIが補完関係を発見</td></tr>
+        <tr><td class="q-num">Q4</td><td>電話番号 / Phone<br><span style="font-size:0.82rem;color:#888">国番号含む（例: 090-xxxx-xxxx）</span></td><td><span class="badge badge-text">記述</span></td><td class="survey-purpose">結果検索キー・重複チェック</td></tr>
+      </tbody>
+    </table>
+
+    <h3 style="font-size:1.05rem;font-weight:700;margin-top:36px;margin-bottom:12px">ビジネス情報（2問）</h3>
+    <table class="survey-table">
+      <thead><tr><th style="width:60px">No.</th><th>質問</th><th style="width:110px">形式</th><th>活用</th></tr></thead>
+      <tbody>
+        <tr><td class="q-num">Q5</td><td><strong>業種</strong>（50業種・10大分類）</td><td><span class="badge badge-select">プルダウン</span></td><td class="survey-purpose">パワーチーム編成の主軸</td></tr>
+        <tr><td class="q-num">Q6</td><td><strong>ターゲット顧客層</strong>（最大3つ）</td><td><span class="badge badge-check">チェック</span></td><td class="survey-purpose">同顧客層の異業種マッチング</td></tr>
       </tbody>
     </table>
 
@@ -598,22 +608,44 @@
     <table class="survey-table">
       <thead><tr><th style="width:60px">No.</th><th>質問</th><th style="width:110px">形式</th><th>判定</th></tr></thead>
       <tbody>
-        <tr class="disc-row"><td class="q-num">Q4</td><td>ビジネスで最もワクワクする瞬間は？<br><span style="font-size:0.8rem;color:#888">When do you feel most excited in business?</span></td><td><span class="badge badge-radio">4択</span></td><td class="survey-purpose">🔥炎 / 🌀風 / 🌿大地 / 💧水</td></tr>
-        <tr class="disc-row"><td class="q-num">Q5</td><td>壁にぶつかった時あなたは？<br><span style="font-size:0.8rem;color:#888">When you hit a wall, you:</span></td><td><span class="badge badge-radio">4択</span></td><td class="survey-purpose">行動スタイル傾向</td></tr>
-        <tr class="disc-row"><td class="q-num">Q6</td><td>あなたを一言で表すなら？<br><span style="font-size:0.8rem;color:#888">In one word, you are:</span></td><td><span class="badge badge-radio">4択</span></td><td class="survey-purpose">行動スタイル傾向</td></tr>
+        <tr class="disc-row"><td class="q-num">Q7</td><td>ビジネスで最もワクワクする瞬間は？<br><span style="font-size:0.8rem;color:#888">When do you feel most excited in business?</span></td><td><span class="badge badge-radio">4択</span></td><td class="survey-purpose">🔥炎 / 🌀風 / 🌿大地 / 💧水</td></tr>
+        <tr class="disc-row"><td class="q-num">Q8</td><td>壁にぶつかった時あなたは？<br><span style="font-size:0.8rem;color:#888">When you hit a wall, you:</span></td><td><span class="badge badge-radio">4択</span></td><td class="survey-purpose">🔥炎 / 🌀風 / 🌿大地 / 💧水</td></tr>
+        <tr class="disc-row"><td class="q-num">Q9</td><td>あなたを一言で表すなら？<br><span style="font-size:0.8rem;color:#888">In one word, you are:</span></td><td><span class="badge badge-radio">4択</span></td><td class="survey-purpose">🔥炎 / 🌀風 / 🌿大地 / 💧水</td></tr>
       </tbody>
     </table>
 
-    <h3 style="font-size:1.05rem;font-weight:700;margin-top:36px;margin-bottom:12px">ビジネス情報（4問）</h3>
-    <table class="survey-table">
-      <thead><tr><th style="width:60px">No.</th><th>質問</th><th style="width:110px">形式</th><th>活用</th></tr></thead>
-      <tbody>
-        <tr><td class="q-num">Q7</td><td><strong>業種</strong>（50業種・10大分類）</td><td><span class="badge badge-select">プルダウン</span></td><td class="survey-purpose">パワーチーム編成の主軸</td></tr>
-        <tr><td class="q-num">Q8</td><td><strong>専門分野の詳細</strong><br><span style="font-size:0.82rem;color:#888">例：「富裕層向け相続対策の生命保険」</span></td><td><span class="badge badge-text">自由入力</span></td><td class="survey-purpose">AIが補完関係を発見</td></tr>
-        <tr><td class="q-num">Q9</td><td><strong>ターゲット顧客層</strong>（最大3つ）</td><td><span class="badge badge-check">チェック</span></td><td class="survey-purpose">同顧客層の異業種マッチング</td></tr>
-        <tr><td class="q-num">Q10</td><td><strong>紹介してほしい業種</strong>（最大3つ）</td><td><span class="badge badge-check">チェック</span></td><td class="survey-purpose">需要 × 供給マッチング</td></tr>
-      </tbody>
-    </table>
+    <!-- 行動スタイル診断の選択肢詳細 -->
+    <h3 style="font-size:1.15rem;font-weight:700;margin-top:48px;margin-bottom:16px;color:var(--bni-gray-dark)">行動スタイル診断 — 選択肢の詳細</h3>
+
+    <div style="background:var(--bni-white);border-radius:16px;padding:24px;box-shadow:var(--shadow);margin-bottom:20px">
+      <h4 style="font-size:0.95rem;font-weight:700;color:var(--bni-red);margin-bottom:12px">Q7. ビジネスで最もワクワクする瞬間は？</h4>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div style="padding:10px 14px;border-radius:10px;background:#FFF5F5;border-left:3px solid var(--fire);font-size:0.85rem"><strong>A.</strong> 大きな決断を下し即座に行動に移すとき → <strong style="color:var(--fire)">🔥 炎</strong></div>
+        <div style="padding:10px 14px;border-radius:10px;background:#F0F7FF;border-left:3px solid var(--wind);font-size:0.85rem"><strong>B.</strong> 新しい人と出会いアイデアを語り合うとき → <strong style="color:var(--wind)">🌀 風</strong></div>
+        <div style="padding:10px 14px;border-radius:10px;background:#FFFDF0;border-left:3px solid var(--earth);font-size:0.85rem"><strong>C.</strong> チームが一丸となって着実に成果を出すとき → <strong style="color:#F57F17">🌿 大地</strong></div>
+        <div style="padding:10px 14px;border-radius:10px;background:#F0FFF4;border-left:3px solid var(--water);font-size:0.85rem"><strong>D.</strong> データを分析して最適な戦略を見つけたとき → <strong style="color:var(--water)">💧 水</strong></div>
+      </div>
+    </div>
+
+    <div style="background:var(--bni-white);border-radius:16px;padding:24px;box-shadow:var(--shadow);margin-bottom:20px">
+      <h4 style="font-size:0.95rem;font-weight:700;color:var(--bni-red);margin-bottom:12px">Q8. 壁にぶつかった時あなたは？</h4>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div style="padding:10px 14px;border-radius:10px;background:#FFF5F5;border-left:3px solid var(--fire);font-size:0.85rem"><strong>A.</strong> 自分で判断して突き進む → <strong style="color:var(--fire)">🔥 炎</strong></div>
+        <div style="padding:10px 14px;border-radius:10px;background:#F0F7FF;border-left:3px solid var(--wind);font-size:0.85rem"><strong>B.</strong> 周りに相談してエネルギーをもらう → <strong style="color:var(--wind)">🌀 風</strong></div>
+        <div style="padding:10px 14px;border-radius:10px;background:#FFFDF0;border-left:3px solid var(--earth);font-size:0.85rem"><strong>C.</strong> 状況を見守りタイミングを待つ → <strong style="color:#F57F17">🌿 大地</strong></div>
+        <div style="padding:10px 14px;border-radius:10px;background:#F0FFF4;border-left:3px solid var(--water);font-size:0.85rem"><strong>D.</strong> 原因を徹底分析してから動く → <strong style="color:var(--water)">💧 水</strong></div>
+      </div>
+    </div>
+
+    <div style="background:var(--bni-white);border-radius:16px;padding:24px;box-shadow:var(--shadow)">
+      <h4 style="font-size:0.95rem;font-weight:700;color:var(--bni-red);margin-bottom:12px">Q9. あなたを一言で表すなら？</h4>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div style="padding:10px 14px;border-radius:10px;background:#FFF5F5;border-left:3px solid var(--fire);font-size:0.85rem"><strong>A.</strong> 挑戦者 / Challenger → <strong style="color:var(--fire)">🔥 炎</strong></div>
+        <div style="padding:10px 14px;border-radius:10px;background:#F0F7FF;border-left:3px solid var(--wind);font-size:0.85rem"><strong>B.</strong> ムードメーカー / Energizer → <strong style="color:var(--wind)">🌀 風</strong></div>
+        <div style="padding:10px 14px;border-radius:10px;background:#FFFDF0;border-left:3px solid var(--earth);font-size:0.85rem"><strong>C.</strong> 縁の下の力持ち / Supporter → <strong style="color:#F57F17">🌿 大地</strong></div>
+        <div style="padding:10px 14px;border-radius:10px;background:#F0FFF4;border-left:3px solid var(--water);font-size:0.85rem"><strong>D.</strong> 分析家 / Analyst → <strong style="color:var(--water)">💧 水</strong></div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -629,7 +661,7 @@
         <div class="rule-priority gold">1</div>
         <div>
           <h4>🤝 パワーチーム編成（最重要）</h4>
-          <p>紹介希望業種 × 実業種のマッチ、同じ顧客層を持つ異業種同士、専門分野の補完関係をAIが発見。<strong>「このグループならリファーラルが生まれる」</strong>組み合わせを最優先で編成</p>
+          <p>同じ顧客層を持つ異業種同士、カテゴリー名から読み取れる専門分野の補完関係をAIが発見。<strong>「このグループならリファーラルが生まれる」</strong>組み合わせを最優先で編成</p>
         </div>
       </div>
       <div class="rule-card">
@@ -841,7 +873,7 @@
     <p class="section-subtitle">Google Workspace内で完結。追加サーバー不要</p>
     <div class="architecture">
       <div class="arch-flow">
-        <div class="arch-box input">📋 Googleフォーム<br><small>10問回答</small></div>
+        <div class="arch-box input">📋 Googleフォーム<br><small>9問回答</small></div>
         <div class="arch-arrow">→</div>
         <div class="arch-box input">📊 スプレッドシート<br><small>集約+タイプ判定</small></div>
         <div class="arch-arrow">→</div>
@@ -852,10 +884,24 @@
       <div style="font-size:1.5rem;color:var(--bni-gray);margin:8px 0">↓</div>
       <div class="arch-outputs">
         <div class="arch-box output">📺 スクリーン<br><small>発表+Reveal</small></div>
-        <div class="arch-box output">📱 電話番号検索<br><small>スマホ / QR</small></div>
+        <div class="arch-box output">📱 グループ検索<br><small>名前 or 電話番号</small></div>
         <div class="arch-box output">💬 WhatsApp<br><small>グループ通知</small></div>
       </div>
       <p class="arch-note">※ ワンクリックで再マッチング可能（キャンセル・追加時も5分で対応）</p>
+    </div>
+
+    <h3 style="font-size:1.15rem;font-weight:700;margin-top:48px;margin-bottom:16px;color:var(--bni-gray-dark)">QRコード読取後の体験フロー</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+      <div style="background:var(--bni-white);border-radius:16px;padding:28px;box-shadow:var(--shadow);border-top:4px solid var(--bni-red);text-align:center">
+        <div style="font-size:2rem;margin-bottom:8px">📋</div>
+        <h4 style="font-size:1rem;font-weight:700;margin-bottom:8px;color:var(--bni-red)">まだ回答していない方</h4>
+        <p style="font-size:0.88rem;color:var(--bni-gray)">Googleフォームへ遷移し<br>9問のアンケートに回答</p>
+      </div>
+      <div style="background:var(--bni-white);border-radius:16px;padding:28px;box-shadow:var(--shadow);border-top:4px solid var(--bni-gold);text-align:center">
+        <div style="font-size:2rem;margin-bottom:8px">🔍</div>
+        <h4 style="font-size:1rem;font-weight:700;margin-bottom:8px;color:var(--bni-gold)">回答済みの方</h4>
+        <p style="font-size:0.88rem;color:var(--bni-gray)">名前 or 電話番号を入力して<br>自分のグループをすぐ確認</p>
+      </div>
     </div>
   </div>
 </section>
@@ -887,7 +933,7 @@
         <tr><td class="date-col">4/16 - 4/17</td><td>提案書修正・デモ準備</td><td>v2提案書 + スクリーンデモ更新</td></tr>
         <tr class="milestone"><td class="date-col">⭐ 4/18</td><td><strong>藤本氏デモ・承認</strong></td><td>大原さん経由で提示</td></tr>
         <tr><td class="date-col">4/19</td><td>中川氏最終確認</td><td>上川さん経由</td></tr>
-        <tr><td class="date-col">4/20 - 4/22</td><td>フォーム + GAS改修</td><td>Googleフォーム10問（日英）+ マッチングエンジン</td></tr>
+        <tr><td class="date-col">4/20 - 4/22</td><td>フォーム + GAS改修</td><td>Googleフォーム9問（日英）+ マッチングエンジン</td></tr>
         <tr><td class="date-col">4/22 - 4/23</td><td>テスト</td><td>ダミー200名テスト</td></tr>
         <tr class="milestone"><td class="date-col">⭐ 4/25 21:00</td><td><strong>アンケート締切</strong></td><td>回答データ確定</td></tr>
         <tr><td class="date-col">4/26</td><td>本番マッチング</td><td>GASワンクリック → 結果HTML生成</td></tr>
@@ -906,7 +952,7 @@
       <div class="role-card">
         <h4>🤖 AIラボチーム（開発）</h4>
         <ul>
-          <li>Googleフォーム10問（日英）作成</li>
+          <li>Googleフォーム9問（日英）作成</li>
           <li>行動タイプ判定 + パワーチーム編成エンジン</li>
           <li>スクリーンHTML（発表+Reveal演出）</li>
           <li>電話番号検索HTML</li>

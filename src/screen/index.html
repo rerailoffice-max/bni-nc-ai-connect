@@ -319,7 +319,7 @@
 
   <!-- 検索モード -->
   <div id="search-mode">
-    <input class="search-box" id="search-input" type="tel" placeholder="電話番号を入力 / Enter phone number..." oninput="searchByPhone()">
+    <input class="search-box" id="search-input" type="text" placeholder="名前 or 電話番号を入力 / Enter name or phone..." oninput="searchByNameOrPhone()">
     <div class="search-result" id="search-result"></div>
     <div class="no-result" id="no-result">該当する参加者が見つかりません / No participant found</div>
   </div>
@@ -637,18 +637,26 @@ function buildListView() {
   }).join('');
 }
 
-// ===== 検索モード =====
-function searchByPhone() {
-  const q = document.getElementById('search-input').value.trim().replace(/[-\s+]/g,'');
+// ===== 検索モード（名前 or 電話番号） =====
+function searchByNameOrPhone() {
+  const raw = document.getElementById('search-input').value.trim();
   const res = document.getElementById('search-result');
   const noRes = document.getElementById('no-result');
-  if (!q || q.length<3) { res.classList.remove('visible'); noRes.style.display='none'; return; }
+  if (!raw || raw.length < 2) { res.classList.remove('visible'); noRes.style.display='none'; return; }
+
+  // 数字が多ければ電話番号検索、そうでなければ名前検索
+  const digitsOnly = raw.replace(/[-\s+]/g,'');
+  const isPhone = /^\d{3,}$/.test(digitsOnly);
 
   let found = null;
   for (const g of getAllGroups()) {
     for (const t of g.tables) {
       for (const m of t.members) {
-        if (m.phone && m.phone.includes(q)) { found = {group:g, table:t, member:m}; break; }
+        if (isPhone) {
+          if (m.phone && m.phone.includes(digitsOnly)) { found = {group:g, table:t, member:m}; break; }
+        } else {
+          if (m.name && m.name.includes(raw)) { found = {group:g, table:t, member:m}; break; }
+        }
       }
       if (found) break;
     }
@@ -660,7 +668,7 @@ function searchByPhone() {
     const isSeren = found.group._isSerendipity;
     const allMembers = found.group.tables.map(t =>
       `<div class="table-divider">Table ${t.table_number}</div>` +
-      t.members.map(m => memberHtmlFull(m, {highlight: m.phone===found.member.phone})).join('')
+      t.members.map(m => memberHtmlFull(m, {highlight: m.id===found.member.id})).join('')
     ).join('');
 
     res.innerHTML = `
