@@ -418,6 +418,11 @@
   <div class="nav-info" id="nav-info"></div>
 </nav>
 
+<!-- QRコード フローティング表示 -->
+<div id="qr-float" style="position:fixed;bottom:20px;right:20px;z-index:50;background:rgba(27,29,36,0.95);border:1px solid #2A2D38;border-radius:16px;padding:12px;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,0.4);cursor:pointer" onclick="toggleQR()">
+  <img id="qr-img" src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://rerailoffice-max.github.io/bni-nc-ai-connect/src/screen/landing.html&bgcolor=1B1D24&color=EAEAEA" width="120" height="120" style="border-radius:8px;display:block">
+  <div style="font-size:0.65rem;color:#8B8FA0;margin-top:6px">Scan to join / QRで参加</div>
+</div>
 <canvas id="confetti-canvas"></canvas>
 <div class="countdown-overlay" id="countdown-overlay"><div class="countdown-number" id="countdown-num"></div></div>
 <div class="main">
@@ -961,6 +966,23 @@ function launchConfetti(duration) {
     else ctx2d.clearRect(0, 0, canvas.width, canvas.height);
   }
   requestAnimationFrame(draw);
+}
+
+// ===== QRコード トグル =====
+let qrExpanded = false;
+function toggleQR() {
+  const el = document.getElementById('qr-float');
+  const img = document.getElementById('qr-img');
+  qrExpanded = !qrExpanded;
+  if (qrExpanded) {
+    img.src = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://rerailoffice-max.github.io/bni-nc-ai-connect/src/screen/landing.html&bgcolor=1B1D24&color=EAEAEA';
+    img.width = 300; img.height = 300;
+    el.style.bottom = '50%'; el.style.right = '50%'; el.style.transform = 'translate(50%,50%)';
+  } else {
+    img.src = 'https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://rerailoffice-max.github.io/bni-nc-ai-connect/src/screen/landing.html&bgcolor=1B1D24&color=EAEAEA';
+    img.width = 120; img.height = 120;
+    el.style.bottom = '20px'; el.style.right = '20px'; el.style.transform = 'none';
+  }
 }
 
 // ===== 検索モード（名前 or 電話番号） =====
