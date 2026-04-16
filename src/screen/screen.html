@@ -558,7 +558,12 @@ function startPresentation() {
   document.getElementById('welcome').style.display = 'none';
   document.getElementById('presentation-content').style.display = 'block';
   currentGroupIndex = 0; currentTableTab = 0;
-  renderGroup(currentGroupIndex);
+  // 最初のグループも演出付きで表示
+  showCountdown(() => {
+    playSound('reveal');
+    launchConfetti(2000);
+    renderGroup(currentGroupIndex);
+  });
 }
 
 function renderGroup(index) {
