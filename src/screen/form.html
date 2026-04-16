@@ -21,7 +21,6 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  /* ヘッダー */
   .header {
     text-align: center; padding: 36px 20px 24px;
     background: linear-gradient(180deg, rgba(207,32,48,0.08) 0%, transparent 60%);
@@ -33,10 +32,8 @@
   }
   .header p { color: var(--text-dim); margin-top: 6px; font-size: 0.85rem; }
 
-  /* フォームコンテナ */
   .form-container { width: 100%; max-width: 520px; margin: 0 auto; padding: 0 16px 48px; }
 
-  /* セクション */
   .section {
     margin-bottom: 20px; background: var(--card); border-radius: 20px;
     padding: 24px 20px; border: 1px solid var(--border);
@@ -46,78 +43,49 @@
     letter-spacing: 0.12em; margin-bottom: 20px;
   }
 
-  /* フィールド */
   .field { margin-bottom: 16px; }
   .field:last-child { margin-bottom: 0; }
-  .field-label {
-    display: block; font-size: 0.82rem; font-weight: 600; margin-bottom: 8px;
-  }
+  .field-label { display: block; font-size: 0.82rem; font-weight: 600; margin-bottom: 8px; }
   .field-label .sub { color: var(--text-dim); font-weight: 400; font-size: 0.75rem; margin-left: 4px; }
   .field-label .req { color: var(--accent); margin-left: 2px; }
 
-  input[type="text"], input[type="tel"] {
+  input[type="text"], input[type="tel"], select {
     width: 100%; padding: 14px 16px; background: var(--input-bg);
     border: 1px solid var(--border); border-radius: 12px;
     color: var(--text); font-size: 0.95rem; outline: none;
     transition: border-color 0.2s, box-shadow 0.2s;
+    -webkit-appearance: none; appearance: none;
   }
-  input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+  input:focus, select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
   input::placeholder { color: var(--text-muted); }
+  select {
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238B8FA0' stroke-width='2' fill='none'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 16px center; padding-right: 40px;
+  }
+  select option { background: var(--card); color: var(--text); }
 
-  /* ===== 業種選択 ===== */
-  .ind-section { margin-bottom: 4px; }
-  .ind-tabs {
-    display: flex; gap: 6px; overflow-x: auto; padding: 4px 0 12px;
-    -webkit-overflow-scrolling: touch; scrollbar-width: none;
-  }
-  .ind-tabs::-webkit-scrollbar { display: none; }
-  .ind-tab {
-    padding: 8px 16px; border-radius: 10px; border: 1px solid var(--border);
-    background: var(--input-bg); color: var(--text-dim); font-size: 0.78rem; font-weight: 600;
-    cursor: pointer; white-space: nowrap; transition: all 0.2s; flex-shrink: 0;
-  }
-  .ind-tab:hover { border-color: var(--border-light); color: var(--text); }
-  .ind-tab.active { background: var(--accent); color: #fff; border-color: var(--accent); }
-
-  .ind-grid {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px;
-  }
-  .ind-item {
-    padding: 12px; border-radius: 10px; border: 1px solid var(--border);
-    background: var(--input-bg); color: var(--text-dim); font-size: 0.82rem;
-    cursor: pointer; transition: all 0.2s; text-align: center; font-weight: 500;
-  }
-  .ind-item:hover { border-color: var(--border-light); color: var(--text); background: var(--card-raised); }
-  .ind-item.selected {
-    border-color: var(--accent); background: var(--accent-glow); color: var(--accent); font-weight: 700;
-  }
-  .ind-item.hidden { display: none; }
-  .ind-chosen {
-    margin-top: 12px; padding: 10px 16px; border-radius: 10px; font-size: 0.85rem;
-    background: var(--accent-glow); color: var(--accent); font-weight: 600; display: none;
-    border: 1px solid rgba(207,32,48,0.2);
-  }
-  .ind-chosen.visible { display: flex; align-items: center; gap: 8px; }
-  .ind-chosen .x {
-    margin-left: auto; cursor: pointer; opacity: 0.6; font-size: 0.9rem;
-  }
-  .ind-chosen .x:hover { opacity: 1; }
+  /* ===== 業種: 2段階セレクト ===== */
+  .ind-step { margin-bottom: 12px; }
+  .ind-step label { font-size: 0.78rem; color: var(--text-dim); display: block; margin-bottom: 6px; }
 
   /* ===== ターゲット顧客 ===== */
-  .target-grid {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
-  }
+  .target-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
   .target-chip {
-    display: flex; align-items: center; justify-content: center; gap: 6px;
-    padding: 12px 10px; border-radius: 10px; border: 1px solid var(--border);
-    background: var(--input-bg); color: var(--text-dim); font-size: 0.8rem; font-weight: 500;
-    cursor: pointer; transition: all 0.2s; text-align: center;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 14px 10px; border-radius: 12px; border: 1px solid var(--border);
+    background: var(--input-bg); cursor: pointer; transition: all 0.2s; text-align: center; gap: 2px;
   }
   .target-chip input { display: none; }
-  .target-chip:hover { border-color: var(--border-light); color: var(--text); }
+  .target-chip .ja { font-size: 0.82rem; font-weight: 500; color: var(--text-dim); }
+  .target-chip .en { font-size: 0.68rem; color: var(--text-muted); }
+  .target-chip:hover { border-color: var(--border-light); }
+  .target-chip:hover .ja { color: var(--text); }
   .target-chip.checked {
-    border-color: var(--gold); background: var(--gold-glow); color: var(--gold); font-weight: 700;
+    border-color: var(--gold); background: var(--gold-glow);
   }
+  .target-chip.checked .ja { color: var(--gold); font-weight: 700; }
+  .target-chip.checked .en { color: var(--gold); opacity: 0.7; }
   .target-hint { font-size: 0.72rem; color: var(--text-muted); margin-bottom: 10px; }
 
   /* ===== DISC診断 ===== */
@@ -147,7 +115,6 @@
   .disc-card.sel-water { border-color: var(--water); background: rgba(69,179,107,0.08); }
   .disc-card.sel-water .ja { color: var(--water); }
 
-  /* 送信ボタン */
   .submit-btn {
     width: 100%; padding: 18px; border-radius: 14px; border: none; margin-top: 4px;
     background: linear-gradient(135deg, var(--accent), var(--accent-dark));
@@ -157,30 +124,17 @@
   .submit-btn:hover { opacity: 0.92; }
   .submit-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
-  /* メッセージ */
-  .msg {
-    padding: 14px 16px; border-radius: 12px; margin-bottom: 16px; display: none; font-size: 0.85rem;
-  }
-  .msg.error {
-    display: block; background: rgba(207,32,48,0.1); border: 1px solid rgba(207,32,48,0.2);
-    color: #FF6B7A;
-  }
+  .msg { padding: 14px 16px; border-radius: 12px; margin-bottom: 16px; display: none; font-size: 0.85rem; }
+  .msg.error { display: block; background: rgba(207,32,48,0.1); border: 1px solid rgba(207,32,48,0.2); color: #FF6B7A; }
 
-  /* ローディング */
   .loading { display: none; text-align: center; padding: 48px 20px; }
   .loading.active { display: block; }
-  .spinner {
-    width: 36px; height: 36px; border: 3px solid var(--border);
-    border-top-color: var(--accent); border-radius: 50%;
-    animation: spin 0.8s linear infinite; margin: 0 auto 14px;
-  }
+  .spinner { width: 36px; height: 36px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 14px; }
   @keyframes spin { to { transform: rotate(360deg); } }
   .loading p { color: var(--text-dim); font-size: 0.88rem; }
 
-  /* モバイル調整 */
   @media (max-width: 420px) {
     .disc-grid { grid-template-columns: 1fr; }
-    .ind-grid { grid-template-columns: 1fr 1fr; }
     .target-grid { grid-template-columns: 1fr; }
   }
 </style>
@@ -210,40 +164,62 @@
       </div>
       <div class="field">
         <label class="field-label">カテゴリー <span class="sub">/ Category</span><span class="req">*</span></label>
-        <input type="text" name="category" placeholder="業務自動化のAI顧問" required>
+        <input type="text" name="category" placeholder="業務自動化のAI顧問 / AI Consultant" required>
       </div>
       <div class="field">
         <label class="field-label">電話番号 <span class="sub">/ Phone</span><span class="req">*</span></label>
-        <input type="tel" name="phone" placeholder="090-1234-5678" required>
+        <input type="tel" name="phone" placeholder="090-1234-5678 / +81-90-1234-5678" required>
       </div>
     </div>
 
-    <!-- 業種 -->
+    <!-- 業種（2段階セレクト） -->
     <div class="section">
       <div class="section-label">Industry</div>
-      <label class="field-label">業種を選択 <span class="sub">/ Select your industry</span><span class="req">*</span></label>
-      <input type="hidden" name="industry" id="ind-val" required>
-      <div class="ind-tabs" id="ind-tabs"></div>
-      <div class="ind-grid" id="ind-grid"></div>
-      <div class="ind-chosen" id="ind-chosen"><span id="ind-chosen-text"></span><span class="x" onclick="clearIndustry()">&times;</span></div>
+      <div class="field">
+        <label class="field-label">業種 <span class="sub">/ Select your industry</span><span class="req">*</span></label>
+
+        <div class="ind-step">
+          <label>Step 1: 業種カテゴリー / Industry Category</label>
+          <select id="ind-cat" onchange="onCatChange()">
+            <option value="">選択してください / Select category...</option>
+            <option value="建設・不動産">建設・不動産 / Construction & Real Estate</option>
+            <option value="IT・デジタル">IT・デジタル / IT & Digital</option>
+            <option value="士業・コンサル">士業・コンサル / Professional Services</option>
+            <option value="金融・保険">金融・保険 / Finance & Insurance</option>
+            <option value="美容・健康">美容・健康 / Beauty & Health</option>
+            <option value="飲食・食品">飲食・食品 / Food & Beverage</option>
+            <option value="教育・研修">教育・研修 / Education & Training</option>
+            <option value="クリエイティブ">クリエイティブ / Creative</option>
+            <option value="生活サービス">生活サービス / Lifestyle Services</option>
+            <option value="その他">その他 / Other</option>
+          </select>
+        </div>
+
+        <div class="ind-step" id="ind-detail-step" style="display:none">
+          <label>Step 2: 詳細業種 / Specific Industry</label>
+          <select id="ind-detail" name="industry">
+            <option value="">選択してください / Select industry...</option>
+          </select>
+        </div>
+      </div>
     </div>
 
-    <!-- ターゲット -->
+    <!-- ターゲット顧客 -->
     <div class="section">
       <div class="section-label">Target Customers</div>
       <label class="field-label">ターゲット顧客層<span class="req">*</span></label>
       <p class="target-hint">最大3つまで選択 / Select up to 3</p>
-      <div class="target-grid" id="tgt-grid">
-        <label class="target-chip" onclick="tgtToggle(this)"><input type="checkbox" name="tgt" value="個人（一般消費者）">個人（消費者）</label>
-        <label class="target-chip" onclick="tgtToggle(this)"><input type="checkbox" name="tgt" value="個人事業主・フリーランス">個人事業主</label>
-        <label class="target-chip" onclick="tgtToggle(this)"><input type="checkbox" name="tgt" value="中小企業（従業員30名以下）">中小企業</label>
-        <label class="target-chip" onclick="tgtToggle(this)"><input type="checkbox" name="tgt" value="中堅企業（従業員31-300名）">中堅企業</label>
-        <label class="target-chip" onclick="tgtToggle(this)"><input type="checkbox" name="tgt" value="大企業（従業員301名以上）">大企業</label>
-        <label class="target-chip" onclick="tgtToggle(this)"><input type="checkbox" name="tgt" value="飲食・小売店舗">飲食・小売</label>
-        <label class="target-chip" onclick="tgtToggle(this)"><input type="checkbox" name="tgt" value="医療・福祉施設">医療・福祉</label>
-        <label class="target-chip" onclick="tgtToggle(this)"><input type="checkbox" name="tgt" value="不動産オーナー">不動産オーナー</label>
-        <label class="target-chip" onclick="tgtToggle(this)"><input type="checkbox" name="tgt" value="富裕層・高所得者">富裕層</label>
-        <label class="target-chip" onclick="tgtToggle(this)"><input type="checkbox" name="tgt" value="海外企業・外国人">海外・外国人</label>
+      <div class="target-grid">
+        <label class="target-chip" onclick="tgt(this)"><input type="checkbox" name="tgt" value="個人（一般消費者）"><span class="ja">個人（消費者）</span><span class="en">Consumers</span></label>
+        <label class="target-chip" onclick="tgt(this)"><input type="checkbox" name="tgt" value="個人事業主・フリーランス"><span class="ja">個人事業主</span><span class="en">Freelancers</span></label>
+        <label class="target-chip" onclick="tgt(this)"><input type="checkbox" name="tgt" value="中小企業（従業員30名以下）"><span class="ja">中小企業</span><span class="en">Small Business</span></label>
+        <label class="target-chip" onclick="tgt(this)"><input type="checkbox" name="tgt" value="中堅企業（従業員31-300名）"><span class="ja">中堅企業</span><span class="en">Mid-size Company</span></label>
+        <label class="target-chip" onclick="tgt(this)"><input type="checkbox" name="tgt" value="大企業（従業員301名以上）"><span class="ja">大企業</span><span class="en">Enterprise</span></label>
+        <label class="target-chip" onclick="tgt(this)"><input type="checkbox" name="tgt" value="飲食・小売店舗"><span class="ja">飲食・小売</span><span class="en">Restaurants & Retail</span></label>
+        <label class="target-chip" onclick="tgt(this)"><input type="checkbox" name="tgt" value="医療・福祉施設"><span class="ja">医療・福祉</span><span class="en">Healthcare</span></label>
+        <label class="target-chip" onclick="tgt(this)"><input type="checkbox" name="tgt" value="不動産オーナー"><span class="ja">不動産オーナー</span><span class="en">Property Owners</span></label>
+        <label class="target-chip" onclick="tgt(this)"><input type="checkbox" name="tgt" value="富裕層・高所得者"><span class="ja">富裕層</span><span class="en">High Net Worth</span></label>
+        <label class="target-chip" onclick="tgt(this)"><input type="checkbox" name="tgt" value="海外企業・外国人"><span class="ja">海外・外国人</span><span class="en">International</span></label>
       </div>
     </div>
 
@@ -294,7 +270,29 @@
 <script>
 const GAS_URL='https://script.google.com/macros/s/AKfycbxinT85Mq5KSEJyujQs_OI0-hzM1vALHOjg9ICjv8jdjdJjTFYMIq4boKLbHNqJfPX8/exec';
 
-const IND={
+// 業種データ（日本語 → 英語）
+const IND_EN = {
+  '建築設計・施工':'Architecture & Construction','リフォーム・リノベーション':'Renovation','不動産売買':'Real Estate Sales',
+  '不動産賃貸・管理':'Property Management','インテリア・内装':'Interior Design','外構・エクステリア':'Exterior & Landscaping',
+  '電気・設備工事':'Electrical & Facilities','Web制作・デザイン':'Web Design','システム開発':'Systems Development',
+  'AI・DX支援':'AI & DX Consulting','SNSマーケティング':'Social Media Marketing','動画制作・映像':'Video Production',
+  'IT機器・サポート':'IT Support','弁護士':'Lawyer','税理士・会計士':'Tax Accountant / CPA',
+  '社会保険労務士':'Labor Consultant','行政書士':'Administrative Scrivener','司法書士':'Judicial Scrivener',
+  '中小企業診断士':'SME Consultant','経営コンサルティング':'Management Consulting','人材・組織コンサルティング':'HR Consulting',
+  '生命保険':'Life Insurance','損害保険':'Property Insurance','ファイナンシャルプランナー':'Financial Planner',
+  '融資・資金調達':'Financing','投資・資産運用':'Investment & Asset Mgmt','美容室・ヘアサロン':'Hair Salon',
+  'エステ・リラクゼーション':'Spa & Relaxation','整体・鍼灸・接骨':'Chiropractic & Acupuncture',
+  'パーソナルトレーニング':'Personal Training','歯科':'Dentistry','医療・クリニック':'Medical Clinic',
+  '飲食店経営':'Restaurant','ケータリング・仕出し':'Catering','食品製造・販売':'Food Production',
+  '語学・翻訳':'Language & Translation','研修・セミナー':'Training & Seminars','コーチング':'Coaching',
+  '学習塾・スクール':'School & Academy','グラフィックデザイン':'Graphic Design','写真・映像':'Photography & Film',
+  'ライティング・編集':'Writing & Editing','印刷・出版':'Printing & Publishing',
+  '清掃・ハウスクリーニング':'Cleaning Services','引越し・物流':'Moving & Logistics',
+  '冠婚葬祭':'Ceremonies','ペット関連':'Pet Services','自動車販売・整備':'Auto Sales & Repair',
+  '人材紹介・派遣':'Staffing & Recruitment','広告・PR':'Advertising & PR','通信・インフラ':'Telecom & Infrastructure','その他':'Other'
+};
+
+const IND_GROUPS = {
   '建設・不動産':['建築設計・施工','リフォーム・リノベーション','不動産売買','不動産賃貸・管理','インテリア・内装','外構・エクステリア','電気・設備工事'],
   'IT・デジタル':['Web制作・デザイン','システム開発','AI・DX支援','SNSマーケティング','動画制作・映像','IT機器・サポート'],
   '士業・コンサル':['弁護士','税理士・会計士','社会保険労務士','行政書士','司法書士','中小企業診断士','経営コンサルティング','人材・組織コンサルティング'],
@@ -307,78 +305,64 @@ const IND={
   'その他':['人材紹介・派遣','広告・PR','通信・インフラ','その他']
 };
 
-document.addEventListener('DOMContentLoaded',()=>{
-  const tabs=document.getElementById('ind-tabs'), grid=document.getElementById('ind-grid');
-  Object.keys(IND).forEach(g=>{
-    const t=document.createElement('button'); t.type='button'; t.className='ind-tab'; t.textContent=g;
-    t.onclick=()=>selTab(g); tabs.appendChild(t);
+function onCatChange() {
+  const cat = document.getElementById('ind-cat').value;
+  const detailStep = document.getElementById('ind-detail-step');
+  const detailSelect = document.getElementById('ind-detail');
+
+  if (!cat) { detailStep.style.display = 'none'; return; }
+
+  detailSelect.innerHTML = '<option value="">選択してください / Select...</option>';
+  (IND_GROUPS[cat] || []).forEach(name => {
+    const en = IND_EN[name] || '';
+    const opt = document.createElement('option');
+    opt.value = name;
+    opt.textContent = `${name} / ${en}`;
+    detailSelect.appendChild(opt);
   });
-  Object.entries(IND).forEach(([g,items])=>{
-    items.forEach(n=>{
-      const d=document.createElement('div'); d.className='ind-item hidden'; d.dataset.g=g; d.textContent=n;
-      d.onclick=()=>selInd(n,d); grid.appendChild(d);
-    });
-  });
-  selTab(Object.keys(IND)[0]);
-});
-
-function selTab(g){
-  document.querySelectorAll('.ind-tab').forEach(t=>t.classList.toggle('active',t.textContent===g));
-  document.querySelectorAll('.ind-item').forEach(i=>{ i.classList.toggle('hidden',i.dataset.g!==g); });
-}
-function selInd(n,el){
-  document.querySelectorAll('.ind-item').forEach(i=>i.classList.remove('selected'));
-  el.classList.add('selected');
-  document.getElementById('ind-val').value=n;
-  const c=document.getElementById('ind-chosen'); c.classList.add('visible');
-  document.getElementById('ind-chosen-text').textContent='✓ '+n;
-}
-function clearIndustry(){
-  document.getElementById('ind-val').value='';
-  document.getElementById('ind-chosen').classList.remove('visible');
-  document.querySelectorAll('.ind-item').forEach(i=>i.classList.remove('selected'));
+  detailStep.style.display = 'block';
 }
 
-function tgtToggle(el){
-  const cb=el.querySelector('input');
-  if(!el.classList.contains('checked')&&document.querySelectorAll('.target-chip.checked').length>=3) return;
-  cb.checked=!cb.checked; el.classList.toggle('checked',cb.checked);
+function tgt(el) {
+  const cb = el.querySelector('input');
+  if (!el.classList.contains('checked') && document.querySelectorAll('.target-chip.checked').length >= 3) return;
+  cb.checked = !cb.checked;
+  el.classList.toggle('checked', cb.checked);
 }
 
-function disc(el,name){
-  const grid=el.closest('.disc-grid');
-  grid.querySelectorAll('.disc-card').forEach(c=>{c.className='disc-card'; c.dataset.c&&c.classList.add();});
-  // reset all
-  grid.querySelectorAll('.disc-card').forEach(c=>{ c.className='disc-card'; });
-  el.classList.add('disc-card','sel-'+el.dataset.c);
-  el.querySelector('input').checked=true;
+function disc(el, name) {
+  el.closest('.disc-grid').querySelectorAll('.disc-card').forEach(c => { c.className = 'disc-card'; });
+  el.classList.add('disc-card', 'sel-' + el.dataset.c);
+  el.querySelector('input').checked = true;
 }
 
-function send(e){
+function send(e) {
   e.preventDefault();
-  const f=document.getElementById('form'), ma=document.getElementById('msg-area');
-  ma.innerHTML='';
-  const d=new FormData(f), ind=document.getElementById('ind-val').value;
-  if(!ind){ ma.innerHTML='<div class="msg error">業種を選択してください</div>'; return false; }
-  const tgts=d.getAll('tgt');
-  if(!tgts.length){ ma.innerHTML='<div class="msg error">ターゲット顧客層を選択してください</div>'; return false; }
+  const f = document.getElementById('form'), ma = document.getElementById('msg-area');
+  ma.innerHTML = '';
+  const d = new FormData(f);
+  const ind = d.get('industry');
+  if (!ind) { ma.innerHTML = '<div class="msg error">業種を選択してください / Please select your industry</div>'; return false; }
+  const tgts = d.getAll('tgt');
+  if (!tgts.length) { ma.innerHTML = '<div class="msg error">ターゲット顧客層を選択してください / Please select target customers</div>'; return false; }
 
-  document.getElementById('btn').disabled=true; f.style.display='none';
+  document.getElementById('btn').disabled = true;
+  f.style.display = 'none';
   document.getElementById('loading').classList.add('active');
 
-  const p={name:d.get('name'),chapter:d.get('chapter'),category:d.get('category'),phone:d.get('phone'),industry:ind,target_customers:tgts.join(', '),q7:d.get('q7'),q8:d.get('q8'),q9:d.get('q9')};
+  const p = { name:d.get('name'), chapter:d.get('chapter'), category:d.get('category'), phone:d.get('phone'), industry:ind, target_customers:tgts.join(', '), q7:d.get('q7'), q8:d.get('q8'), q9:d.get('q9') };
 
-  fetch(GAS_URL,{method:'POST',body:new URLSearchParams(p),headers:{'Content-Type':'application/x-www-form-urlencoded'}})
-  .then(r=>r.json()).then(res=>{
+  fetch(GAS_URL, { method:'POST', body:new URLSearchParams(p), headers:{'Content-Type':'application/x-www-form-urlencoded'} })
+  .then(r => r.json()).then(res => {
     document.getElementById('loading').classList.remove('active');
-    if(res.success){
-      const dc=res.disc||{};
-      window.location.href=`result.html?name=${encodeURIComponent(p.name)}&disc_emoji=${encodeURIComponent(dc.emoji||'')}&disc_label=${encodeURIComponent(dc.label||'')}`;
-    } else { f.style.display='block'; document.getElementById('btn').disabled=false; ma.innerHTML=`<div class="msg error">${res.error||'送信に失敗しました'}</div>`; }
-  }).catch(err=>{
+    if (res.success) {
+      const dc = res.disc || {};
+      window.location.href = `result.html?name=${encodeURIComponent(p.name)}&disc_emoji=${encodeURIComponent(dc.emoji||'')}&disc_label=${encodeURIComponent(dc.label||'')}`;
+    } else { f.style.display = 'block'; document.getElementById('btn').disabled = false; ma.innerHTML = `<div class="msg error">${res.error || 'Error'}</div>`; }
+  }).catch(err => {
     document.getElementById('loading').classList.remove('active');
-    f.style.display='block'; document.getElementById('btn').disabled=false;
-    ma.innerHTML=`<div class="msg error">通信エラー: ${err.message}</div>`;
+    f.style.display = 'block'; document.getElementById('btn').disabled = false;
+    ma.innerHTML = `<div class="msg error">通信エラー / Network error: ${err.message}</div>`;
   });
   return false;
 }
