@@ -1,5 +1,5 @@
 /**
- * AI Connect — 設定値一元管理
+ * AI Connect v2 — 設定値一元管理
  * スクリプトプロパティにGEMINI_API_KEYを設定してから使用すること
  */
 
@@ -9,18 +9,49 @@ const CONFIG = {
   GEMINI_MODEL: 'gemini-2.0-flash',
   GEMINI_ENDPOINT: 'https://generativelanguage.googleapis.com/v1beta/models/',
   GEMINI_TEMPERATURE: 0.2,
-  GEMINI_MAX_OUTPUT_TOKENS: 8192,
+  GEMINI_MAX_OUTPUT_TOKENS: 16384,
   GEMINI_MAX_RETRIES: 3,
 
-  // テーブル設定
-  TABLE_SIZE_MIN: 5,
-  TABLE_SIZE_MAX: 7,
+  // グループ設定（v2: 10グループ × 2テーブル × 約10名）
+  GROUP_COUNT: 10,
+  GROUP_SIZE_MIN: 17,
+  GROUP_SIZE_MAX: 23,
+  TABLES_PER_GROUP: 2,
 
   // シート名
   SHEET_RESPONSES: '参加者回答',
+  SHEET_DISC: 'DISC判定結果',
   SHEET_RESULTS: 'マッチング結果',
-  SHEET_TABLES: 'テーブル一覧',
+  SHEET_GROUPS: 'グループ一覧',
+  SHEET_REASONING: 'マッチング根拠',
   SHEET_CONFIG: '設定',
+
+  // DISC行動スタイル診断
+  DISC: {
+    // フォーム選択肢 → DISCタイプ
+    ANSWER_MAP: { 'A': 'D', 'B': 'I', 'C': 'S', 'D': 'C' },
+
+    // タイプ情報
+    TYPE_NAMES: {
+      D: { ja: '炎', en: 'Fire', emoji: '🔥', css: 'fire', color: '#CF2030' },
+      I: { ja: '風', en: 'Wind', emoji: '🌀', css: 'wind', color: '#2196F3' },
+      S: { ja: '大地', en: 'Earth', emoji: '🌿', css: 'earth', color: '#FFC107' },
+      C: { ja: '水', en: 'Water', emoji: '💧', css: 'water', color: '#4CAF50' }
+    },
+
+    // サブタイプラベル（メインタイプ+サブタイプ → 和名）
+    COMPOUND_LABELS: {
+      DD: '炎', DI: '炎風', ID: '風炎', II: '風',
+      IS: '風大地', SI: '大地風', SS: '大地', SC: '大地水',
+      CS: '水大地', CC: '水', CD: '水炎', DC: '炎水'
+    },
+
+    // 同点時の優先度（Q7の回答を最優先）
+    PRIORITY: ['Q7', 'Q8', 'Q9'],
+
+    // 各グループにS型・C型を最低この人数保証
+    SC_MIN_PER_GROUP: 2
+  },
 
   // 業種大分類
   INDUSTRY_GROUPS: {
@@ -76,7 +107,21 @@ const CONFIG = {
     '広告・PR': 'その他',
     '通信・インフラ': 'その他',
     'その他': 'その他'
-  }
+  },
+
+  // ターゲット顧客層の選択肢
+  TARGET_OPTIONS: [
+    '個人（一般消費者）',
+    '個人事業主・フリーランス',
+    '中小企業（従業員30名以下）',
+    '中堅企業（従業員31-300名）',
+    '大企業（従業員301名以上）',
+    '飲食・小売店舗',
+    '医療・福祉施設',
+    '不動産オーナー',
+    '富裕層・高所得者',
+    '海外企業・外国人'
+  ]
 };
 
 /**
@@ -84,13 +129,16 @@ const CONFIG = {
  */
 function onOpen() {
   const ui = SpreadsheetApp.getUi();
-  ui.createMenu('🤖 AI Connect')
+  ui.createMenu('🤖 AI Connect v2')
     .addItem('▶ マッチング実行', 'runMatching')
     .addItem('🔄 再マッチング', 'runMatching')
+    .addSeparator()
     .addItem('📊 ダミーデータ生成（30名）', 'generateDummyData')
-    .addItem('📊 ダミーデータ生成（150名）', 'generateDummyData150')
-    .addItem('🗑️ 結果クリア', 'clearResults')
+    .addItem('📊 ダミーデータ生成（200名）', 'generateDummyData200')
+    .addSeparator()
+    .addItem('🧪 DISC判定テスト', 'testDiscScoring')
     .addItem('📄 スクリーンHTML出力', 'exportScreenHTML')
+    .addItem('🗑️ 結果クリア', 'clearResults')
     .addToUi();
 }
 
@@ -99,9 +147,10 @@ function onOpen() {
  */
 function clearResults() {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
-  const resultSheet = ss.getSheetByName(CONFIG.SHEET_RESULTS);
-  const tableSheet = ss.getSheetByName(CONFIG.SHEET_TABLES);
-  if (resultSheet) resultSheet.clearContents();
-  if (tableSheet) tableSheet.clearContents();
+  const sheets = [CONFIG.SHEET_RESULTS, CONFIG.SHEET_GROUPS, CONFIG.SHEET_REASONING, CONFIG.SHEET_DISC];
+  sheets.forEach(name => {
+    const sheet = ss.getSheetByName(name);
+    if (sheet) sheet.clearContents();
+  });
   SpreadsheetApp.getUi().alert('結果をクリアしました');
 }

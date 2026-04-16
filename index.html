@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI Connect — BNI前夜祭</title>
+<title>AI Connect v2 — BNI前夜祭</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
@@ -26,44 +26,62 @@
     background-clip: text;
     margin-bottom: 8px;
   }
-  .sub { color: #888; font-size: 1.1rem; margin-bottom: 48px; }
+  .sub { color: #888; font-size: 1.1rem; margin-bottom: 8px; }
+  .version { color: #555; font-size: 0.82rem; margin-bottom: 48px; }
   .links {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 12px;
     width: 100%;
     max-width: 480px;
   }
+  .section-label { color: #C9A84C; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.08em; margin-top: 16px; margin-bottom: 4px; }
   a {
     display: block;
-    padding: 20px 28px;
+    padding: 18px 24px;
     background: #1A1A1A;
     border: 1px solid #333;
-    border-radius: 16px;
+    border-radius: 14px;
     color: #fff;
     text-decoration: none;
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 600;
     transition: all 0.2s;
   }
   a:hover { border-color: #CF2030; background: #222; }
-  a .desc { font-size: 0.85rem; color: #888; font-weight: 400; margin-top: 4px; }
+  a .desc { font-size: 0.82rem; color: #888; font-weight: 400; margin-top: 4px; }
   .footer { margin-top: 48px; font-size: 0.8rem; color: #555; }
 </style>
 </head>
 <body>
   <h1>AI Connect</h1>
-  <p class="sub">BNI前夜祭 コンタクトサークル自動編成システム</p>
+  <p class="sub">パワーチーム × 行動特性 AIグループ編成</p>
+  <p class="version">v2.2 — BNI National Conference 前夜祭</p>
   <div class="links">
+    <div class="section-label">参加者向け</div>
+    <a href="src/screen/landing.html">
+      📱 QRランディングページ
+      <div class="desc">回答する / グループを確認する</div>
+    </a>
+    <a href="src/screen/form.html">
+      📝 アンケートフォーム
+      <div class="desc">9問の専用フォーム（日英バイリンガル）</div>
+    </a>
+    <a href="src/screen/result.html">
+      🔍 グループ確認ページ
+      <div class="desc">名前 or 電話番号で自分のグループを検索</div>
+    </a>
+
+    <div class="section-label">運営向け</div>
+    <a href="src/screen/screen.html">
+      📺 スクリーン発表
+      <div class="desc">Reveal演出付きグループ発表・一覧・検索</div>
+    </a>
     <a href="docs/proposal/ai-connect-proposal.html">
       📄 提案書
       <div class="desc">BNIナショナル運営向け提案資料</div>
     </a>
-    <a href="src/screen/index.html">
-      📺 スクリーンデモ
-      <div class="desc">テーブル発表・一覧・名前検索のデモ</div>
-    </a>
   </div>
-  <p class="footer">AI Connect by BNI AIラボチーム</p>
+  <p class="footer">AI Connect by Re-rail AI Lab</p>
 </body>
 </html>
