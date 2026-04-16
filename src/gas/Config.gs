@@ -4,6 +4,9 @@
  */
 
 const CONFIG = {
+  // スプレッドシートID（Web App用 — getActiveSpreadsheet()はWeb Appで動かないため）
+  SPREADSHEET_ID: '1V8g2N3hYP4PT9_uTy8bzOkvJlcE1GX9kjnUzFB9fANQ',
+
   // Gemini API
   GEMINI_API_KEY: PropertiesService.getScriptProperties().getProperty('GEMINI_API_KEY'),
   GEMINI_MODEL: 'gemini-3-flash-preview',

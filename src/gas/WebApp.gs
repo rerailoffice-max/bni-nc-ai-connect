@@ -50,7 +50,7 @@ function doPost(e) {
     const normalizedPhone = normalizePhone(phone);
 
     // スプレッドシートに保存
-    const ss = SpreadsheetApp.getActiveSpreadsheet();
+    const ss = SpreadsheetApp.openById(CONFIG.SPREADSHEET_ID);
     let sheet = ss.getSheetByName(CONFIG.SHEET_RESPONSES);
     if (!sheet) {
       sheet = ss.insertSheet(CONFIG.SHEET_RESPONSES);
@@ -130,7 +130,7 @@ function checkResult_(params) {
     return jsonResponse_({ error: '検索キーワードが短すぎます', found: false });
   }
 
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const ss = SpreadsheetApp.openById(CONFIG.SPREADSHEET_ID);
   const resultSheet = ss.getSheetByName(CONFIG.SHEET_RESULTS);
 
   if (!resultSheet || resultSheet.getLastRow() < 2) {
@@ -208,7 +208,7 @@ function checkResult_(params) {
  * マッチング実行状態を確認
  */
 function getMatchingStatus_() {
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const ss = SpreadsheetApp.openById(CONFIG.SPREADSHEET_ID);
   const resultSheet = ss.getSheetByName(CONFIG.SHEET_RESULTS);
   if (!resultSheet || resultSheet.getLastRow() < 2) return 'not_ready';
   return 'ready';
