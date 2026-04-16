@@ -139,23 +139,19 @@
     .reveal-grid { grid-template-columns: 1fr; }
   }
 
-  /* スマホ: 左に名前、右に情報3行 */
+  /* スマホ: 左に名前、右に情報を右寄せ縦並び */
   @media (max-width: 768px) {
-    .member-item {
-      display: grid; grid-template-columns: 24px 1fr auto; grid-template-rows: auto;
-      gap: 4px 8px; padding: 8px 10px; align-items: center;
-    }
-    .member-avatar { width: 24px; height: 24px; font-size: 0.65rem; grid-row: 1 / 2; }
-    .member-info { grid-row: 1 / 2; grid-column: 2 / 3; }
+    .member-item { padding: 8px 10px; }
+    .member-avatar { width: 24px; height: 24px; font-size: 0.65rem; }
+    .member-info { flex: 1; min-width: 0; }
     .member-name { font-size: 0.88rem; }
     .member-name-en { display: none; }
     .member-right {
-      grid-row: 1 / 2; grid-column: 3 / 4;
-      display: flex; flex-direction: column; align-items: flex-end; gap: 2px;
+      flex-direction: column !important; align-items: flex-end !important; gap: 3px !important;
     }
-    .member-meta { font-size: 0.68rem; }
-    .member-industry { font-size: 0.65rem; padding: 2px 6px; }
-    .disc-badge { font-size: 0.65rem; padding: 2px 6px; }
+    .member-right .member-meta { text-align: right; }
+    .member-right .disc-badge { font-size: 0.65rem; padding: 2px 6px; }
+    .member-right .member-industry { font-size: 0.65rem; padding: 2px 6px; text-align: right; }
     .disc-detail { grid-template-columns: 1fr 1fr; gap: 6px; }
     .disc-detail-item { padding: 8px; }
     .disc-detail-item .count { font-size: 0.85rem; }
