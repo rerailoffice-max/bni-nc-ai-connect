@@ -139,22 +139,28 @@
     .reveal-grid { grid-template-columns: 1fr; }
   }
 
-  /* スマホ: メンバー表示を2行レイアウトに */
+  /* スマホ: 左に名前、右に情報3行 */
   @media (max-width: 768px) {
     .member-item {
-      flex-wrap: wrap; gap: 4px 8px; padding: 8px 10px;
+      display: grid; grid-template-columns: 24px 1fr auto; grid-template-rows: auto;
+      gap: 4px 8px; padding: 8px 10px; align-items: center;
     }
-    .member-avatar { width: 26px; height: 26px; font-size: 0.7rem; }
-    .member-info { flex: 0 0 auto; min-width: 80px; }
+    .member-avatar { width: 24px; height: 24px; font-size: 0.65rem; grid-row: 1 / 2; }
+    .member-info { grid-row: 1 / 2; grid-column: 2 / 3; }
     .member-name { font-size: 0.88rem; }
     .member-name-en { display: none; }
-    .member-meta { font-size: 0.72rem; }
-    .member-disc-badge .disc-badge { font-size: 0.65rem; padding: 2px 6px; }
+    .member-right {
+      grid-row: 1 / 2; grid-column: 3 / 4;
+      display: flex; flex-direction: column; align-items: flex-end; gap: 2px;
+    }
+    .member-meta { font-size: 0.68rem; }
     .member-industry { font-size: 0.65rem; padding: 2px 6px; }
+    .disc-badge { font-size: 0.65rem; padding: 2px 6px; }
     .disc-detail { grid-template-columns: 1fr 1fr; gap: 6px; }
-    .disc-detail-item { padding: 8px 10px; }
-    .disc-detail-item .count { font-size: 0.9rem; }
-    .disc-detail-item .desc { font-size: 0.7rem; }
+    .disc-detail-item { padding: 8px; }
+    .disc-detail-item .count { font-size: 0.85rem; }
+    .disc-detail-item .desc { font-size: 0.68rem; }
+    .table-col-header { font-size: 0.78rem; padding: 6px 10px; }
   }
 
   /* 発表モード */
@@ -282,7 +288,8 @@
   .member-info { flex: 1; min-width: 0; }
   .member-name { font-size: 0.88rem; font-weight: 700; }
   .member-name-en { font-size: 0.65rem; color: #555; white-space: nowrap; }
-  .member-meta { font-size: 0.7rem; color: var(--text-dim); white-space: nowrap; flex-shrink: 0; }
+  .member-meta { font-size: 0.7rem; color: var(--text-dim); white-space: nowrap; }
+  .member-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
   .member-industry {
     display: inline-block; background: rgba(207,32,48,0.12); color: #FF6B7A;
     padding: 2px 8px; border-radius: 100px; font-size: 0.72rem; font-weight: 600; white-space: nowrap;
@@ -581,8 +588,7 @@ function memberHtmlSimple(m) {
   return `<div class="member-item">
     <div class="member-avatar">${m.name.charAt(0)}</div>
     <div class="member-info"><div class="member-name">${m.name}</div><div class="member-name-en">${m.name_en||''}</div></div>
-    <div class="member-meta">${m.chapter}</div>
-    <span class="member-industry">${m.industry}</span>
+    <div class="member-right"><div class="member-meta">${m.chapter}</div><span class="member-industry">${m.industry}</span></div>
   </div>`;
 }
 
@@ -594,9 +600,7 @@ function memberHtmlFull(m, opts={}) {
   return `<div class="member-item${hl}">
     <div class="member-avatar ${avCss}" ${avStyle}>${m.name.charAt(0)}</div>
     <div class="member-info"><div class="member-name">${m.name}</div><div class="member-name-en">${m.name_en||''}</div></div>
-    <div class="member-meta">${m.chapter}</div>
-    ${discBadge(m)}
-    <span class="member-industry">${m.industry}</span>
+    <div class="member-right"><div class="member-meta">${m.chapter}</div>${discBadge(m)}<span class="member-industry">${m.industry}</span></div>
   </div>`;
 }
 
