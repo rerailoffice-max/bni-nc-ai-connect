@@ -307,8 +307,8 @@ function _generateDummy(count) {
   if (!sheet) sheet = ss.insertSheet(CONFIG.SHEET_RESPONSES);
   sheet.clearContents();
 
-  // v2ヘッダー（タイムスタンプなし）
-  const headers = ['氏名', 'チャプター名', 'カテゴリー名', '電話番号', '業種', 'ターゲット顧客層', 'Q7', 'Q8', 'Q9'];
+  // v2ヘッダー（タイムスタンプあり — WebApp.gs doPostと統一）
+  const headers = ['タイムスタンプ', '氏名', 'チャプター名', 'カテゴリー名', '電話番号', '業種', 'ターゲット顧客層', 'Q7', 'Q8', 'Q9'];
   sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
   sheet.getRange(1, 1, 1, headers.length).setFontWeight('bold');
 
@@ -390,7 +390,8 @@ function _generateDummy(count) {
     const q8 = randomAnswer();
     const q9 = randomAnswer();
 
-    rows.push([name, chapter, category, phone, industry, targets, q7, q8, q9]);
+    const timestamp = new Date(2026, 3, 15 + Math.floor(i/30), 9 + (i%12), i%60).toISOString();
+    rows.push([timestamp, name, chapter, category, phone, industry, targets, q7, q8, q9]);
   }
 
   sheet.getRange(2, 1, rows.length, headers.length).setValues(rows);
