@@ -330,8 +330,18 @@
   }
   .group-card-number { font-size: 1.6rem; font-weight: 900; color: var(--bni-red); }
   .group-card-name { font-size: 0.85rem; color: var(--bni-gold); font-weight: 600; }
-  .group-card-members { display: flex; flex-direction: column; gap: 4px; }
-  .group-card-member { display: flex; align-items: center; gap: 8px; font-size: 0.82rem; padding: 3px 0; }
+  .group-card-members { display: flex; flex-direction: column; gap: 2px; }
+  .group-card-member {
+    display: flex; align-items: center; gap: 8px; font-size: 0.82rem; padding: 5px 8px;
+    background: rgba(255,255,255,0.02); border-radius: 6px;
+  }
+  .group-card-member .m-info { flex: 1; min-width: 0; }
+  .group-card-member .m-name { font-weight: 600; font-size: 0.82rem; }
+  .group-card-member .m-name-en { font-size: 0.6rem; color: #555; }
+  .group-card-member .m-right { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+  @media (max-width: 768px) {
+    .group-card-member .m-right { flex-direction: column; align-items: flex-end; gap: 2px; }
+  }
   .mini-avatar {
     width: 24px; height: 24px; border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
@@ -810,9 +820,8 @@ function buildListView() {
       `<div class="table-divider">Table ${t.table_number}</div>` +
       t.members.map(m => `<div class="group-card-member">
         <div class="mini-avatar ${m.disc_css||''}" ${!m.disc_css?'style="background:var(--bni-gold)"':''}>${m.name.charAt(0)}</div>
-        <span>${m.name}</span>
-        ${discBadge(m)}
-        <span style="color:var(--text-dim);font-size:0.72rem;margin-left:auto;white-space:nowrap">${m.industry}</span>
+        <div class="m-info"><div class="m-name">${m.name}</div>${m.name_en?`<div class="m-name-en">${m.name_en}</div>`:''}</div>
+        <div class="m-right"><span style="color:var(--text-dim);font-size:0.7rem">${m.chapter||''}</span>${discBadge(m)}<span style="color:var(--text-dim);font-size:0.68rem;white-space:nowrap">${m.industry}</span></div>
       </div>`).join('')
     ).join('');
 
