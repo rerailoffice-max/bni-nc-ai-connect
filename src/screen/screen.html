@@ -120,6 +120,40 @@
   }
   .reveal-flash { animation: revealPulse 0.8s ease-out; }
 
+  /* カウントダウン */
+  .countdown-overlay {
+    position: fixed; top:0; left:0; right:0; bottom:0; z-index: 200;
+    background: rgba(0,0,0,0.85); display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none; transition: opacity 0.3s;
+  }
+  .countdown-overlay.active { opacity: 1; pointer-events: auto; }
+  .countdown-number {
+    font-size: 12rem; font-weight: 900; color: var(--bni-gold);
+    text-shadow: 0 0 60px rgba(201,168,76,0.5);
+    animation: countPop 0.8s ease-out;
+  }
+  @keyframes countPop {
+    0% { transform: scale(3); opacity: 0; }
+    50% { transform: scale(0.9); opacity: 1; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  /* 紙吹雪キャンバス */
+  #confetti-canvas {
+    position: fixed; top:0; left:0; width:100%; height:100%;
+    pointer-events: none; z-index: 150;
+  }
+
+  /* Reveal時のグロー */
+  .reveal-glow {
+    animation: glowBurst 1.5s ease-out;
+  }
+  @keyframes glowBurst {
+    0% { box-shadow: 0 0 0 0 rgba(201,168,76,0.6), 0 0 60px rgba(201,168,76,0.3); }
+    50% { box-shadow: 0 0 0 20px rgba(201,168,76,0), 0 0 120px rgba(201,168,76,0.5); }
+    100% { box-shadow: none; }
+  }
+
   .group-number {
     font-size: 4rem; font-weight: 900;
     background: linear-gradient(135deg, var(--bni-red), var(--bni-gold));
@@ -294,6 +328,8 @@
   <div class="nav-info" id="nav-info"></div>
 </nav>
 
+<canvas id="confetti-canvas"></canvas>
+<div class="countdown-overlay" id="countdown-overlay"><div class="countdown-number" id="countdown-num"></div></div>
 <div class="main">
   <!-- 発表モード -->
   <div id="presentation-mode">
@@ -581,9 +617,10 @@ function renderGroup(index) {
 
 function revealGroup(index) {
   revealedGroups.add(index);
+  playSound('fanfare');
+  launchConfetti(3000);
   const card = document.getElementById('pcard-'+index);
-  if (card) card.classList.add('reveal-flash');
-  // Re-render with full info
+  if (card) { card.classList.add('reveal-flash','reveal-glow'); }
   renderGroup(index);
 }
 
@@ -591,7 +628,15 @@ function switchTableTab(i) { currentTableTab = i; renderGroup(currentGroupIndex)
 
 function nextGroup() {
   const all = getAllGroups();
-  if (currentGroupIndex < all.length-1) { currentGroupIndex++; currentTableTab=0; renderGroup(currentGroupIndex); }
+  if (currentGroupIndex < all.length-1) {
+    playSound('whoosh');
+    showCountdown(() => {
+      currentGroupIndex++; currentTableTab=0;
+      playSound('reveal');
+      launchConfetti(1500);
+      renderGroup(currentGroupIndex);
+    });
+  }
 }
 function prevGroup() {
   if (currentGroupIndex > 0) { currentGroupIndex--; currentTableTab=0; renderGroup(currentGroupIndex); }
@@ -641,6 +686,132 @@ function buildListView() {
       ${g.synergy_reason ? `<div class="group-card-synergy">💡 ${g.synergy_reason}</div>` : ''}
     </div>`;
   }).join('');
+}
+
+// ===== 効果音（Web Audio API — 外部ファイル不要） =====
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+let audioCtx = null;
+function getAudio() { if (!audioCtx) audioCtx = new AudioCtx(); return audioCtx; }
+
+function playSound(type) {
+  try {
+    const ctx = getAudio();
+    if (type === 'whoosh') {
+      // シュッという風切り音
+      const osc = ctx.createOscillator(); const gain = ctx.createGain();
+      osc.type = 'sine'; osc.frequency.setValueAtTime(800, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(200, ctx.currentTime + 0.3);
+      gain.gain.setValueAtTime(0.3, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.start(); osc.stop(ctx.currentTime + 0.3);
+    } else if (type === 'reveal') {
+      // ジャジャーン！上昇音
+      [0, 0.1, 0.2].forEach((delay, i) => {
+        const osc = ctx.createOscillator(); const gain = ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime([523, 659, 784][i], ctx.currentTime + delay);
+        gain.gain.setValueAtTime(0.25, ctx.currentTime + delay);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + delay + 0.5);
+        osc.connect(gain); gain.connect(ctx.destination);
+        osc.start(ctx.currentTime + delay); osc.stop(ctx.currentTime + delay + 0.5);
+      });
+    } else if (type === 'fanfare') {
+      // ファンファーレ（豪華版）
+      const notes = [523, 659, 784, 1047, 784, 1047];
+      const times = [0, 0.12, 0.24, 0.36, 0.55, 0.7];
+      notes.forEach((freq, i) => {
+        const osc = ctx.createOscillator(); const gain = ctx.createGain();
+        osc.type = i < 4 ? 'triangle' : 'sine';
+        osc.frequency.setValueAtTime(freq, ctx.currentTime + times[i]);
+        gain.gain.setValueAtTime(0.3, ctx.currentTime + times[i]);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + times[i] + 0.4);
+        osc.connect(gain); gain.connect(ctx.destination);
+        osc.start(ctx.currentTime + times[i]); osc.stop(ctx.currentTime + times[i] + 0.4);
+      });
+    } else if (type === 'countdown') {
+      const osc = ctx.createOscillator(); const gain = ctx.createGain();
+      osc.type = 'sine'; osc.frequency.setValueAtTime(880, ctx.currentTime);
+      gain.gain.setValueAtTime(0.2, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.15);
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.start(); osc.stop(ctx.currentTime + 0.15);
+    }
+  } catch(e) {}
+}
+
+// ===== カウントダウン =====
+function showCountdown(callback) {
+  const overlay = document.getElementById('countdown-overlay');
+  const numEl = document.getElementById('countdown-num');
+  overlay.classList.add('active');
+  let count = 3;
+  numEl.textContent = count;
+  numEl.style.animation = 'none'; void numEl.offsetHeight; numEl.style.animation = 'countPop 0.8s ease-out';
+  playSound('countdown');
+
+  const interval = setInterval(() => {
+    count--;
+    if (count > 0) {
+      numEl.textContent = count;
+      numEl.style.animation = 'none'; void numEl.offsetHeight; numEl.style.animation = 'countPop 0.8s ease-out';
+      playSound('countdown');
+    } else {
+      clearInterval(interval);
+      overlay.classList.remove('active');
+      callback();
+    }
+  }, 800);
+}
+
+// ===== 紙吹雪エンジン =====
+function launchConfetti(duration) {
+  const canvas = document.getElementById('confetti-canvas');
+  const ctx2d = canvas.getContext('2d');
+  canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+
+  const colors = ['#CF2030','#C9A84C','#2196F3','#FFC107','#4CAF50','#FF6B7A','#64B5F6','#FFD54F','#81C784','#FF4081','#FFFFFF'];
+  const pieces = [];
+  const startTime = Date.now();
+
+  for (let i = 0; i < 150; i++) {
+    pieces.push({
+      x: Math.random() * canvas.width,
+      y: -20 - Math.random() * 200,
+      w: 6 + Math.random() * 8,
+      h: 4 + Math.random() * 6,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      vx: (Math.random() - 0.5) * 4,
+      vy: 2 + Math.random() * 4,
+      rot: Math.random() * 360,
+      rotSpeed: (Math.random() - 0.5) * 10,
+      opacity: 1
+    });
+  }
+
+  function draw() {
+    const elapsed = Date.now() - startTime;
+    ctx2d.clearRect(0, 0, canvas.width, canvas.height);
+
+    const fadeStart = duration * 0.7;
+    pieces.forEach(p => {
+      p.x += p.vx; p.y += p.vy; p.rot += p.rotSpeed;
+      p.vy += 0.05; // gravity
+      if (elapsed > fadeStart) p.opacity = Math.max(0, 1 - (elapsed - fadeStart) / (duration * 0.3));
+
+      ctx2d.save();
+      ctx2d.translate(p.x, p.y);
+      ctx2d.rotate(p.rot * Math.PI / 180);
+      ctx2d.globalAlpha = p.opacity;
+      ctx2d.fillStyle = p.color;
+      ctx2d.fillRect(-p.w/2, -p.h/2, p.w, p.h);
+      ctx2d.restore();
+    });
+
+    if (elapsed < duration) requestAnimationFrame(draw);
+    else ctx2d.clearRect(0, 0, canvas.width, canvas.height);
+  }
+  requestAnimationFrame(draw);
 }
 
 // ===== 検索モード（名前 or 電話番号） =====
