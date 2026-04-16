@@ -7,11 +7,11 @@
 <style>
   :root {
     --bni-red: #CF2030; --bni-red-dark: #A81A28; --bni-gold: #C9A84C;
-    --bg: #0D0D0D; --card-bg: #1A1A1A; --text: #FFFFFF; --text-dim: #888; --border: #333;
-    --fire: #CF2030; --fire-bg: rgba(207,32,48,0.15); --fire-text: #FF6B7A;
-    --wind: #2196F3; --wind-bg: rgba(33,150,243,0.15); --wind-text: #64B5F6;
-    --earth: #FFC107; --earth-bg: rgba(255,193,7,0.15); --earth-text: #FFD54F;
-    --water: #4CAF50; --water-bg: rgba(76,175,80,0.15); --water-text: #81C784;
+    --bg: #F5F5F5; --card-bg: #FFFFFF; --text: #1A1A1A; --text-dim: #666; --border: #E0E0E0;
+    --fire: #CF2030; --fire-bg: rgba(207,32,48,0.08); --fire-text: #B71C1C;
+    --wind: #2196F3; --wind-bg: rgba(33,150,243,0.08); --wind-text: #1565C0;
+    --earth: #E8A800; --earth-bg: rgba(232,168,0,0.08); --earth-text: #E65100;
+    --water: #4CAF50; --water-bg: rgba(76,175,80,0.08); --water-text: #2E7D32;
   }
   * { margin:0; padding:0; box-sizing:border-box; }
   body {
@@ -20,8 +20,8 @@
   }
 
   .header {
-    text-align: center; padding: 32px 20px 20px;
-    background: linear-gradient(180deg, rgba(207,32,48,0.08) 0%, transparent 100%);
+    text-align: center; padding: 28px 20px 16px;
+    background: linear-gradient(180deg, rgba(207,32,48,0.06) 0%, transparent 100%);
   }
   .header h1 {
     font-size: 1.6rem; font-weight: 900;
@@ -31,59 +31,45 @@
 
   .container { max-width: 560px; margin: 0 auto; padding: 0 20px 40px; }
 
-  /* 回答完了メッセージ */
-  .thank-you {
-    text-align: center; padding: 32px 0; display: none;
-  }
+  .thank-you { text-align: center; padding: 28px 0; display: none; }
   .thank-you.visible { display: block; }
-  .thank-you .disc-result {
-    font-size: 3rem; margin-bottom: 8px;
-  }
-  .thank-you .disc-label {
-    font-size: 1.2rem; font-weight: 700; color: var(--bni-gold); margin-bottom: 16px;
-  }
-  .thank-you .msg {
-    color: var(--text-dim); font-size: 0.9rem; line-height: 1.6;
-  }
+  .thank-you .disc-result { font-size: 3rem; margin-bottom: 8px; }
+  .thank-you .disc-label { font-size: 1.2rem; font-weight: 700; color: var(--bni-red); margin-bottom: 16px; }
+  .thank-you .msg { color: var(--text-dim); font-size: 0.9rem; line-height: 1.6; }
 
-  /* 検索 */
-  .search-section { margin-top: 24px; }
+  .search-section { margin-top: 20px; }
   .search-box {
     width: 100%; padding: 16px 20px; border-radius: 16px;
     border: 2px solid var(--border); background: var(--card-bg);
     color: var(--text); font-size: 1.1rem; outline: none; transition: border-color 0.2s;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
   }
   .search-box:focus { border-color: var(--bni-red); }
-  .search-box::placeholder { color: #555; }
+  .search-box::placeholder { color: #999; }
   .search-hint { font-size: 0.78rem; color: var(--text-dim); margin-top: 8px; text-align: center; }
 
-  /* ローディング */
   .loading { display: none; text-align: center; padding: 32px; }
   .loading.active { display: block; }
   .spinner { width: 32px; height: 32px; border: 3px solid var(--border); border-top-color: var(--bni-red); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 12px; }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* 未実行状態 */
-  .not-ready {
-    text-align: center; padding: 40px 20px; display: none;
-  }
+  .not-ready { text-align: center; padding: 40px 20px; display: none; }
   .not-ready.visible { display: block; }
   .not-ready .icon { font-size: 3rem; margin-bottom: 16px; }
-  .not-ready h2 { font-size: 1.1rem; font-weight: 700; margin-bottom: 12px; color: var(--bni-gold); }
+  .not-ready h2 { font-size: 1.1rem; font-weight: 700; margin-bottom: 12px; color: var(--bni-red); }
   .not-ready p { color: var(--text-dim); font-size: 0.9rem; line-height: 1.6; }
 
-  /* 結果表示 */
   .result { display: none; animation: fadeIn 0.5s ease-out; }
   .result.visible { display: block; }
   @keyframes fadeIn { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
 
   .result-group-number {
-    font-size: 4rem; font-weight: 900; text-align: center;
+    font-size: 3.5rem; font-weight: 900; text-align: center;
     background: linear-gradient(135deg, var(--bni-red), var(--bni-gold));
     -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
     line-height: 1.1; margin: 20px 0 4px;
   }
-  .result-group-name { text-align: center; font-size: 1rem; color: var(--bni-gold); font-weight: 600; margin-bottom: 4px; }
+  .result-group-name { text-align: center; font-size: 1rem; color: var(--bni-red); font-weight: 600; margin-bottom: 4px; }
   .result-table { text-align: center; font-size: 0.88rem; color: var(--text-dim); margin-bottom: 20px; }
   .result-person-badge { text-align: center; margin-bottom: 20px; }
 
@@ -99,46 +85,46 @@
   .result-card {
     background: var(--card-bg); border-radius: 16px; padding: 20px;
     border: 1px solid var(--border); margin-bottom: 16px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
   }
   .result-card h3 { font-size: 0.88rem; color: var(--text-dim); margin-bottom: 12px; }
 
   .member-item {
     display: flex; align-items: center; gap: 10px;
     padding: 8px 12px; border-radius: 10px; margin-bottom: 4px;
-    background: rgba(255,255,255,0.02);
+    background: var(--bg);
   }
-  .member-item.highlight { background: rgba(201,168,76,0.12); border: 1px solid rgba(201,168,76,0.3); }
+  .member-item.highlight { background: rgba(207,32,48,0.06); border: 1px solid rgba(207,32,48,0.2); }
   .member-avatar {
     width: 32px; height: 32px; border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
-    font-size: 0.8rem; font-weight: 700; flex-shrink: 0; background: var(--bni-red);
+    font-size: 0.8rem; font-weight: 700; flex-shrink: 0; background: var(--bni-red); color: #fff;
   }
   .member-info { flex: 1; min-width: 0; }
   .member-name { font-size: 0.88rem; font-weight: 700; }
   .member-meta { font-size: 0.72rem; color: var(--text-dim); }
   .member-industry {
-    display: inline-block; background: rgba(207,32,48,0.12); color: #FF6B7A;
+    display: inline-block; background: rgba(207,32,48,0.06); color: var(--bni-red);
     padding: 2px 8px; border-radius: 100px; font-size: 0.68rem; font-weight: 600; white-space: nowrap;
   }
 
   .table-divider {
     font-size: 0.72rem; color: var(--text-dim); margin: 10px 0 6px;
-    padding: 2px 8px; background: rgba(255,255,255,0.03); border-radius: 4px; display: inline-block;
+    padding: 2px 8px; background: var(--bg); border-radius: 4px; display: inline-block;
   }
 
   .synergy-box {
-    background: rgba(201,168,76,0.08); border: 1px solid rgba(201,168,76,0.2);
+    background: rgba(201,168,76,0.06); border: 1px solid rgba(201,168,76,0.2);
     border-radius: 12px; padding: 16px; margin-top: 12px;
   }
   .synergy-box h4 { font-size: 0.88rem; color: var(--bni-gold); margin-bottom: 6px; }
-  .synergy-box p { font-size: 0.82rem; color: var(--bni-gold); opacity: 0.85; line-height: 1.5; }
+  .synergy-box p { font-size: 0.82rem; color: #8B7024; line-height: 1.5; }
 
   .no-result { text-align: center; color: var(--text-dim); padding: 32px; display: none; font-size: 0.9rem; }
 
   .back-link { display: block; text-align: center; margin-top: 24px; color: var(--text-dim); font-size: 0.85rem; text-decoration: none; }
-  .back-link:hover { color: var(--bni-gold); }
+  .back-link:hover { color: var(--bni-red); }
 
-  /* DISC構成バー */
   .disc-bar { display: flex; gap: 3px; height: 6px; border-radius: 3px; overflow: hidden; margin: 8px 0; }
   .disc-bar-seg { height: 100%; }
   .disc-bar-seg.fire { background: var(--fire); }
@@ -152,12 +138,9 @@
 </head>
 <body>
 
-<div class="header">
-  <h1>AI Connect</h1>
-</div>
+<div class="header"><h1>AI Connect</h1></div>
 
 <div class="container">
-  <!-- 回答完了メッセージ（フォームから遷移した場合） -->
   <div class="thank-you" id="thank-you">
     <div class="disc-result" id="disc-emoji"></div>
     <div class="disc-label" id="disc-label-text"></div>
@@ -165,47 +148,39 @@
       アンケートへの回答ありがとうございます！<br>
       Thank you for your response!<br><br>
       下の検索からグループを確認できます。<br>
-      <small>※マッチング実行後に結果が表示されます</small>
+      <small>※グループ発表後に結果が表示されます</small>
     </p>
   </div>
 
-  <!-- 検索 -->
   <div class="search-section">
     <input class="search-box" id="search-input" type="text"
       placeholder="名前 or 電話番号 / Name or Phone..."
       oninput="debounceSearch()">
-    <p class="search-hint">名前（部分一致）または電話番号の下4桁で検索 / Search by name or last 4 digits</p>
+    <p class="search-hint">名前（部分一致）または電話番号の下4桁で検索</p>
   </div>
 
   <div class="loading" id="loading">
     <div class="spinner"></div>
-    <p style="color:var(--text-dim);font-size:0.85rem">検索中... / Searching...</p>
+    <p style="color:var(--text-dim);font-size:0.85rem">検索中...</p>
   </div>
 
   <div class="not-ready" id="not-ready">
     <div class="icon">⏳</div>
     <h2>グループ発表をお楽しみに！</h2>
-    <p>
-      マッチング結果はまだ準備中です。<br>
-      当日の発表をお楽しみに！<br><br>
-      The matching results are being prepared.<br>
-      Stay tuned for the announcement!
-    </p>
+    <p>マッチング結果はまだ準備中です。<br>当日の発表をお楽しみに！<br><br>
+    The matching results are being prepared.<br>Stay tuned for the announcement!</p>
   </div>
 
   <div class="result" id="result"></div>
   <div class="no-result" id="no-result">該当する参加者が見つかりません / No participant found</div>
 
-  <a href="landing.html" class="back-link">← トップに戻る / Back to top</a>
+  <a href="landing.html" class="back-link">← トップに戻る / Back</a>
 </div>
 
 <script>
-// GAS Web App URL（デプロイ後に設定）
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbxinT85Mq5KSEJyujQs_OI0-hzM1vALHOjg9ICjv8jdjdJjTFYMIq4boKLbHNqJfPX8/exec';
-
 let searchTimer = null;
 
-// フォームからの遷移チェック
 document.addEventListener('DOMContentLoaded', () => {
   const params = new URLSearchParams(window.location.search);
   const name = params.get('name');
@@ -213,21 +188,15 @@ document.addEventListener('DOMContentLoaded', () => {
   const discLabel = params.get('disc_label');
 
   if (name) {
-    const thankYou = document.getElementById('thank-you');
-    thankYou.classList.add('visible');
+    document.getElementById('thank-you').classList.add('visible');
     if (discEmoji) document.getElementById('disc-emoji').textContent = discEmoji;
     if (discLabel) document.getElementById('disc-label-text').textContent = `あなたの行動タイプ: ${discLabel}`;
-
-    // 名前を検索欄にプリセット
     document.getElementById('search-input').value = name;
     setTimeout(() => doSearch(), 500);
   }
 });
 
-function debounceSearch() {
-  clearTimeout(searchTimer);
-  searchTimer = setTimeout(doSearch, 400);
-}
+function debounceSearch() { clearTimeout(searchTimer); searchTimer = setTimeout(doSearch, 400); }
 
 function doSearch() {
   const query = document.getElementById('search-input').value.trim();
@@ -236,40 +205,20 @@ function doSearch() {
   const noResult = document.getElementById('no-result');
   const notReady = document.getElementById('not-ready');
 
-  result.classList.remove('visible');
-  noResult.style.display = 'none';
-  notReady.classList.remove('visible');
-
-  if (!query || query.length < 2) {
-    return;
-  }
+  result.classList.remove('visible'); noResult.style.display = 'none'; notReady.classList.remove('visible');
+  if (!query || query.length < 2) return;
 
   loading.classList.add('active');
 
-  const url = `${GAS_URL}?action=check&query=${encodeURIComponent(query)}`;
-
-  fetch(url)
+  fetch(`${GAS_URL}?action=check&query=${encodeURIComponent(query)}`)
     .then(r => r.json())
     .then(data => {
       loading.classList.remove('active');
-
-      if (data.status === 'not_ready') {
-        notReady.classList.add('visible');
-        return;
-      }
-
-      if (!data.found) {
-        noResult.style.display = 'block';
-        return;
-      }
-
+      if (data.status === 'not_ready') { notReady.classList.add('visible'); return; }
+      if (!data.found) { noResult.style.display = 'block'; return; }
       renderResult(data);
     })
-    .catch(err => {
-      loading.classList.remove('active');
-      // フォールバック: GAS未設定時のデモ表示
-      notReady.classList.add('visible');
-    });
+    .catch(() => { loading.classList.remove('active'); notReady.classList.add('visible'); });
 }
 
 function renderResult(data) {
@@ -278,7 +227,6 @@ function renderResult(data) {
   const group = data.group;
   const members = data.members || [];
 
-  // DISC CSSクラス判定
   function discCss(label) {
     if (!label) return '';
     if (label.startsWith('炎')) return 'fire';
@@ -287,7 +235,6 @@ function renderResult(data) {
     if (label.startsWith('水')) return 'water';
     return '';
   }
-
   function discEmoji(label) {
     if (!label) return '✨';
     if (label.startsWith('炎')) return '🔥';
@@ -297,47 +244,34 @@ function renderResult(data) {
     return '✨';
   }
 
-  // グループのDISC集計
-  const discCount = { D: 0, I: 0, S: 0, C: 0 };
+  const discCount = { D:0, I:0, S:0, C:0 };
   members.forEach(m => {
     const css = discCss(m.disc_label);
-    if (css === 'fire') discCount.D++;
-    else if (css === 'wind') discCount.I++;
-    else if (css === 'earth') discCount.S++;
-    else if (css === 'water') discCount.C++;
+    if (css==='fire') discCount.D++; else if (css==='wind') discCount.I++;
+    else if (css==='earth') discCount.S++; else if (css==='water') discCount.C++;
   });
   const total = discCount.D + discCount.I + discCount.S + discCount.C;
 
-  // テーブル別にグループ化
   const tables = {};
-  members.forEach(m => {
-    const tn = m.table_number || 1;
-    if (!tables[tn]) tables[tn] = [];
-    tables[tn].push(m);
-  });
+  members.forEach(m => { const tn = m.table_number||1; if (!tables[tn]) tables[tn]=[]; tables[tn].push(m); });
 
   const pCss = discCss(person.disc_label);
 
   let membersHtml = '';
-  Object.entries(tables).sort((a,b) => a[0]-b[0]).forEach(([tn, mems]) => {
+  Object.entries(tables).sort((a,b)=>a[0]-b[0]).forEach(([tn, mems]) => {
     membersHtml += `<div class="table-divider">Table ${tn}</div>`;
     mems.forEach(m => {
       const isMe = m.name === person.name;
       const mCss = discCss(m.disc_label);
-      const mEmoji = discEmoji(m.disc_label);
-      membersHtml += `<div class="member-item ${isMe ? 'highlight' : ''}">
-        <div class="member-avatar ${mCss}" ${!mCss ? 'style="background:var(--bni-gold)"' : ''}>${m.name.charAt(0)}</div>
-        <div class="member-info">
-          <div class="member-name">${m.name}${isMe ? ' 👈' : ''}</div>
-          <div class="member-meta">${m.chapter || ''}</div>
-        </div>
-        ${m.disc_label ? `<span class="disc-badge ${mCss}">${mEmoji} ${m.disc_label}</span>` : ''}
-        <span class="member-industry">${m.industry || ''}</span>
+      membersHtml += `<div class="member-item ${isMe?'highlight':''}">
+        <div class="member-avatar" ${mCss?`style="background:var(--${mCss})"`:''}>${m.name.charAt(0)}</div>
+        <div class="member-info"><div class="member-name">${m.name}${isMe?' 👈':''}</div><div class="member-meta">${m.chapter||''}</div></div>
+        ${m.disc_label?`<span class="disc-badge ${mCss}">${discEmoji(m.disc_label)} ${m.disc_label}</span>`:''}
+        <span class="member-industry">${m.industry||''}</span>
       </div>`;
     });
   });
 
-  // DISC バー
   const discBarHtml = total > 0 ? `
     <div class="disc-bar">
       <div class="disc-bar-seg fire" style="width:${discCount.D/total*100}%"></div>
@@ -350,29 +284,19 @@ function renderResult(data) {
       <span><span class="disc-dot" style="background:var(--wind)"></span>🌀${discCount.I}</span>
       <span><span class="disc-dot" style="background:var(--earth)"></span>🌿${discCount.S}</span>
       <span><span class="disc-dot" style="background:var(--water)"></span>💧${discCount.C}</span>
-    </div>
-  ` : '';
+    </div>` : '';
 
   el.innerHTML = `
     <div class="result-group-number">Group ${person.group_number}</div>
-    <div class="result-group-name">${group.group_name || ''}</div>
+    <div class="result-group-name">${group.group_name||''}</div>
     <div class="result-table">Table ${person.table_number}</div>
-    <div class="result-person-badge">
-      <span class="disc-badge ${pCss}">${discEmoji(person.disc_label)} ${person.disc_label || ''}</span>
-    </div>
-
+    <div class="result-person-badge"><span class="disc-badge ${pCss}">${discEmoji(person.disc_label)} ${person.disc_label||''}</span></div>
     <div class="result-card">
       <h3>グループメンバー / Group Members (${members.length}名)</h3>
       ${discBarHtml}
       ${membersHtml}
     </div>
-
-    ${group.synergy_reason ? `
-    <div class="synergy-box">
-      <h4>💡 パワーチーム: ${group.group_name}</h4>
-      <p>${group.synergy_reason}</p>
-    </div>` : ''}
-  `;
+    ${group.synergy_reason?`<div class="synergy-box"><h4>💡 ${group.group_name}</h4><p>${group.synergy_reason}</p></div>`:''}`;
   el.classList.add('visible');
 }
 </script>

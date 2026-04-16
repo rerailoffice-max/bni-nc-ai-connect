@@ -7,9 +7,9 @@
 <style>
   :root {
     --bni-red: #CF2030; --bni-red-dark: #A81A28; --bni-gold: #C9A84C;
-    --bg: #0D0D0D; --card-bg: #1A1A1A; --text: #FFFFFF; --text-dim: #888;
-    --border: #333; --input-bg: #111;
-    --fire: #CF2030; --wind: #2196F3; --earth: #FFC107; --water: #4CAF50;
+    --bg: #F5F5F5; --card-bg: #FFFFFF; --text: #1A1A1A; --text-dim: #666;
+    --border: #E0E0E0; --input-bg: #FAFAFA;
+    --fire: #CF2030; --wind: #2196F3; --earth: #E8A800; --water: #4CAF50;
   }
   * { margin:0; padding:0; box-sizing:border-box; }
   body {
@@ -19,26 +19,29 @@
   }
 
   .header {
-    text-align: center; padding: 40px 20px 24px;
-    background: linear-gradient(180deg, rgba(207,32,48,0.08) 0%, transparent 100%);
-    width: 100%;
+    text-align: center; padding: 32px 20px 20px; width: 100%;
+    background: linear-gradient(180deg, rgba(207,32,48,0.06) 0%, transparent 100%);
   }
   .header h1 {
-    font-size: 2rem; font-weight: 900;
+    font-size: 1.8rem; font-weight: 900;
     background: linear-gradient(135deg, var(--bni-red), var(--bni-gold));
     -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
   }
-  .header p { color: var(--text-dim); margin-top: 8px; font-size: 0.9rem; }
+  .header p { color: var(--text-dim); margin-top: 6px; font-size: 0.88rem; }
 
   .form-container { width: 100%; max-width: 560px; padding: 0 20px 40px; }
 
-  .section { margin-bottom: 32px; }
+  .section {
+    margin-bottom: 28px; background: var(--card-bg); border-radius: 16px;
+    padding: 24px; border: 1px solid var(--border);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  }
   .section-title {
-    font-size: 0.82rem; font-weight: 700; color: var(--bni-gold); text-transform: uppercase;
+    font-size: 0.82rem; font-weight: 700; color: var(--bni-red); text-transform: uppercase;
     letter-spacing: 0.08em; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--border);
   }
 
-  .field { margin-bottom: 20px; }
+  .field { margin-bottom: 18px; }
   .field label {
     display: block; font-size: 0.88rem; font-weight: 600; margin-bottom: 6px; color: var(--text);
   }
@@ -50,64 +53,104 @@
     -webkit-appearance: none; appearance: none;
   }
   .field input:focus, .field select:focus { border-color: var(--bni-red); }
-  .field input::placeholder { color: #555; }
-  .field select { cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='2' fill='none'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 16px center; padding-right: 40px; }
-  .field select option { background: #1A1A1A; color: var(--text); }
+  .field input::placeholder { color: #999; }
+  .field select {
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23999' stroke-width='2' fill='none'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 16px center; padding-right: 40px;
+  }
+  .field select option { background: #fff; color: var(--text); }
 
-  /* チェックボックス */
-  .checkbox-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  /* 業種タブ選択 */
+  .industry-tabs {
+    display: flex; gap: 6px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 12px;
+    -webkit-overflow-scrolling: touch; scrollbar-width: none;
+  }
+  .industry-tabs::-webkit-scrollbar { display: none; }
+  .ind-tab {
+    padding: 8px 14px; border-radius: 100px; border: 1px solid var(--border);
+    background: var(--input-bg); color: var(--text-dim); font-size: 0.75rem; font-weight: 600;
+    cursor: pointer; white-space: nowrap; transition: all 0.2s; flex-shrink: 0;
+  }
+  .ind-tab:hover { border-color: var(--bni-red); color: var(--text); }
+  .ind-tab.active { background: var(--bni-red); color: #fff; border-color: var(--bni-red); }
+  .industry-list { display: flex; flex-wrap: wrap; gap: 8px; }
+  .ind-item {
+    padding: 10px 14px; border-radius: 10px; border: 1px solid var(--border);
+    background: var(--input-bg); color: var(--text); font-size: 0.85rem; cursor: pointer;
+    transition: all 0.2s;
+  }
+  .ind-item:hover { border-color: var(--bni-red); }
+  .ind-item.selected { background: rgba(207,32,48,0.08); border-color: var(--bni-red); color: var(--bni-red); font-weight: 600; }
+  .ind-item.hidden { display: none; }
+  .industry-selected {
+    margin-top: 10px; padding: 10px 14px; background: rgba(207,32,48,0.06);
+    border-radius: 10px; font-size: 0.85rem; color: var(--bni-red); font-weight: 600; display: none;
+  }
+  .industry-selected.visible { display: block; }
+
+  /* ターゲット顧客アコーディオン */
+  .accordion-toggle {
+    display: flex; justify-content: space-between; align-items: center;
+    cursor: pointer; padding: 10px 0;
+  }
+  .accordion-toggle .arrow { transition: transform 0.3s; font-size: 0.8rem; color: var(--text-dim); }
+  .accordion-toggle.open .arrow { transform: rotate(180deg); }
+  .accordion-body {
+    max-height: 0; overflow: hidden; transition: max-height 0.3s ease;
+  }
+  .accordion-body.open { max-height: 500px; }
+
+  .checkbox-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding-top: 8px; }
   .checkbox-item {
     display: flex; align-items: center; gap: 8px; padding: 10px 12px;
     background: var(--input-bg); border: 1px solid var(--border); border-radius: 10px;
     cursor: pointer; transition: all 0.2s; font-size: 0.82rem;
   }
   .checkbox-item:hover { border-color: var(--bni-red); }
-  .checkbox-item.checked { border-color: var(--bni-red); background: rgba(207,32,48,0.08); }
+  .checkbox-item.checked { border-color: var(--bni-red); background: rgba(207,32,48,0.06); }
   .checkbox-item input[type="checkbox"] { display: none; }
   .check-mark {
     width: 20px; height: 20px; border: 2px solid var(--border); border-radius: 4px;
     display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.2s;
   }
   .checkbox-item.checked .check-mark { border-color: var(--bni-red); background: var(--bni-red); }
-  .checkbox-item.checked .check-mark::after { content: "✓"; color: #fff; font-size: 0.7rem; font-weight: 700; }
-  .checkbox-limit { font-size: 0.75rem; color: var(--text-dim); margin-top: 4px; }
+  .checkbox-item.checked .check-mark::after { content: "\2713"; color: #fff; font-size: 0.7rem; font-weight: 700; }
+  .checkbox-limit { font-size: 0.75rem; color: var(--text-dim); }
+  .target-summary { font-size: 0.82rem; color: var(--bni-red); margin-top: 4px; }
 
   /* 行動スタイル診断カード */
-  .disc-question { margin-bottom: 28px; }
+  .disc-question { margin-bottom: 24px; }
   .disc-question h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 4px; }
   .disc-question .q-en { font-size: 0.82rem; color: var(--text-dim); margin-bottom: 12px; }
   .disc-options { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 
   .disc-card {
     padding: 14px; border: 2px solid var(--border); border-radius: 14px;
-    cursor: pointer; transition: all 0.3s; background: var(--input-bg); position: relative;
+    cursor: pointer; transition: all 0.3s; background: var(--input-bg);
   }
-  .disc-card:hover { border-color: #555; }
-  .disc-card.selected { border-width: 2px; }
-  .disc-card.selected[data-type="D"] { border-color: var(--fire); background: rgba(207,32,48,0.08); }
-  .disc-card.selected[data-type="I"] { border-color: var(--wind); background: rgba(33,150,243,0.08); }
-  .disc-card.selected[data-type="S"] { border-color: var(--earth); background: rgba(255,193,7,0.08); }
-  .disc-card.selected[data-type="C"] { border-color: var(--water); background: rgba(76,175,80,0.08); }
+  .disc-card:hover { border-color: #CCC; }
+  .disc-card.selected[data-type="D"] { border-color: var(--fire); background: rgba(207,32,48,0.06); }
+  .disc-card.selected[data-type="I"] { border-color: var(--wind); background: rgba(33,150,243,0.06); }
+  .disc-card.selected[data-type="S"] { border-color: var(--earth); background: rgba(232,168,0,0.06); }
+  .disc-card.selected[data-type="C"] { border-color: var(--water); background: rgba(76,175,80,0.06); }
   .disc-card input[type="radio"] { display: none; }
   .disc-card .emoji { font-size: 1.4rem; margin-bottom: 6px; display: block; }
-  .disc-card .ja { font-size: 0.85rem; font-weight: 600; line-height: 1.4; }
+  .disc-card .ja { font-size: 0.85rem; font-weight: 600; line-height: 1.4; color: var(--text); }
   .disc-card .en { font-size: 0.72rem; color: var(--text-dim); line-height: 1.4; margin-top: 4px; }
 
-  /* 送信ボタン */
   .submit-btn {
     width: 100%; padding: 18px; border-radius: 16px; border: none;
-    background: var(--bni-red); color: var(--text); font-size: 1.1rem; font-weight: 700;
+    background: var(--bni-red); color: #fff; font-size: 1.1rem; font-weight: 700;
     cursor: pointer; transition: background 0.2s; margin-top: 8px;
+    box-shadow: 0 4px 12px rgba(207,32,48,0.2);
   }
   .submit-btn:hover { background: var(--bni-red-dark); }
   .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-  /* エラー・成功メッセージ */
   .msg { padding: 16px; border-radius: 12px; margin-bottom: 20px; display: none; font-size: 0.9rem; }
-  .msg.error { background: rgba(207,32,48,0.15); border: 1px solid rgba(207,32,48,0.3); color: #FF6B7A; display: block; }
-  .msg.success { background: rgba(76,175,80,0.15); border: 1px solid rgba(76,175,80,0.3); color: #81C784; display: block; }
+  .msg.error { background: rgba(207,32,48,0.08); border: 1px solid rgba(207,32,48,0.2); color: #B71C1C; display: block; }
 
-  /* ローディング */
   .loading { display: none; text-align: center; padding: 40px; }
   .loading.active { display: block; }
   .spinner { width: 40px; height: 40px; border: 3px solid var(--border); border-top-color: var(--bni-red); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 16px; }
@@ -133,25 +176,21 @@
     <!-- 基本情報 -->
     <div class="section">
       <div class="section-title">基本情報 / Basic Info</div>
-
       <div class="field">
         <label>氏名 <span class="en">/ Name</span><span class="required">*</span></label>
         <input type="text" name="name" placeholder="例: 大城 良樹 / Yoshiki Oshiro" required>
       </div>
-
       <div class="field">
         <label>チャプター名 <span class="en">/ Chapter</span><span class="required">*</span></label>
         <input type="text" name="chapter" placeholder="例: ジャンヌ / Jeanne" required>
       </div>
-
       <div class="field">
         <label>カテゴリー名 <span class="en">/ Category</span><span class="required">*</span></label>
-        <input type="text" name="category" placeholder="例: 業務自動化のAI顧問 / AI Business Automation Consultant" required>
+        <input type="text" name="category" placeholder="例: 業務自動化のAI顧問" required>
       </div>
-
       <div class="field">
         <label>電話番号 <span class="en">/ Phone</span><span class="required">*</span></label>
-        <input type="tel" name="phone" placeholder="例: 090-1234-5678 / +81-90-1234-5678" required>
+        <input type="tel" name="phone" placeholder="例: 090-1234-5678" required>
       </div>
     </div>
 
@@ -159,80 +198,48 @@
     <div class="section">
       <div class="section-title">ビジネス情報 / Business Info</div>
 
+      <!-- 業種タブ選択 -->
       <div class="field">
         <label>業種 <span class="en">/ Industry</span><span class="required">*</span></label>
-        <select name="industry" required>
-          <option value="">選択してください / Select...</option>
-          <optgroup label="建設・不動産">
-            <option>建築設計・施工</option><option>リフォーム・リノベーション</option>
-            <option>不動産売買</option><option>不動産賃貸・管理</option>
-            <option>インテリア・内装</option><option>外構・エクステリア</option><option>電気・設備工事</option>
-          </optgroup>
-          <optgroup label="IT・デジタル">
-            <option>Web制作・デザイン</option><option>システム開発</option>
-            <option>AI・DX支援</option><option>SNSマーケティング</option>
-            <option>動画制作・映像</option><option>IT機器・サポート</option>
-          </optgroup>
-          <optgroup label="士業・コンサルティング">
-            <option>弁護士</option><option>税理士・会計士</option>
-            <option>社会保険労務士</option><option>行政書士</option><option>司法書士</option>
-            <option>中小企業診断士</option><option>経営コンサルティング</option><option>人材・組織コンサルティング</option>
-          </optgroup>
-          <optgroup label="金融・保険">
-            <option>生命保険</option><option>損害保険</option>
-            <option>ファイナンシャルプランナー</option><option>融資・資金調達</option><option>投資・資産運用</option>
-          </optgroup>
-          <optgroup label="美容・健康">
-            <option>美容室・ヘアサロン</option><option>エステ・リラクゼーション</option>
-            <option>整体・鍼灸・接骨</option><option>パーソナルトレーニング</option>
-            <option>歯科</option><option>医療・クリニック</option>
-          </optgroup>
-          <optgroup label="飲食・食品">
-            <option>飲食店経営</option><option>ケータリング・仕出し</option><option>食品製造・販売</option>
-          </optgroup>
-          <optgroup label="教育・研修">
-            <option>語学・翻訳</option><option>研修・セミナー</option>
-            <option>コーチング</option><option>学習塾・スクール</option>
-          </optgroup>
-          <optgroup label="クリエイティブ">
-            <option>グラフィックデザイン</option><option>写真・映像</option>
-            <option>ライティング・編集</option><option>印刷・出版</option>
-          </optgroup>
-          <optgroup label="生活サービス">
-            <option>清掃・ハウスクリーニング</option><option>引越し・物流</option>
-            <option>冠婚葬祭</option><option>ペット関連</option><option>自動車販売・整備</option>
-          </optgroup>
-          <optgroup label="その他">
-            <option>人材紹介・派遣</option><option>広告・PR</option>
-            <option>通信・インフラ</option><option>その他</option>
-          </optgroup>
-        </select>
+        <input type="hidden" name="industry" id="industry-value" required>
+        <div class="industry-tabs" id="ind-tabs"></div>
+        <div class="industry-list" id="ind-list"></div>
+        <div class="industry-selected" id="ind-selected"></div>
       </div>
 
+      <!-- ターゲット顧客（アコーディオン） -->
       <div class="field">
-        <label>ターゲット顧客層 <span class="en">/ Target Customers</span><span class="required">*</span></label>
-        <div class="checkbox-limit">最大3つまで / Up to 3</div>
-        <div class="checkbox-grid" id="target-grid">
-          <label class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox" name="target" value="個人（一般消費者）"><span class="check-mark"></span>個人（一般消費者）</label>
-          <label class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox" name="target" value="個人事業主・フリーランス"><span class="check-mark"></span>個人事業主</label>
-          <label class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox" name="target" value="中小企業（従業員30名以下）"><span class="check-mark"></span>中小企業</label>
-          <label class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox" name="target" value="中堅企業（従業員31-300名）"><span class="check-mark"></span>中堅企業</label>
-          <label class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox" name="target" value="大企業（従業員301名以上）"><span class="check-mark"></span>大企業</label>
-          <label class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox" name="target" value="飲食・小売店舗"><span class="check-mark"></span>飲食・小売店舗</label>
-          <label class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox" name="target" value="医療・福祉施設"><span class="check-mark"></span>医療・福祉施設</label>
-          <label class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox" name="target" value="不動産オーナー"><span class="check-mark"></span>不動産オーナー</label>
-          <label class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox" name="target" value="富裕層・高所得者"><span class="check-mark"></span>富裕層・高所得者</label>
-          <label class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox" name="target" value="海外企業・外国人"><span class="check-mark"></span>海外企業・外国人</label>
+        <div class="accordion-toggle" id="target-toggle" onclick="toggleAccordion()">
+          <div>
+            <label style="margin-bottom:0">ターゲット顧客層 <span class="en">/ Target</span><span class="required">*</span></label>
+            <div class="checkbox-limit">最大3つまで / Up to 3</div>
+            <div class="target-summary" id="target-summary"></div>
+          </div>
+          <span class="arrow">&#9660;</span>
+        </div>
+        <div class="accordion-body" id="target-body">
+          <div class="checkbox-grid" id="target-grid">
+            <label class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox" name="target" value="個人（一般消費者）"><span class="check-mark"></span>個人（一般消費者）</label>
+            <label class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox" name="target" value="個人事業主・フリーランス"><span class="check-mark"></span>個人事業主</label>
+            <label class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox" name="target" value="中小企業（従業員30名以下）"><span class="check-mark"></span>中小企業</label>
+            <label class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox" name="target" value="中堅企業（従業員31-300名）"><span class="check-mark"></span>中堅企業</label>
+            <label class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox" name="target" value="大企業（従業員301名以上）"><span class="check-mark"></span>大企業</label>
+            <label class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox" name="target" value="飲食・小売店舗"><span class="check-mark"></span>飲食・小売店舗</label>
+            <label class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox" name="target" value="医療・福祉施設"><span class="check-mark"></span>医療・福祉施設</label>
+            <label class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox" name="target" value="不動産オーナー"><span class="check-mark"></span>不動産オーナー</label>
+            <label class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox" name="target" value="富裕層・高所得者"><span class="check-mark"></span>富裕層・高所得者</label>
+            <label class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox" name="target" value="海外企業・外国人"><span class="check-mark"></span>海外企業・外国人</label>
+          </div>
         </div>
       </div>
     </div>
 
     <!-- 行動スタイル診断 -->
     <div class="section">
-      <div class="section-title">🔥🌀🌿💧 行動スタイル診断 / Behavioral Style</div>
+      <div class="section-title">行動スタイル診断 / Your Style</div>
 
       <div class="disc-question">
-        <h3>Q7. ビジネスで最もワクワクする瞬間は？</h3>
+        <h3>Q1. ビジネスで最もワクワクする瞬間は？</h3>
         <p class="q-en">When do you feel most excited in business?</p>
         <div class="disc-options">
           <label class="disc-card" data-type="D" onclick="selectDisc(this,'q7')">
@@ -257,13 +264,13 @@
             <input type="radio" name="q7" value="D">
             <span class="emoji">💧</span>
             <span class="ja">データを分析して最適な戦略を見つけたとき</span>
-            <span class="en">Discovering the optimal strategy through data analysis</span>
+            <span class="en">Discovering the optimal strategy through data</span>
           </label>
         </div>
       </div>
 
       <div class="disc-question">
-        <h3>Q8. 壁にぶつかった時あなたは？</h3>
+        <h3>Q2. 壁にぶつかった時あなたは？</h3>
         <p class="q-en">When you hit a wall, you:</p>
         <div class="disc-options">
           <label class="disc-card" data-type="D" onclick="selectDisc(this,'q8')">
@@ -294,7 +301,7 @@
       </div>
 
       <div class="disc-question">
-        <h3>Q9. あなたを一言で表すなら？</h3>
+        <h3>Q3. あなたを一言で表すなら？</h3>
         <p class="q-en">In one word, you are:</p>
         <div class="disc-options">
           <label class="disc-card" data-type="D" onclick="selectDisc(this,'q9')">
@@ -330,26 +337,106 @@
 
   <div class="loading" id="loading">
     <div class="spinner"></div>
-    <p>送信中... / Submitting...</p>
+    <p style="color:var(--text-dim)">送信中... / Submitting...</p>
   </div>
 </div>
 
 <script>
-// GAS Web App URL（デプロイ後に設定）
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbxinT85Mq5KSEJyujQs_OI0-hzM1vALHOjg9ICjv8jdjdJjTFYMIq4boKLbHNqJfPX8/exec';
+
+// 業種データ
+const INDUSTRIES = {
+  '建設・不動産': ['建築設計・施工','リフォーム・リノベーション','不動産売買','不動産賃貸・管理','インテリア・内装','外構・エクステリア','電気・設備工事'],
+  'IT・デジタル': ['Web制作・デザイン','システム開発','AI・DX支援','SNSマーケティング','動画制作・映像','IT機器・サポート'],
+  '士業・コンサル': ['弁護士','税理士・会計士','社会保険労務士','行政書士','司法書士','中小企業診断士','経営コンサルティング','人材・組織コンサルティング'],
+  '金融・保険': ['生命保険','損害保険','ファイナンシャルプランナー','融資・資金調達','投資・資産運用'],
+  '美容・健康': ['美容室・ヘアサロン','エステ・リラクゼーション','整体・鍼灸・接骨','パーソナルトレーニング','歯科','医療・クリニック'],
+  '飲食・食品': ['飲食店経営','ケータリング・仕出し','食品製造・販売'],
+  '教育・研修': ['語学・翻訳','研修・セミナー','コーチング','学習塾・スクール'],
+  'クリエイティブ': ['グラフィックデザイン','写真・映像','ライティング・編集','印刷・出版'],
+  '生活サービス': ['清掃・ハウスクリーニング','引越し・物流','冠婚葬祭','ペット関連','自動車販売・整備'],
+  'その他': ['人材紹介・派遣','広告・PR','通信・インフラ','その他']
+};
+
+let activeTab = null;
+
+// 業種タブ・リスト初期化
+document.addEventListener('DOMContentLoaded', () => {
+  const tabsEl = document.getElementById('ind-tabs');
+  const listEl = document.getElementById('ind-list');
+
+  // タブ生成
+  Object.keys(INDUSTRIES).forEach(group => {
+    const tab = document.createElement('button');
+    tab.type = 'button';
+    tab.className = 'ind-tab';
+    tab.textContent = group;
+    tab.onclick = () => selectIndustryTab(group);
+    tabsEl.appendChild(tab);
+  });
+
+  // 業種アイテム生成
+  Object.entries(INDUSTRIES).forEach(([group, items]) => {
+    items.forEach(name => {
+      const item = document.createElement('div');
+      item.className = 'ind-item hidden';
+      item.dataset.group = group;
+      item.textContent = name;
+      item.onclick = () => selectIndustry(name, item);
+      listEl.appendChild(item);
+    });
+  });
+
+  // 最初のタブを選択
+  selectIndustryTab(Object.keys(INDUSTRIES)[0]);
+});
+
+function selectIndustryTab(group) {
+  activeTab = group;
+  document.querySelectorAll('.ind-tab').forEach(t => t.classList.toggle('active', t.textContent === group));
+  document.querySelectorAll('.ind-item').forEach(item => {
+    item.classList.toggle('hidden', item.dataset.group !== group);
+  });
+}
+
+function selectIndustry(name, el) {
+  document.querySelectorAll('.ind-item').forEach(i => i.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('industry-value').value = name;
+  const sel = document.getElementById('ind-selected');
+  sel.textContent = '✓ ' + name;
+  sel.classList.add('visible');
+}
+
+// ターゲット顧客アコーディオン
+function toggleAccordion() {
+  const toggle = document.getElementById('target-toggle');
+  const body = document.getElementById('target-body');
+  toggle.classList.toggle('open');
+  body.classList.toggle('open');
+}
 
 function toggleCheck(el) {
   const cb = el.querySelector('input[type="checkbox"]');
   const checked = document.querySelectorAll('#target-grid .checkbox-item.checked');
-  if (!el.classList.contains('checked') && checked.length >= 3) {
-    return; // 最大3つ制限
-  }
+  if (!el.classList.contains('checked') && checked.length >= 3) return;
   cb.checked = !cb.checked;
   el.classList.toggle('checked', cb.checked);
+  updateTargetSummary();
+}
+
+function updateTargetSummary() {
+  const checked = document.querySelectorAll('#target-grid .checkbox-item.checked');
+  const summary = document.getElementById('target-summary');
+  if (checked.length > 0) {
+    const names = Array.from(checked).map(el => el.textContent.trim()).join(', ');
+    summary.textContent = `${checked.length}件選択: ${names}`;
+  } else {
+    summary.textContent = '';
+  }
 }
 
 function selectDisc(el, name) {
-  // 同グループの他カードの選択を解除
   el.closest('.disc-options').querySelectorAll('.disc-card').forEach(c => c.classList.remove('selected'));
   el.classList.add('selected');
   el.querySelector('input[type="radio"]').checked = true;
@@ -361,15 +448,19 @@ function submitForm(e) {
   const msgArea = document.getElementById('msg-area');
   msgArea.innerHTML = '';
 
-  // バリデーション
   const data = new FormData(form);
-  const targets = data.getAll('target');
-  if (targets.length === 0) {
-    msgArea.innerHTML = '<div class="msg error">ターゲット顧客層を1つ以上選択してください / Please select at least 1 target customer</div>';
+  const industry = document.getElementById('industry-value').value;
+  if (!industry) {
+    msgArea.innerHTML = '<div class="msg error">業種を選択してください / Please select your industry</div>';
     return false;
   }
 
-  // 送信
+  const targets = data.getAll('target');
+  if (targets.length === 0) {
+    msgArea.innerHTML = '<div class="msg error">ターゲット顧客層を1つ以上選択してください / Please select at least 1 target</div>';
+    return false;
+  }
+
   const btn = document.getElementById('submit-btn');
   const loading = document.getElementById('loading');
   btn.disabled = true;
@@ -377,44 +468,31 @@ function submitForm(e) {
   loading.classList.add('active');
 
   const payload = {
-    name: data.get('name'),
-    chapter: data.get('chapter'),
-    category: data.get('category'),
-    phone: data.get('phone'),
-    industry: data.get('industry'),
-    target_customers: targets.join(', '),
-    q7: data.get('q7'),
-    q8: data.get('q8'),
-    q9: data.get('q9')
+    name: data.get('name'), chapter: data.get('chapter'), category: data.get('category'),
+    phone: data.get('phone'), industry: industry, target_customers: targets.join(', '),
+    q7: data.get('q7'), q8: data.get('q8'), q9: data.get('q9')
   };
-
-  // URLSearchParams形式でPOST
-  const params = new URLSearchParams(payload);
 
   fetch(GAS_URL, {
     method: 'POST',
-    body: params,
+    body: new URLSearchParams(payload),
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
   })
   .then(r => r.json())
   .then(res => {
     loading.classList.remove('active');
     if (res.success) {
-      // 成功 → result.htmlへ遷移
       const disc = res.disc || {};
-      const resultUrl = `result.html?name=${encodeURIComponent(payload.name)}&disc_emoji=${encodeURIComponent(disc.emoji||'')}&disc_label=${encodeURIComponent(disc.label||'')}`;
-      window.location.href = resultUrl;
+      window.location.href = `result.html?name=${encodeURIComponent(payload.name)}&disc_emoji=${encodeURIComponent(disc.emoji||'')}&disc_label=${encodeURIComponent(disc.label||'')}`;
     } else {
-      form.style.display = 'block';
-      btn.disabled = false;
+      form.style.display = 'block'; btn.disabled = false;
       msgArea.innerHTML = `<div class="msg error">${res.error || '送信に失敗しました'}</div>`;
     }
   })
   .catch(err => {
     loading.classList.remove('active');
-    form.style.display = 'block';
-    btn.disabled = false;
-    msgArea.innerHTML = `<div class="msg error">通信エラーが発生しました / Network error: ${err.message}</div>`;
+    form.style.display = 'block'; btn.disabled = false;
+    msgArea.innerHTML = `<div class="msg error">通信エラー / Network error: ${err.message}</div>`;
   });
 
   return false;
