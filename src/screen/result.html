@@ -152,29 +152,38 @@
 <div class="header"><h1>AI Connect</h1></div>
 
 <div class="container">
+  <!-- 回答直後の感謝画面 -->
   <div class="thank-you" id="thank-you">
     <div class="disc-result" id="disc-emoji"></div>
     <div class="disc-label" id="disc-label-text"></div>
-    <p class="msg">回答ありがとうございます！<br>Thank you for your response!<br><br>下の検索からグループを確認できます。<br><small>※グループ発表後に結果が表示されます</small></p>
+    <p class="msg">
+      回答ありがとうございます！<br>Thank you for your response!<br><br>
+      当日のグループ発表をお楽しみに！<br>
+      Look forward to the group announcement!<br><br>
+      <small>※グループはイベント当日に発表されます<br>Groups will be announced at the event</small>
+    </p>
   </div>
 
-  <div class="search-section">
-    <input class="search-box" id="search-input" type="text" placeholder="名前 or 電話番号..." oninput="debounceSearch()">
-    <p class="search-hint">名前（部分一致）または電話番号の下4桁で検索</p>
+  <!-- 検索セクション（直接アクセス時のみ表示） -->
+  <div class="search-section" id="search-section">
+    <input class="search-box" id="search-input" type="text"
+      placeholder="名前 or 電話番号 / Name or Phone..."
+      oninput="debounceSearch()">
+    <p class="search-hint">名前（部分一致）または電話番号の下4桁で検索<br>Search by name or last 4 digits of phone</p>
   </div>
 
-  <div class="loading" id="loading"><div class="spinner"></div><p style="color:var(--text-dim);font-size:0.85rem">検索中...</p></div>
+  <div class="loading" id="loading"><div class="spinner"></div><p style="color:var(--text-dim);font-size:0.85rem">検索中... / Searching...</p></div>
 
   <div class="not-ready" id="not-ready">
     <div class="icon">⏳</div>
-    <h2>グループ発表をお楽しみに！</h2>
-    <p>マッチング結果はまだ準備中です。<br>当日の発表をお楽しみに！<br><br>Results are being prepared.<br>Stay tuned!</p>
+    <h2>グループ発表をお楽しみに！<br><span style="font-size:0.85rem;font-weight:500">Stay tuned for the announcement!</span></h2>
+    <p>マッチング結果はまだ準備中です。<br>当日の発表をお楽しみに！<br><br>Results are being prepared.<br>Look forward to the event!</p>
   </div>
 
   <div class="result" id="result"></div>
-  <div class="no-result" id="no-result">該当する参加者が見つかりません</div>
+  <div class="no-result" id="no-result">該当する参加者が見つかりません<br><span style="font-size:0.8rem">No participant found</span></div>
 
-  <a href="landing.html" class="back-link">← トップに戻る</a>
+  <a href="landing.html" class="back-link">← トップに戻る / Back to top</a>
 </div>
 
 <script>
@@ -184,12 +193,12 @@ let st=null;
 document.addEventListener('DOMContentLoaded',()=>{
   const p=new URLSearchParams(location.search);
   if(p.get('name')){
+    // フォームからの遷移 → 感謝画面のみ表示、検索欄は非表示
     document.getElementById('thank-you').classList.add('visible');
+    document.getElementById('search-section').style.display='none';
     const e=p.get('disc_emoji'), l=p.get('disc_label');
     if(e) document.getElementById('disc-emoji').textContent=e;
-    if(l) document.getElementById('disc-label-text').textContent='あなたの行動タイプ: '+l;
-    document.getElementById('search-input').value=p.get('name');
-    setTimeout(doSearch,500);
+    if(l) document.getElementById('disc-label-text').textContent='Your Style: '+l;
   }
 });
 
