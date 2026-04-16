@@ -136,6 +136,25 @@
     .three-col { grid-template-columns: 1fr; }
     .col-info { position: static; }
     .presentation-card { padding: 20px 16px; max-width: 100%; }
+    .reveal-grid { grid-template-columns: 1fr; }
+  }
+
+  /* スマホ: メンバー表示を2行レイアウトに */
+  @media (max-width: 768px) {
+    .member-item {
+      flex-wrap: wrap; gap: 4px 8px; padding: 8px 10px;
+    }
+    .member-avatar { width: 26px; height: 26px; font-size: 0.7rem; }
+    .member-info { flex: 0 0 auto; min-width: 80px; }
+    .member-name { font-size: 0.88rem; }
+    .member-name-en { display: none; }
+    .member-meta { font-size: 0.72rem; }
+    .member-disc-badge .disc-badge { font-size: 0.65rem; padding: 2px 6px; }
+    .member-industry { font-size: 0.65rem; padding: 2px 6px; }
+    .disc-detail { grid-template-columns: 1fr 1fr; gap: 6px; }
+    .disc-detail-item { padding: 8px 10px; }
+    .disc-detail-item .count { font-size: 0.9rem; }
+    .disc-detail-item .desc { font-size: 0.7rem; }
   }
 
   /* 発表モード */
