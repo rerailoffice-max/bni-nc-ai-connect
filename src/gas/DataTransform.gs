@@ -231,7 +231,7 @@ function testDiscScoring() {
 
   const msg = `DISC判定テスト結果: ${passed}/${tests.length} 合格\n\n${results.join('\n')}`;
   Logger.log(msg);
-  SpreadsheetApp.getUi().alert('DISC判定テスト', msg, SpreadsheetApp.getUi().ButtonSet.OK);
+  try { SpreadsheetApp.getUi().alert('DISC判定テスト', msg, SpreadsheetApp.getUi().ButtonSet.OK); } catch(e) {}
 }
 
 /**

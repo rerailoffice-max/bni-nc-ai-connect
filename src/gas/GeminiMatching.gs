@@ -7,21 +7,23 @@
  * メインのマッチング実行関数（メニューから呼び出し）
  */
 function runMatching() {
-  const ui = SpreadsheetApp.getUi();
+  let ui;
+  try { ui = SpreadsheetApp.getUi(); } catch(e) { ui = null; }
+  const alert_ = (title, msg) => { if (ui) ui.alert(title, msg, ui.ButtonSet.OK); Logger.log(`${title}: ${msg}`); };
 
   try {
     // APIキーチェック
     if (!CONFIG.GEMINI_API_KEY) {
-      ui.alert('エラー', 'Gemini APIキーが設定されていません。\n\nスクリプトプロパティに GEMINI_API_KEY を設定してください。', ui.ButtonSet.OK);
+      alert_('エラー', 'Gemini APIキーが設定されていません。\nスクリプトプロパティに GEMINI_API_KEY を設定してください。');
       return;
     }
 
     // 参加者データ読み込み
-    ui.alert('マッチング開始', '参加者データを読み込んでいます...', ui.ButtonSet.OK);
+    alert_('マッチング開始', '参加者データを読み込んでいます...');
     const data = loadParticipants();
 
     if (data.participants.length < CONFIG.GROUP_SIZE_MIN) {
-      ui.alert('エラー', `参加者が${CONFIG.GROUP_SIZE_MIN}名未満です（現在: ${data.participants.length}名）`, ui.ButtonSet.OK);
+      alert_('エラー', `参加者が${CONFIG.GROUP_SIZE_MIN}名未満です（現在: ${data.participants.length}名）`);
       return;
     }
 
@@ -65,7 +67,7 @@ function runMatching() {
     }
 
     if (!result) {
-      ui.alert('エラー', `マッチングに失敗しました。\n\n${lastError}`, ui.ButtonSet.OK);
+      alert_('エラー', `マッチングに失敗しました。\n\n${lastError}`);
       return;
     }
 
@@ -76,10 +78,10 @@ function runMatching() {
     writeResults(result, data.participants, serendipity);
 
     const totalMembers = result.groups.reduce((s, g) => s + g.tables.reduce((ss, t) => ss + t.members.length, 0), 0);
-    ui.alert('完了', `マッチングが完了しました！\n\n参加者: ${data.participants.length}名\nグループ数: ${result.groups.length}\n配置済み: ${totalMembers}名\n\n「マッチング結果」「グループ一覧」「マッチング根拠」シートを確認してください。`, ui.ButtonSet.OK);
+    alert_('完了', `マッチングが完了しました！\n\n参加者: ${data.participants.length}名\nグループ数: ${result.groups.length}\n配置済み: ${totalMembers}名`);
 
   } catch (e) {
-    ui.alert('エラー', `予期しないエラーが発生しました。\n\n${e.message}`, ui.ButtonSet.OK);
+    alert_('エラー', `予期しないエラーが発生しました。\n\n${e.message}`);
     Logger.log(`エラー: ${e.message}\n${e.stack}`);
   }
 }
@@ -122,10 +124,55 @@ function callGeminiForMatching(data) {
   }
 
   const textContent = candidates[0].content.parts[0].text;
-  const matchingResult = JSON.parse(textContent);
+  const rawResult = JSON.parse(textContent);
+
+  // コンパクト形式（table1/table2がID配列）を正規形式に展開
+  const matchingResult = expandCompactResult_(rawResult, data);
 
   Logger.log(`Gemini応答: ${matchingResult.groups.length}グループ`);
   return matchingResult;
+}
+
+/**
+ * コンパクトなGemini出力を正規のグループ形式に展開する
+ */
+function expandCompactResult_(raw, data) {
+  const pMap = {};
+  data.participants.forEach(p => { pMap[p.id] = p; });
+
+  const groups = raw.groups.map((g, idx) => {
+    const t1Ids = g.table1 || [];
+    const t2Ids = g.table2 || [];
+    const tableNum = (idx + 1) * 2;
+
+    function memberFromId(id) {
+      const p = pMap[id] || {};
+      return { id: id, name: p.name||'', industry: p.industry||'', chapter: p.chapter||'', category: p.category||'', disc_label: p.disc_label||'' };
+    }
+
+    const t1Members = t1Ids.map(memberFromId);
+    const t2Members = t2Ids.map(memberFromId);
+
+    // DISC集計
+    const bal = { D:0, I:0, S:0, C:0 };
+    [...t1Ids, ...t2Ids].forEach(id => {
+      const p = pMap[id];
+      if (p && p.disc_main && bal[p.disc_main] !== undefined) bal[p.disc_main]++;
+    });
+
+    return {
+      group_number: g.group_number || (idx + 1),
+      group_name: g.group_name || '',
+      disc_balance: bal,
+      tables: [
+        { table_number: tableNum - 1, members: t1Members },
+        { table_number: tableNum, members: t2Members }
+      ],
+      synergy_reason: g.synergy_reason || ''
+    };
+  });
+
+  return { groups: groups };
 }
 
 /**
@@ -144,66 +191,38 @@ function buildMatchingPrompt(data) {
 
 以下の${participantCount}名の参加者を、${groupCount}グループ（各グループ2テーブル）に最適配置してください。
 
-## 配置ルール（優先度順）
+## 配置ルール（全ルール必守）
 
-### ルール1: パワーチーム編成（最重要）
-- 同じtarget_customersを持つ異業種同士を同グループに（同顧客層マッチ）
-- categoryの意味的な補完関係を判断（例: 不動産×リフォーム×保険×税理士の紹介チェーン）
-- **「このグループならリファーラル（ビジネス紹介）が生まれる」** 組み合わせを最優先
+### ルール1: 異業種分散（最重要・絶対守る）
+- **同じind(業種グループ)の人を同グループに4名以上入れてはいけない**。これが最重要ルール。
+- 10種の業種グループがある。各グループには全10業種が均等に混ざるように配置せよ。
+- 「美容だけのグループ」「建設だけのグループ」は絶対に作らない。
 
-### ルール2: 同業種回避
-- 同じindustry_groupの人は同グループに最大3-4名まで（${groupSize}名中）
-- できるだけ少なく。完全回避が無理な場合のフォールバック
+### ルール2: パワーチーム（異業種シナジー）
+- 同じtc(ターゲット顧客)を持つ**異なる業種**を同グループに配置
+- 例: 不動産(1名)+リフォーム(1名)+保険(1名)+税理士(1名)=紹介チェーン
+- 同業種を集めるのではなく、補完関係にある異業種を集める
 
-### ルール3: 行動タイプの多様性
-- 各グループにD(炎)/I(風)/S(大地)/C(水)の全4タイプを含める
-- 現在の分布: D=${discDist.D}名, I=${discDist.I}名, S=${discDist.S}名, C=${discDist.C}名
-- S型・C型が少ない場合、各グループに最低${CONFIG.DISC.SC_MIN_PER_GROUP}名ずつ保証
+### ルール3: チャプター分散
+- 同じch(チャプター)は同グループに3名まで
 
-### ルール4: チャプター分散
-- 同チャプターのメンバーは同グループに3名まで
+### ルール4: 行動タイプ多様性
+- 各グループにD/I/S/C全4タイプを含める（分布: D=${discDist.D}, I=${discDist.I}, S=${discDist.S}, C=${discDist.C}）
 
-### ルール5: グループサイズ均等化
-- ${groupCount}グループ × 約${groupSize}名、グループ間の差は最大±3名
-- 各グループ内の2テーブルも均等（差±1名）
-- テーブル番号: グループ1はTable 1,2 / グループ2はTable 3,4 / ... / グループ${groupCount}はTable ${groupCount*2-1},${groupCount*2}
+### ルール5: サイズ均等
+- ${groupCount}グループ × 約${groupSize}名（±3名）
 
-## 出力形式
-以下のJSON形式で正確に出力してください。
+## 出力形式（コンパクト版 — membersはidの配列のみ）
 
-{
-  "groups": [
-    {
-      "group_number": 1,
-      "group_name": "パワーチームテーマ名（日本語、15文字以内）",
-      "disc_balance": {"D": 5, "I": 6, "S": 5, "C": 4},
-      "tables": [
-        {
-          "table_number": 1,
-          "members": [
-            {"id": 1, "name": "氏名", "industry": "業種", "chapter": "チャプター", "category": "カテゴリー", "disc_label": "炎風"}
-          ]
-        },
-        {
-          "table_number": 2,
-          "members": [...]
-        }
-      ],
-      "synergy_reason": "このグループのシナジー説明（日本語、80文字以内）"
-    }
-  ],
-  "total_groups": ${groupCount},
-  "total_participants": ${participantCount}
-}
+{"groups":[{"group_number":1,"group_name":"テーマ名","table1":[id,id,...],"table2":[id,id,...],"synergy_reason":"説明"},...]}
 
-**重要**:
-- 全${participantCount}名を必ずいずれかのグループに配置すること（漏れ不可）
-- 1人を複数グループに配置しないこと（重複不可）
-- group_nameは「住宅ワンストップ」「中小企業の成長支援」のような業種シナジーを表すテーマ名
-- synergy_reasonはパワーチームの紹介チェーンと行動タイプの多様性を含む説明
+- group_name: 業種シナジーのテーマ（日本語15文字以内）
+- table1/table2: メンバーIDの配列（均等に分割）
+- synergy_reason: パワーチーム説明（50文字以内）
+- 全${participantCount}名を必ず配置（漏れ・重複不可）
 
 ## 参加者データ（${participantCount}名）
-${JSON.stringify(data.participants, null, 1)}`;
+${JSON.stringify(data.participants.map(p => ({id:p.id,ind:p.industry_group,ch:p.chapter,cat:p.category,tc:p.target_customers,dm:p.disc_main})))}`;
 }
 
 /**
@@ -452,16 +471,15 @@ function generateScreenData() {
 function exportScreenHTML() {
   try {
     const jsonData = generateScreenData();
-    const ui = SpreadsheetApp.getUi();
-
     Logger.log('=== スクリーン表示用JSONデータ ===');
     Logger.log(jsonData);
 
     const parsed = JSON.parse(jsonData);
-    ui.alert('スクリーンデータ出力',
-      `JSONデータをログに出力しました。\n\n表示 → ログ からコピーしてスクリーンHTMLに埋め込んでください。\n\nグループ数: ${parsed.groups.length}\n総参加者: ${parsed.stats.total_participants}名`,
-      ui.ButtonSet.OK);
+    const msg = `JSONデータをログに出力しました。\nグループ数: ${parsed.groups.length}\n総参加者: ${parsed.stats.total_participants}名`;
+    try { SpreadsheetApp.getUi().alert('スクリーンデータ出力', msg, SpreadsheetApp.getUi().ButtonSet.OK); } catch(e2) {}
+    Logger.log(msg);
   } catch (e) {
-    SpreadsheetApp.getUi().alert('エラー', e.message, SpreadsheetApp.getUi().ButtonSet.OK);
+    Logger.log(`エラー: ${e.message}`);
+    try { SpreadsheetApp.getUi().alert('エラー', e.message, SpreadsheetApp.getUi().ButtonSet.OK); } catch(e2) {}
   }
 }

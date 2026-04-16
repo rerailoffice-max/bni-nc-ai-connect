@@ -6,10 +6,10 @@
 const CONFIG = {
   // Gemini API
   GEMINI_API_KEY: PropertiesService.getScriptProperties().getProperty('GEMINI_API_KEY'),
-  GEMINI_MODEL: 'gemini-2.0-flash',
+  GEMINI_MODEL: 'gemini-3-flash-preview',
   GEMINI_ENDPOINT: 'https://generativelanguage.googleapis.com/v1beta/models/',
   GEMINI_TEMPERATURE: 0.2,
-  GEMINI_MAX_OUTPUT_TOKENS: 16384,
+  GEMINI_MAX_OUTPUT_TOKENS: 65536,
   GEMINI_MAX_RETRIES: 3,
 
   // グループ設定（v2: 10グループ × 2テーブル × 約10名）
@@ -152,5 +152,5 @@ function clearResults() {
     const sheet = ss.getSheetByName(name);
     if (sheet) sheet.clearContents();
   });
-  SpreadsheetApp.getUi().alert('結果をクリアしました');
+  try { SpreadsheetApp.getUi().alert('結果をクリアしました'); } catch(e) {}
 }

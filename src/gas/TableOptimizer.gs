@@ -113,70 +113,132 @@ function validateGroups(result, participants) {
 }
 
 /**
- * グループ配置のルール違反を自動修正する
+ * グループ配置のルール違反を自動修正する（双方向スワップ方式）
  */
 function fixGroupViolations(result, participants) {
   const pMap = {};
   participants.forEach(p => { pMap[p.id] = p; });
 
-  let improved = true;
-  let iterations = 0;
-  const maxIterations = 200;
+  // ヘルパー: グループの業種別カウント
+  function getIGCounts(group) {
+    const counts = {};
+    group.tables.flatMap(t => t.members).forEach(m => {
+      const p = pMap[m.id];
+      if (p) counts[p.industry_group] = (counts[p.industry_group] || 0) + 1;
+    });
+    return counts;
+  }
 
-  while (improved && iterations < maxIterations) {
-    improved = false;
-    iterations++;
+  // ヘルパー: グループのチャプター別カウント
+  function getChCounts(group) {
+    const counts = {};
+    group.tables.flatMap(t => t.members).forEach(m => {
+      const p = pMap[m.id];
+      if (p && p.chapter) counts[p.chapter] = (counts[p.chapter] || 0) + 1;
+    });
+    return counts;
+  }
 
-    for (let i = 0; i < result.groups.length; i++) {
-      const group = result.groups[i];
-      const allMembers = group.tables.flatMap(t => t.members);
-
-      // 同業種グループの違反を修正
-      const igCount = {};
-      allMembers.forEach(m => {
-        const p = pMap[m.id];
-        if (p) {
-          if (!igCount[p.industry_group]) igCount[p.industry_group] = [];
-          igCount[p.industry_group].push(m);
-        }
-      });
-
-      Object.entries(igCount).forEach(([ig, members]) => {
-        if (members.length > 4) {
-          const excess = members.slice(4);
-          excess.forEach(excessMember => {
-            const target = findGroupSwapTarget_(result.groups, i, excessMember, pMap, 'industry');
-            if (target !== null) {
-              performGroupSwap_(result.groups, i, target, excessMember, pMap);
-              improved = true;
-            }
-          });
-        }
-      });
-
-      // 同チャプター違反を修正
-      const chCount = {};
-      allMembers.forEach(m => {
-        const p = pMap[m.id];
-        if (p && p.chapter) {
-          if (!chCount[p.chapter]) chCount[p.chapter] = [];
-          chCount[p.chapter].push(m);
-        }
-      });
-
-      Object.entries(chCount).forEach(([ch, members]) => {
-        if (members.length > 3) {
-          const excess = members.slice(3);
-          excess.forEach(excessMember => {
-            const target = findGroupSwapTarget_(result.groups, i, excessMember, pMap, 'chapter');
-            if (target !== null) {
-              performGroupSwap_(result.groups, i, target, excessMember, pMap);
-              improved = true;
-            }
-          });
-        }
-      });
+  // ヘルパー: メンバーをグループから除去
+  function removeMember(group, memberId) {
+    for (const table of group.tables) {
+      const idx = table.members.findIndex(m => m.id === memberId);
+      if (idx >= 0) { return table.members.splice(idx, 1)[0]; }
     }
+    return null;
+  }
+
+  // ヘルパー: グループの小さいテーブルに追加
+  function addMember(group, member) {
+    const t = group.tables.sort((a, b) => a.members.length - b.members.length)[0];
+    t.members.push(member);
+  }
+
+  let totalSwaps = 0;
+
+  // 業種違反の修正（双方向スワップ）
+  for (let pass = 0; pass < 50; pass++) {
+    let swapped = false;
+    for (let i = 0; i < result.groups.length; i++) {
+      const igCounts = getIGCounts(result.groups[i]);
+      for (const [ig, count] of Object.entries(igCounts)) {
+        if (count <= 4) continue;
+        // この業種の余剰メンバーを見つける
+        const allMembers = result.groups[i].tables.flatMap(t => t.members);
+        const excess = allMembers.filter(m => pMap[m.id] && pMap[m.id].industry_group === ig).slice(4);
+
+        for (const exMember of excess) {
+          // 別グループで、この業種が少なく、かつ交換相手がいるグループを探す
+          for (let j = 0; j < result.groups.length; j++) {
+            if (j === i) continue;
+            const jIGCounts = getIGCounts(result.groups[j]);
+            if ((jIGCounts[ig] || 0) >= 4) continue; // 受け入れ先も既に多い
+
+            // 交換相手: jグループから、iグループで少ない業種のメンバー
+            const jMembers = result.groups[j].tables.flatMap(t => t.members);
+            const swapCandidate = jMembers.find(m => {
+              const p = pMap[m.id];
+              if (!p) return false;
+              const pIG = p.industry_group;
+              if (pIG === ig) return false; // 同じ業種は交換しても意味ない
+              // iグループでこの業種が4名未満なら受け入れ可能
+              return (igCounts[pIG] || 0) < 4;
+            });
+
+            if (swapCandidate) {
+              // 双方向スワップ実行
+              removeMember(result.groups[i], exMember.id);
+              removeMember(result.groups[j], swapCandidate.id);
+              addMember(result.groups[j], exMember);
+              addMember(result.groups[i], swapCandidate);
+              totalSwaps++;
+              swapped = true;
+              break;
+            }
+          }
+        }
+      }
+    }
+    if (!swapped) break;
+  }
+
+  // チャプター違反の修正（双方向スワップ）
+  for (let pass = 0; pass < 50; pass++) {
+    let swapped = false;
+    for (let i = 0; i < result.groups.length; i++) {
+      const chCounts = getChCounts(result.groups[i]);
+      for (const [ch, count] of Object.entries(chCounts)) {
+        if (count <= 3) continue;
+        const allMembers = result.groups[i].tables.flatMap(t => t.members);
+        const excess = allMembers.filter(m => pMap[m.id] && pMap[m.id].chapter === ch).slice(3);
+
+        for (const exMember of excess) {
+          for (let j = 0; j < result.groups.length; j++) {
+            if (j === i) continue;
+            const jChCounts = getChCounts(result.groups[j]);
+            if ((jChCounts[ch] || 0) >= 3) continue;
+
+            const jMembers = result.groups[j].tables.flatMap(t => t.members);
+            const swapCandidate = jMembers.find(m => {
+              const p = pMap[m.id];
+              if (!p) return false;
+              return p.chapter !== ch && (chCounts[p.chapter] || 0) < 3;
+            });
+
+            if (swapCandidate) {
+              removeMember(result.groups[i], exMember.id);
+              removeMember(result.groups[j], swapCandidate.id);
+              addMember(result.groups[j], exMember);
+              addMember(result.groups[i], swapCandidate);
+              totalSwaps++;
+              swapped = true;
+              break;
+            }
+          }
+        }
+      }
+    }
+    if (!swapped) break;
   }
 
   // 未割り当ての参加者を最小グループに追加
@@ -185,15 +247,9 @@ function fixGroupViolations(result, participants) {
   const unassigned = participants.filter(p => !assignedIds.has(p.id));
   unassigned.forEach(p => {
     const smallest = result.groups
-      .filter(g => g.tables.flatMap(t => t.members).length < CONFIG.GROUP_SIZE_MAX)
       .sort((a, b) => a.tables.flatMap(t => t.members).length - b.tables.flatMap(t => t.members).length)[0];
     if (smallest) {
-      // 小さい方のテーブルに追加
-      const targetTable = smallest.tables.sort((a, b) => a.members.length - b.members.length)[0];
-      targetTable.members.push({
-        id: p.id, name: p.name, industry: p.industry,
-        chapter: p.chapter, category: p.category, disc_label: p.disc_label
-      });
+      addMember(smallest, { id: p.id, name: p.name, industry: p.industry, chapter: p.chapter, category: p.category, disc_label: p.disc_label });
     }
   });
 
@@ -209,56 +265,8 @@ function fixGroupViolations(result, participants) {
     }
   });
 
-  Logger.log(`自動修正完了: ${iterations}回のイテレーション`);
+  Logger.log(`自動修正完了: ${totalSwaps}回のスワップ`);
   return result;
-}
-
-/**
- * スワップ先グループを探す
- */
-function findGroupSwapTarget_(groups, sourceIdx, member, pMap, violationType) {
-  const memberData = pMap[member.id];
-  if (!memberData) return null;
-
-  for (let j = 0; j < groups.length; j++) {
-    if (j === sourceIdx) continue;
-    const targetGroup = groups[j];
-    const targetMembers = targetGroup.tables.flatMap(t => t.members);
-
-    if (targetMembers.length >= CONFIG.GROUP_SIZE_MAX) continue;
-
-    if (violationType === 'industry') {
-      const sameIG = targetMembers.filter(m => {
-        const p = pMap[m.id];
-        return p && p.industry_group === memberData.industry_group;
-      }).length;
-      if (sameIG < 4) return j;
-    } else if (violationType === 'chapter') {
-      const sameCh = targetMembers.filter(m => {
-        const p = pMap[m.id];
-        return p && p.chapter === memberData.chapter;
-      }).length;
-      if (sameCh < 3) return j;
-    }
-  }
-  return null;
-}
-
-/**
- * グループ間でメンバーを移動する
- */
-function performGroupSwap_(groups, fromIdx, toIdx, member, pMap) {
-  // 元グループから削除
-  for (const table of groups[fromIdx].tables) {
-    const idx = table.members.findIndex(m => m.id === member.id);
-    if (idx >= 0) {
-      table.members.splice(idx, 1);
-      break;
-    }
-  }
-  // 移動先グループの小さいテーブルに追加
-  const targetTable = groups[toIdx].tables.sort((a, b) => a.members.length - b.members.length)[0];
-  targetTable.members.push(member);
 }
 
 /**
@@ -388,6 +396,6 @@ function _generateDummy(count) {
   sheet.getRange(2, 1, rows.length, headers.length).setValues(rows);
   sheet.autoResizeColumns(1, headers.length);
 
-  SpreadsheetApp.getUi().alert(`ダミーデータ ${count}名分を生成しました`);
+  try { SpreadsheetApp.getUi().alert(`ダミーデータ ${count}名分を生成しました`); } catch(e) {}
   Logger.log(`ダミーデータ生成完了: ${count}名`);
 }
