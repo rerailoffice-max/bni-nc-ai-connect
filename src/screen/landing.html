@@ -49,11 +49,12 @@
   }
   .btn-primary:hover { opacity: 0.92; }
 
-  /* デフォルト: グループ確認ボタン（控えめ） */
+  /* デフォルト: グループ確認ボタン（非活性風） */
   .btn-check {
-    background: var(--card); color: var(--text); border: 1px solid var(--border); font-size: 1.05rem;
+    background: var(--card); color: var(--text-dim); border: 1px solid var(--border); font-size: 1.05rem;
+    opacity: 0.5; cursor: default;
   }
-  .btn-check:hover { border-color: var(--gold); }
+  .btn-check:hover { border-color: var(--border); }
 
   /* マッチング済み: グループ確認ボタン（目立つ） */
   .btn-check.ready {
@@ -61,6 +62,7 @@
     color: #000; border: none; font-size: 1.15rem;
     box-shadow: 0 4px 20px rgba(201,168,76,0.3);
     animation: pulse 2s ease-in-out infinite;
+    opacity: 1; cursor: pointer;
   }
   .btn-check.ready:hover { opacity: 0.92; }
   @keyframes pulse {
