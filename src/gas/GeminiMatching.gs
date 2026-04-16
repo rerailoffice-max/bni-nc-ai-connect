@@ -140,9 +140,12 @@ function expandCompactResult_(raw, data) {
   const pMap = {};
   data.participants.forEach(p => { pMap[p.id] = p; });
 
+  // 全グループ横断で重複IDを除去
+  const usedIds = new Set();
+
   const groups = raw.groups.map((g, idx) => {
-    const t1Ids = g.table1 || [];
-    const t2Ids = g.table2 || [];
+    const t1Ids = (g.table1 || []).filter(id => { if (usedIds.has(id)) return false; usedIds.add(id); return true; });
+    const t2Ids = (g.table2 || []).filter(id => { if (usedIds.has(id)) return false; usedIds.add(id); return true; });
     const tableNum = (idx + 1) * 2;
 
     function memberFromId(id) {
@@ -171,6 +174,21 @@ function expandCompactResult_(raw, data) {
       synergy_reason: g.synergy_reason || ''
     };
   });
+
+  // 未割り当ての参加者を最小グループに自動配置
+  const allAssigned = new Set();
+  groups.forEach(g => g.tables.forEach(t => t.members.forEach(m => allAssigned.add(m.id))));
+  const missing = data.participants.filter(p => !allAssigned.has(p.id));
+  if (missing.length > 0) {
+    Logger.log(`展開時に未割り当て${missing.length}名を自動補填`);
+    missing.forEach(p => {
+      const smallest = groups.sort((a, b) =>
+        a.tables.flatMap(t => t.members).length - b.tables.flatMap(t => t.members).length
+      )[0];
+      const t = smallest.tables.sort((a, b) => a.members.length - b.members.length)[0];
+      t.members.push({ id: p.id, name: p.name, industry: p.industry, chapter: p.chapter, category: p.category, disc_label: p.disc_label });
+    });
+  }
 
   return { groups: groups };
 }
