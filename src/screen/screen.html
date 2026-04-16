@@ -88,9 +88,29 @@
     background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.25);
     border-radius: 14px; padding: 20px; margin-top: 16px;
   }
-  .synergy-box h4 { font-size: 1rem; font-weight: 700; color: var(--bni-gold); margin-bottom: 8px; }
-  .synergy-box p { font-size: 0.88rem; color: var(--bni-gold); line-height: 1.6; opacity: 0.9; }
+  .synergy-box h4 { font-size: 1.2rem; font-weight: 700; color: var(--bni-gold); margin-bottom: 10px; }
+  .synergy-box p { font-size: 0.95rem; color: var(--bni-gold); line-height: 1.7; opacity: 0.9; }
   .synergy-box::before { content: "💡 "; }
+
+  /* DISC詳細分析 */
+  .disc-detail { margin-top: 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .disc-detail-item {
+    padding: 12px 14px; border-radius: 12px; background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+  .disc-detail-item .emoji { font-size: 1.2rem; }
+  .disc-detail-item .count { font-size: 1.1rem; font-weight: 800; }
+  .disc-detail-item .desc { font-size: 0.78rem; color: var(--text-dim); margin-top: 4px; line-height: 1.4; }
+
+  /* テーブル別分析 */
+  .table-analysis {
+    margin-top: 14px; padding: 16px; border-radius: 14px;
+    background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06);
+  }
+  .table-analysis h5 { font-size: 0.9rem; font-weight: 700; margin-bottom: 8px; color: var(--text); }
+  .table-analysis .mini-bar { display: flex; gap: 2px; height: 5px; border-radius: 3px; overflow: hidden; margin-bottom: 6px; }
+  .table-analysis .flavor { font-size: 0.82rem; color: var(--bni-gold); font-weight: 600; }
+  .table-analysis .flavor-desc { font-size: 0.78rem; color: var(--text-dim); margin-top: 2px; }
 
   /* 発表モード */
   #presentation-mode {
@@ -160,7 +180,7 @@
     -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
     line-height: 1; margin-bottom: 4px;
   }
-  .group-name { font-size: 1.2rem; font-weight: 600; color: var(--bni-gold); margin-bottom: 12px; }
+  .group-name { font-size: 2.2rem; font-weight: 800; color: var(--bni-gold); margin-bottom: 16px; letter-spacing: 0.02em; }
 
   /* テーブルタブ */
   .table-tabs { display: flex; gap: 4px; margin-bottom: 12px; }
@@ -204,8 +224,9 @@
   }
 
   .member-info { flex: 1; min-width: 0; }
-  .member-name { font-size: 0.95rem; font-weight: 700; }
-  .member-meta { font-size: 0.78rem; color: var(--text-dim); margin-top: 1px; }
+  .member-name { font-size: 1.2rem; font-weight: 700; }
+  .member-name-en { font-size: 0.82rem; color: var(--text-dim); font-weight: 400; margin-left: 8px; }
+  .member-meta { font-size: 0.9rem; color: var(--text-dim); margin-top: 2px; }
   .member-industry {
     display: inline-block; background: rgba(207,32,48,0.12); color: #FF6B7A;
     padding: 2px 8px; border-radius: 100px; font-size: 0.72rem; font-weight: 600; white-space: nowrap;
@@ -368,8 +389,10 @@
 const DATA = (typeof REAL_DATA !== 'undefined') ? REAL_DATA : generateDemoData();
 
 function generateDemoData() {
-  const lastNames = ["佐藤","鈴木","高橋","田中","伊藤","渡辺","山本","中村","小林","加藤","吉田","山田","佐々木","松本","井上","木村","林","斎藤","清水","山崎","森","池田","橋本","阿部","石川","前田","藤田","小川","岡田","後藤","長谷川","石井","村上","近藤","坂本","遠藤","青木","藤井","西村","福田","太田","三浦","岡本","松田","中川","中野","原田","小野","竹内","金子","和田","中山","石田","上田","柴田","宮崎","酒井","宮本","工藤","横山","高木","安藤","内田","谷口","大野","丸山","今井","河野","武田","藤原","杉山","増田","小島","平野","土屋","大塚","千葉","久保","菅原","岩崎","松井","木下","佐野","野口","菊地","杉本","渡部","古川","市川","望月","北村","吉川","片山","野村","新井","中田","桜井","浜田","三宅"];
-  const firstNames = ["太郎","花子","健太","由美","大輔","美咲","陽子","翔太","麻衣","拓也","真由美","直樹","裕子","達也","恵子","雄一","智子","和也","理恵","俊介","綾子","修","明美","誠","久美子","浩二","裕太","恵美","啓介","千尋","隆司","沙織","正人","典子","康太","優子","剛","瞳","博","さくら","亮","美穂","哲也","彩","勇気","奈々","光","結衣","翼","舞"];
+  const lastNamesJa = ["佐藤","鈴木","高橋","田中","伊藤","渡辺","山本","中村","小林","加藤","吉田","山田","佐々木","松本","井上","木村","林","斎藤","清水","山崎","森","池田","橋本","阿部","石川","前田","藤田","小川","岡田","後藤","長谷川","石井","村上","近藤","坂本","遠藤","青木","藤井","西村","福田","太田","三浦","岡本","松田","中川","中野","原田","小野","竹内","金子","和田","中山","石田","上田","柴田","宮崎","酒井","宮本","工藤","横山","高木","安藤","内田","谷口","大野","丸山","今井","河野","武田","藤原","杉山","増田","小島","平野","土屋","大塚","千葉","久保","菅原","岩崎","松井","木下","佐野","野口","菊地","杉本","渡部","古川","市川","望月","北村","吉川","片山","野村","新井","中田","桜井","浜田","三宅"];
+  const lastNamesEn = ["Sato","Suzuki","Takahashi","Tanaka","Ito","Watanabe","Yamamoto","Nakamura","Kobayashi","Kato","Yoshida","Yamada","Sasaki","Matsumoto","Inoue","Kimura","Hayashi","Saito","Shimizu","Yamazaki","Mori","Ikeda","Hashimoto","Abe","Ishikawa","Maeda","Fujita","Ogawa","Okada","Goto","Hasegawa","Ishii","Murakami","Kondo","Sakamoto","Endo","Aoki","Fujii","Nishimura","Fukuda","Ota","Miura","Okamoto","Matsuda","Nakagawa","Nakano","Harada","Ono","Takeuchi","Kaneko","Wada","Nakayama","Ishida","Ueda","Shibata","Miyazaki","Sakai","Miyamoto","Kudo","Yokoyama","Takagi","Ando","Uchida","Taniguchi","Ono","Maruyama","Imai","Kono","Takeda","Fujiwara","Sugiyama","Masuda","Kojima","Hirano","Tsuchiya","Otsuka","Chiba","Kubo","Sugawara","Iwasaki","Matsui","Kinoshita","Sano","Noguchi","Kikuchi","Sugimoto","Watabe","Furukawa","Ichikawa","Mochizuki","Kitamura","Yoshikawa","Katayama","Nomura","Arai","Nakata","Sakurai","Hamada","Miyake"];
+  const firstNamesJa = ["太郎","花子","健太","由美","大輔","美咲","陽子","翔太","麻衣","拓也","真由美","直樹","裕子","達也","恵子","雄一","智子","和也","理恵","俊介","綾子","修","明美","誠","久美子","浩二","裕太","恵美","啓介","千尋","隆司","沙織","正人","典子","康太","優子","剛","瞳","博","さくら","亮","美穂","哲也","彩","勇気","奈々","光","結衣","翼","舞"];
+  const firstNamesEn = ["Taro","Hanako","Kenta","Yumi","Daisuke","Misaki","Yoko","Shota","Mai","Takuya","Mayumi","Naoki","Yuko","Tatsuya","Keiko","Yuichi","Tomoko","Kazuya","Rie","Shunsuke","Ayako","Osamu","Akemi","Makoto","Kumiko","Koji","Yuta","Emi","Keisuke","Chihiro","Takashi","Saori","Masato","Noriko","Kota","Yuko","Tsuyoshi","Hitomi","Hiroshi","Sakura","Ryo","Miho","Tetsuya","Aya","Yuki","Nana","Hikaru","Yui","Tsubasa","Mai"];
   const chapters = ["アンカー","ライジング","フェニックス","ドリーム","サクセス","風神","UKA","パイオニア","ビクトリー","フォルテ","レガシー","ジャンヌ","インフィニティ","ブリリアント","エクセレンス","アドバンス","トリニティ","グローリー","ネクサス","ホライズン","クレスト","サミット","ステラ","グランツ","フラッグ"];
 
   // パワーチーム テーマ別の業種セット
@@ -401,6 +424,7 @@ function generateDemoData() {
     {main:"D",label:"炎水",emoji:"🔥",css:"fire"}
   ];
 
+  function randIdx(arr) { return Math.floor(Math.random()*arr.length); }
   function rand(arr) { return arr[Math.floor(Math.random()*arr.length)]; }
   function randPhone() { return String(1000 + Math.floor(Math.random()*9000)); }
 
@@ -416,9 +440,13 @@ function generateDemoData() {
 
     for (let t = 0; t < 2; t++) {
       for (let m = 0; m < 10; m++) {
-        let name;
-        do { name = rand(lastNames) + " " + rand(firstNames); } while (usedNames.has(name));
+        let name, nameEn, li, fi;
+        do {
+          li = randIdx(lastNamesJa); fi = randIdx(firstNamesJa);
+          name = lastNamesJa[li] + " " + firstNamesJa[fi];
+        } while (usedNames.has(name));
         usedNames.add(name);
+        nameEn = firstNamesEn[fi] + " " + lastNamesEn[li];
 
         // 業種をパワーチームテーマから選択（重複少なめ）
         let industry;
@@ -435,7 +463,7 @@ function generateDemoData() {
         else disc = rand(discTypes);
 
         balance[disc.main]++;
-        tables[t].members.push({ id: id++, name, chapter: rand(chapters), industry, disc_label: disc.label, disc_emoji: disc.emoji, disc_css: disc.css, disc_main: disc.main, phone: randPhone() });
+        tables[t].members.push({ id: id++, name, name_en: nameEn, chapter: rand(chapters), industry, disc_label: disc.label, disc_emoji: disc.emoji, disc_css: disc.css, disc_main: disc.main, phone: randPhone() });
       }
     }
 
@@ -453,10 +481,10 @@ function generateDemoData() {
   const serenTables = [{table_number:21,members:[]},{table_number:22,members:[]}];
   for (let t = 0; t < 2; t++) {
     for (let i = 0; i < 5; i++) {
-      let name;
-      do { name = rand(lastNames) + " " + rand(firstNames); } while (usedNames.has(name));
-      usedNames.add(name);
-      serenTables[t].members.push({id:id++,name,chapter:rand(chapters),industry:rand(powerTeams[0].industries),disc_label:"?",disc_emoji:"✨",disc_css:"",disc_main:"?",phone:randPhone()});
+      let name, nameEn, li, fi;
+      do { li=randIdx(lastNamesJa); fi=randIdx(firstNamesJa); name=lastNamesJa[li]+" "+firstNamesJa[fi]; } while (usedNames.has(name));
+      usedNames.add(name); nameEn=firstNamesEn[fi]+" "+lastNamesEn[li];
+      serenTables[t].members.push({id:id++,name,name_en:nameEn,chapter:rand(chapters),industry:rand(powerTeams[0].industries),disc_label:"?",disc_emoji:"✨",disc_css:"",disc_main:"?",phone:randPhone()});
     }
   }
 
@@ -496,7 +524,7 @@ function discBarHtml(bal) {
 function memberHtmlSimple(m) {
   return `<div class="member-item">
     <div class="member-avatar">${m.name.charAt(0)}</div>
-    <div class="member-info"><div class="member-name">${m.name}</div><div class="member-meta">${m.chapter}</div></div>
+    <div class="member-info"><div class="member-name">${m.name}${m.name_en ? `<span class="member-name-en">${m.name_en}</span>` : ''}</div><div class="member-meta">${m.chapter}</div></div>
     <span class="member-industry">${m.industry}</span>
   </div>`;
 }
@@ -508,10 +536,60 @@ function memberHtmlFull(m, opts={}) {
   const avStyle = avCss ? '' : 'style="background:var(--bni-gold)"';
   return `<div class="member-item${hl}">
     <div class="member-avatar ${avCss}" ${avStyle}>${m.name.charAt(0)}</div>
-    <div class="member-info"><div class="member-name">${m.name}</div><div class="member-meta">${m.chapter}</div></div>
+    <div class="member-info"><div class="member-name">${m.name}${m.name_en ? `<span class="member-name-en">${m.name_en}</span>` : ''}</div><div class="member-meta">${m.chapter}</div></div>
     <span class="member-disc-badge">${discBadge(m)}</span>
     <span class="member-industry">${m.industry}</span>
   </div>`;
+}
+
+// DISC詳細分析HTML
+function discDetailHtml(bal) {
+  if (!bal) return '';
+  const descs = {
+    D: { emoji:'🔥', name:'炎 Fire', desc:'推進力で決断を加速。チームを前に動かすエンジン' },
+    I: { emoji:'🌀', name:'風 Wind', desc:'人をつなぎアイデアを広げる。場の空気を変える力' },
+    S: { emoji:'🌿', name:'大地 Earth', desc:'安定感と信頼でチームを支える。着実に成果を積む' },
+    C: { emoji:'💧', name:'水 Water', desc:'データと分析で最適解を導く。戦略の要' }
+  };
+  return `<div class="disc-detail">
+    ${Object.entries(descs).map(([k,v]) => `<div class="disc-detail-item">
+      <span class="emoji">${v.emoji}</span> <span class="count">${v.name} ×${bal[k]||0}</span>
+      <div class="desc">${v.desc}</div>
+    </div>`).join('')}
+  </div>`;
+}
+
+// テーブル別分析HTML
+function tableAnalysisHtml(tables) {
+  if (!tables || tables.length < 2) return '';
+  return tables.map(t => {
+    const tb = {D:0,I:0,S:0,C:0};
+    t.members.forEach(m => { if (m.disc_main && tb[m.disc_main]!==undefined) tb[m.disc_main]++; });
+    const total = tb.D+tb.I+tb.S+tb.C;
+    if (!total) return '';
+
+    // テーブルの特色を判定
+    const max = Object.entries(tb).sort((a,b)=>b[1]-a[1])[0];
+    const flavors = {
+      D: {text:'🔥 攻めのテーブル — Action Table', desc:'決断力と推進力に溢れるメンバーが揃う。スピード重視の紹介が期待できます'},
+      I: {text:'🌀 つながりのテーブル — Connection Table', desc:'社交力と巻き込み力の高いメンバー中心。ネットワークが爆発的に広がります'},
+      S: {text:'🌿 信頼のテーブル — Trust Table', desc:'安定感と継続力のあるメンバーが揃う。長期的なビジネス関係が築けます'},
+      C: {text:'💧 戦略のテーブル — Strategy Table', desc:'分析力と正確さを持つメンバー中心。質の高い紹介が期待できます'}
+    };
+    const flavor = flavors[max[0]];
+
+    return `<div class="table-analysis">
+      <h5>Table ${t.table_number}（${t.members.length}名）</h5>
+      <div class="mini-bar">
+        <div class="disc-bar-seg fire" style="width:${tb.D/total*100}%;height:100%"></div>
+        <div class="disc-bar-seg wind" style="width:${tb.I/total*100}%;height:100%"></div>
+        <div class="disc-bar-seg earth" style="width:${tb.S/total*100}%;height:100%"></div>
+        <div class="disc-bar-seg water" style="width:${tb.C/total*100}%;height:100%"></div>
+      </div>
+      <div class="flavor">${flavor.text}</div>
+      <div class="flavor-desc">${flavor.desc}</div>
+    </div>`;
+  }).join('');
 }
 
 function getAllGroups() {
@@ -598,11 +676,12 @@ function renderGroup(index) {
     <button class="reveal-btn ${isRevealed?'revealed':''}" id="reveal-btn-${index}" onclick="revealGroup(${index})">🎉 Reveal! — このグループの秘密を公開</button>
     <div class="reveal-section ${isRevealed?'revealed':''}" id="reveal-section-${index}">
       ${g.disc_balance ? discBarHtml(g.disc_balance) : ''}
+      ${g.disc_balance ? discDetailHtml(g.disc_balance) : ''}
       <div class="synergy-box">
-        <h4>パワーチーム: ${g.group_name}</h4>
+        <h4>🏆 パワーチーム: ${g.group_name}</h4>
         <p>${g.synergy_reason || ''}</p>
       </div>
-      ${g.disc_comment ? `<div style="margin-top:12px;font-size:0.82rem;color:var(--text-dim)">${g.disc_comment}</div>` : ''}
+      ${tableAnalysisHtml(g.tables)}
     </div>
   `;
 
