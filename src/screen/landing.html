@@ -40,7 +40,7 @@
   .btn {
     display: flex; flex-direction: column; align-items: center;
     padding: 26px 24px; border-radius: 18px; text-decoration: none;
-    font-weight: 700; transition: all 0.3s; text-align: center;
+    font-weight: 700; transition: all 0.3s; text-align: center; cursor: pointer;
   }
   .btn-primary {
     background: linear-gradient(135deg, var(--accent), var(--accent-dark));
@@ -48,17 +48,66 @@
     box-shadow: 0 4px 20px rgba(207,32,48,0.25);
   }
   .btn-primary:hover { opacity: 0.92; }
-  .btn-secondary {
+
+  /* デフォルト: グループ確認ボタン（控えめ） */
+  .btn-check {
     background: var(--card); color: var(--text); border: 1px solid var(--border); font-size: 1.05rem;
   }
-  .btn-secondary:hover { border-color: var(--gold); }
+  .btn-check:hover { border-color: var(--gold); }
+
+  /* マッチング済み: グループ確認ボタン（目立つ） */
+  .btn-check.ready {
+    background: linear-gradient(135deg, var(--gold), #B8942E);
+    color: #000; border: none; font-size: 1.15rem;
+    box-shadow: 0 4px 20px rgba(201,168,76,0.3);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  .btn-check.ready:hover { opacity: 0.92; }
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 4px 20px rgba(201,168,76,0.3); }
+    50% { box-shadow: 0 4px 32px rgba(201,168,76,0.5); }
+  }
+
   .btn .desc { font-size: 0.8rem; font-weight: 400; opacity: 0.6; margin-top: 6px; }
+  .btn-check.ready .desc { opacity: 0.8; color: #333; }
+
+  /* ステータスバッジ */
+  .status-badge {
+    display: inline-block; padding: 4px 12px; border-radius: 100px;
+    font-size: 0.72rem; font-weight: 700; margin-top: 8px;
+  }
+  .status-badge.waiting { background: rgba(139,143,160,0.15); color: var(--text-dim); }
+  .status-badge.live { background: rgba(69,179,107,0.15); color: #45B36B; }
+
+  /* モーダル */
+  .modal-overlay {
+    display: none; position: fixed; top:0; left:0; right:0; bottom:0;
+    background: rgba(0,0,0,0.7); z-index: 100;
+    align-items: center; justify-content: center; padding: 20px;
+  }
+  .modal-overlay.visible { display: flex; }
+  .modal {
+    background: var(--card); border-radius: 20px; padding: 32px 28px;
+    max-width: 360px; width: 100%; text-align: center;
+    border: 1px solid var(--border);
+    animation: modalIn 0.3s ease-out;
+  }
+  @keyframes modalIn { from { opacity:0; transform:scale(0.95); } to { opacity:1; transform:scale(1); } }
+  .modal .icon { font-size: 2.4rem; margin-bottom: 16px; }
+  .modal h2 { font-size: 1.1rem; font-weight: 700; margin-bottom: 8px; color: var(--gold); }
+  .modal p { font-size: 0.88rem; color: var(--text-dim); line-height: 1.6; margin-bottom: 24px; }
+  .modal-close {
+    padding: 12px 32px; border-radius: 12px; border: 1px solid var(--border);
+    background: transparent; color: var(--text); font-size: 0.9rem; font-weight: 600;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .modal-close:hover { border-color: var(--gold); }
 </style>
 </head>
 <body>
   <div class="logo">AI</div>
   <h1>AI Connect</h1>
-  <p class="subtitle">あなたにぴったりのグループを見つけます</p>
+  <p class="subtitle">あなたにぴったりのグループを見つけます<br><span style="font-size:0.82rem">Find the perfect group for you</span></p>
   <div class="event-info">
     <strong>BNI National Conference 前夜祭</strong><br>
     2026年4月27日（日）ベルサール汐留
@@ -68,10 +117,65 @@
       📝 アンケートに回答する
       <span class="desc">Answer the Survey (2 min)</span>
     </a>
-    <a href="result.html" class="btn btn-secondary">
+    <a class="btn btn-check" id="check-btn" onclick="checkGroup()">
       🔍 グループを確認する
       <span class="desc">Check Your Group</span>
+      <span class="status-badge waiting" id="status-badge">準備中 / Coming soon</span>
     </a>
   </div>
+
+  <!-- 未準備モーダル -->
+  <div class="modal-overlay" id="modal">
+    <div class="modal">
+      <div class="icon">⏳</div>
+      <h2>もうしばらくお待ちください<br><span style="font-size:0.85rem;font-weight:500">Please wait a little longer</span></h2>
+      <p>
+        まだ全体の回答を集計中です。<br>
+        当日のグループ発表をお楽しみに！<br><br>
+        We're still collecting responses.<br>
+        Look forward to the group reveal!
+      </p>
+      <button class="modal-close" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+<script>
+const GAS_URL='https://script.google.com/macros/s/AKfycbxinT85Mq5KSEJyujQs_OI0-hzM1vALHOjg9ICjv8jdjdJjTFYMIq4boKLbHNqJfPX8/exec';
+let matchingReady = false;
+
+// ページ読み込み時にマッチング状態を確認
+document.addEventListener('DOMContentLoaded', () => {
+  fetch(`${GAS_URL}?action=status`)
+    .then(r => r.json())
+    .then(data => {
+      if (data.status === 'ready') {
+        matchingReady = true;
+        const btn = document.getElementById('check-btn');
+        btn.classList.add('ready');
+        const badge = document.getElementById('status-badge');
+        badge.className = 'status-badge live';
+        badge.textContent = '✓ 確認可能 / Available';
+      }
+    })
+    .catch(() => {}); // エラー時はデフォルト（未準備）のまま
+});
+
+function checkGroup() {
+  if (matchingReady) {
+    window.location.href = 'result.html';
+  } else {
+    document.getElementById('modal').classList.add('visible');
+  }
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.remove('visible');
+}
+
+// モーダル外クリックで閉じる
+document.getElementById('modal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+</script>
 </body>
 </html>
