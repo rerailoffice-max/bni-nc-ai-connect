@@ -114,7 +114,9 @@
 
   /* 3カラムレイアウト: 情報 | Table1 | Table2 */
   .three-col {
-    display: grid; grid-template-columns: 220px 1fr 1fr; gap: 20px;
+    display: grid;
+    grid-template-columns: 240px minmax(380px, 460px) minmax(380px, 460px);
+    gap: 20px; justify-content: center;
     align-items: start; width: 100%;
   }
   .col-info {
@@ -166,8 +168,9 @@
     min-height: calc(100vh - 80px); padding: 20px 16px;
   }
   .presentation-card {
-    background: var(--card-bg); border-radius: 24px; padding: 28px 32px;
-    max-width: 100%; width: 100%; border: 1px solid var(--border);
+    background: var(--card-bg); border-radius: 24px; padding: 28px 32px 40px;
+    max-width: 1240px; width: 100%; margin: 0 auto;
+    border: 1px solid var(--border);
     animation: cardIn 0.6s ease-out; position: relative; overflow: hidden;
   }
   .presentation-card::before {
@@ -271,9 +274,9 @@
     transition: background 0.4s;
   }
 
-  .member-info { flex: 0 1 auto; min-width: 0; max-width: 170px; }
+  .member-info { flex: 1 1 auto; min-width: 0; overflow: hidden; }
   .member-item {
-    display: flex; align-items: center; gap: 6px;
+    display: flex; align-items: center; gap: 8px;
     padding: 6px 10px; background: rgba(255,255,255,0.03);
     border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);
   }
@@ -282,7 +285,6 @@
     display: flex; align-items: center; justify-content: center;
     font-size: 0.72rem; font-weight: 700;
   }
-  .member-info { flex: 0 1 auto; min-width: 0; max-width: 170px; }
   .member-name { font-size: 0.88rem; font-weight: 700; }
   .member-name-en { font-size: 0.82rem; color: var(--bni-gold); font-weight: 600; white-space: nowrap; letter-spacing: 0.01em; }
   .member-meta { font-size: 0.7rem; color: var(--text-dim); white-space: nowrap; }
@@ -342,7 +344,7 @@
     display: flex; align-items: center; gap: 8px; font-size: 0.82rem; padding: 5px 8px;
     background: rgba(255,255,255,0.02); border-radius: 6px;
   }
-  .group-card-member .m-info { flex: 0 1 auto; min-width: 0; max-width: 150px; }
+  .group-card-member .m-info { flex: 1 1 auto; min-width: 0; overflow: hidden; }
   .group-card-member .m-name { font-weight: 600; font-size: 0.82rem; }
   .group-card-member .m-name-en { font-size: 0.74rem; color: var(--bni-gold); font-weight: 600; letter-spacing: 0.01em; }
   .group-card-member .m-industry-wrap {
@@ -453,9 +455,9 @@
 </nav>
 
 <!-- QRコード フローティング表示 -->
-<div id="qr-float" style="position:fixed;bottom:20px;left:20px;z-index:999;background:rgba(27,29,36,0.95);border:1px solid #2A2D38;border-radius:16px;padding:12px;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,0.4);cursor:pointer" onclick="toggleQR()">
-  <img id="qr-img" src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://rerailoffice-max.github.io/bni-nc-ai-connect/src/screen/landing.html&bgcolor=1B1D24&color=EAEAEA" width="120" height="120" style="border-radius:8px;display:block">
-  <div style="font-size:0.65rem;color:#8B8FA0;margin-top:6px">Scan to join / QRで参加</div>
+<div id="qr-float" style="position:fixed;bottom:16px;left:16px;z-index:999;background:rgba(27,29,36,0.95);border:1px solid #2A2D38;border-radius:14px;padding:10px;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,0.4);cursor:pointer" onclick="toggleQR()">
+  <img id="qr-img" src="https://api.qrserver.com/v1/create-qr-code/?size=90x90&data=https://rerailoffice-max.github.io/bni-nc-ai-connect/src/screen/landing.html&bgcolor=1B1D24&color=EAEAEA" width="90" height="90" style="border-radius:6px;display:block">
+  <div style="font-size:0.6rem;color:#8B8FA0;margin-top:4px">Scan / QRで参加</div>
 </div>
 <canvas id="confetti-canvas"></canvas>
 <div class="countdown-overlay" id="countdown-overlay"><div class="countdown-number" id="countdown-num"></div></div>
