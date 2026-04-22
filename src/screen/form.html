@@ -192,9 +192,9 @@
         <input type="text" name="category" placeholder="業務自動化のAI顧問 / AI Consultant" required>
       </div>
       <div class="field">
-        <label class="field-label">電話番号（任意） <span class="sub">/ Phone (optional)</span></label>
-        <input type="tel" name="phone" placeholder="+81 90-1234-5678 / 090-1234-5678">
-        <div class="target-hint" style="margin-top:6px">当日のグループ検索用。公開はされません<br>For group lookup only — not shared publicly</div>
+        <label class="field-label">電話番号 <span class="sub">/ Phone</span><span class="req">*</span></label>
+        <input type="tel" name="phone" placeholder="+81 9012345678 / 09012345678" required>
+        <div class="target-hint" style="margin-top:6px">ハイフンなしでご入力ください。当日のグループ検索用で公開はされません<br>Please enter without hyphens. For group lookup only — not shared publicly</div>
       </div>
     </div>
 
@@ -376,7 +376,9 @@ function send(e) {
   f.style.display = 'none';
   document.getElementById('loading').classList.add('active');
 
-  const p = { name:d.get('name'), chapter:d.get('chapter'), category:d.get('category'), phone:d.get('phone'), industry:ind, target_customers:tgts.join(', '), q7:d.get('q7'), q8:d.get('q8'), q9:d.get('q9') };
+  const rawPhone = d.get('phone') || '';
+  const normPhone = rawPhone.replace(/[-\s()]/g, '');
+  const p = { name:d.get('name'), chapter:d.get('chapter'), category:d.get('category'), phone:normPhone, industry:ind, target_customers:tgts.join(', '), q7:d.get('q7'), q8:d.get('q8'), q9:d.get('q9') };
 
   fetch(GAS_URL, { method:'POST', body:new URLSearchParams(p), headers:{'Content-Type':'application/x-www-form-urlencoded'} })
   .then(r => r.json()).then(res => {
