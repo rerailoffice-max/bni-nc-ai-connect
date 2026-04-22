@@ -93,14 +93,16 @@
   .synergy-box::before { content: "💡 "; }
 
   /* DISC詳細分析 */
-  .disc-detail { margin-top: 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .disc-detail { margin-top: 14px; display: grid; grid-template-columns: 1fr; gap: 6px; }
   .disc-detail-item {
-    padding: 12px 14px; border-radius: 12px; background: rgba(255,255,255,0.03);
+    padding: 8px 12px; border-radius: 10px; background: rgba(255,255,255,0.03);
     border: 1px solid rgba(255,255,255,0.06);
+    display: flex; gap: 12px; align-items: center;
   }
-  .disc-detail-item .emoji { font-size: 1.2rem; }
-  .disc-detail-item .count { font-size: 1.1rem; font-weight: 800; }
-  .disc-detail-item .desc { font-size: 0.78rem; color: var(--text-dim); margin-top: 4px; line-height: 1.4; }
+  .disc-detail-item .emoji { font-size: 1.6rem; flex-shrink: 0; }
+  .disc-detail-item .body { flex: 1; min-width: 0; }
+  .disc-detail-item .count { font-size: 0.9rem; font-weight: 800; margin-bottom: 2px; }
+  .disc-detail-item .desc { font-size: 0.7rem; color: var(--text-dim); line-height: 1.4; }
 
   /* テーブル別分析 */
   .table-analysis {
@@ -115,8 +117,8 @@
   /* 3カラムレイアウト: 情報 | Table1 | Table2 */
   .three-col {
     display: grid;
-    grid-template-columns: 240px minmax(380px, 460px) minmax(380px, 460px);
-    gap: 20px; justify-content: center;
+    grid-template-columns: 280px minmax(420px, 1fr) minmax(420px, 1fr);
+    gap: 24px;
     align-items: start; width: 100%;
   }
   .col-info {
@@ -127,9 +129,14 @@
   .col-info .reveal-btn { margin-top: 16px; }
   .col-table { min-width: 0; }
   .table-col-header {
-    font-size: 0.88rem; font-weight: 700; color: var(--text-dim);
-    padding: 8px 14px; margin-bottom: 8px;
-    background: rgba(255,255,255,0.04); border-radius: 8px; display: inline-block;
+    font-size: 1.15rem; font-weight: 900; color: var(--bni-gold);
+    padding: 10px 18px; margin-bottom: 12px;
+    background: linear-gradient(135deg, rgba(201,168,76,0.18), rgba(201,168,76,0.06));
+    border: 1px solid rgba(201,168,76,0.35);
+    border-left: 4px solid var(--bni-gold);
+    border-radius: 10px; display: inline-block;
+    letter-spacing: 0.03em;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
   }
 
   .member-list { display: flex; flex-direction: column; gap: 3px; }
@@ -155,11 +162,12 @@
     .member-right .disc-badge { font-size: 0.65rem; padding: 2px 6px; }
     .member-right .member-industry { font-size: 0.66rem; padding: 3px 8px; text-align: right; align-items: flex-end; }
     .member-right .member-industry .industry-en { font-size: 0.58rem; }
-    .disc-detail { grid-template-columns: 1fr 1fr; gap: 6px; }
-    .disc-detail-item { padding: 8px; }
-    .disc-detail-item .count { font-size: 0.85rem; }
-    .disc-detail-item .desc { font-size: 0.68rem; }
-    .table-col-header { font-size: 0.78rem; padding: 6px 10px; }
+    .disc-detail { grid-template-columns: 1fr; gap: 5px; }
+    .disc-detail-item { padding: 7px 10px; gap: 10px; }
+    .disc-detail-item .emoji { font-size: 1.3rem; }
+    .disc-detail-item .count { font-size: 0.82rem; }
+    .disc-detail-item .desc { font-size: 0.66rem; }
+    .table-col-header { font-size: 0.95rem; padding: 8px 14px; }
   }
 
   /* 発表モード */
@@ -169,7 +177,7 @@
   }
   .presentation-card {
     background: var(--card-bg); border-radius: 24px; padding: 28px 32px 40px;
-    max-width: 1240px; width: 100%; margin: 0 auto;
+    max-width: 1600px; width: 100%; margin: 0 auto;
     border: 1px solid var(--border);
     animation: cardIn 0.6s ease-out; position: relative; overflow: hidden;
   }
@@ -712,8 +720,11 @@ function discDetailHtml(bal) {
   };
   return `<div class="disc-detail">
     ${Object.entries(descs).map(([k,v]) => `<div class="disc-detail-item">
-      <span class="emoji">${v.emoji}</span> <span class="count">${v.name} ×${bal[k]||0}</span>
-      <div class="desc">${v.desc}</div>
+      <span class="emoji">${v.emoji}</span>
+      <div class="body">
+        <div class="count">${v.name} ×${bal[k]||0}</div>
+        <div class="desc">${v.desc}</div>
+      </div>
     </div>`).join('')}
   </div>`;
 }
