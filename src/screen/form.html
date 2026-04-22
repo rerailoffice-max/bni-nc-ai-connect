@@ -26,11 +26,28 @@
     background: linear-gradient(180deg, rgba(207,32,48,0.08) 0%, transparent 60%);
   }
   .header h1 {
-    font-size: 1.6rem; font-weight: 800; letter-spacing: -0.02em;
+    font-size: 1.1rem; font-weight: 800; letter-spacing: 0.02em;
+    color: var(--accent); opacity: 0.85;
+  }
+  .header .event-sub {
+    margin-top: 10px; font-size: 0.82rem; font-weight: 600;
+    color: var(--text-dim); letter-spacing: 0.04em; line-height: 1.5;
+  }
+  .header .event-sub .en { display: block; font-size: 0.76rem; color: #B0B0B0; margin-top: 2px; font-weight: 500; }
+  .header .event-main {
+    margin-top: 10px; font-size: 1.6rem; font-weight: 900; line-height: 1.25;
     background: linear-gradient(135deg, var(--accent), var(--gold));
     -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
   }
-  .header p { color: var(--text-dim); margin-top: 6px; font-size: 0.85rem; }
+  .header .event-main .en {
+    display: block; font-size: 1rem; font-weight: 700; margin-top: 6px;
+    -webkit-text-fill-color: var(--text); color: var(--text);
+    letter-spacing: 0.03em; background: none;
+  }
+  @media (max-width: 420px) {
+    .header .event-main { font-size: 1.3rem; }
+    .header .event-main .en { font-size: 0.88rem; }
+  }
 
   .form-container { width: 100%; max-width: 520px; margin: 0 auto; padding: 0 16px 48px; }
 
@@ -143,7 +160,14 @@
 
 <div class="header">
   <h1>AI Connect</h1>
-  <p>BNI National Conference 前夜祭</p>
+  <p class="event-sub">
+    BNIジャパン ナショナルカンファレンス2026
+    <span class="en">BNI Japan National Conference 2026</span>
+  </p>
+  <h2 class="event-main">
+    『インターナショナルウェルカムイブニング』
+    <span class="en">International Welcome Evening</span>
+  </h2>
 </div>
 
 <div class="form-container">
@@ -157,6 +181,7 @@
       <div class="field">
         <label class="field-label">氏名 <span class="sub">/ Name</span><span class="req">*</span></label>
         <input type="text" name="name" placeholder="大城 芳樹 / Yoshiki Oshiro" required>
+        <div class="target-hint" style="margin-top:6px">海外ゲスト向けに英字名もご記入ください（スラッシュ区切り）<br>Please include English spelling after " / " for our international guests</div>
       </div>
       <div class="field">
         <label class="field-label">チャプター <span class="sub">/ Chapter</span><span class="req">*</span></label>

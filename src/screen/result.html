@@ -27,9 +27,23 @@
     background: linear-gradient(180deg, rgba(207,32,48,0.08) 0%, transparent 60%);
   }
   .header h1 {
-    font-size: 1.5rem; font-weight: 800; letter-spacing: -0.02em;
+    font-size: 1.1rem; font-weight: 800; letter-spacing: 0.02em;
+    color: var(--accent); opacity: 0.85;
+  }
+  .header .event-sub {
+    margin-top: 8px; font-size: 0.78rem; font-weight: 600; color: var(--text-dim);
+    letter-spacing: 0.04em; line-height: 1.5;
+  }
+  .header .event-sub .en { display: block; font-size: 0.72rem; color: #B0B0B0; font-weight: 500; margin-top: 2px; }
+  .header .event-main {
+    margin-top: 8px; font-size: 1.4rem; font-weight: 900; line-height: 1.25;
     background: linear-gradient(135deg, var(--accent), var(--gold));
     -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .header .event-main .en {
+    display: block; font-size: 0.92rem; font-weight: 700; margin-top: 4px;
+    -webkit-text-fill-color: var(--text); color: var(--text);
+    letter-spacing: 0.03em; background: none;
   }
 
   .container { max-width: 520px; margin: 0 auto; padding: 0 16px 40px; }
@@ -149,7 +163,17 @@
 </head>
 <body>
 
-<div class="header"><h1>AI Connect</h1></div>
+<div class="header">
+  <h1>AI Connect</h1>
+  <p class="event-sub">
+    BNIジャパン ナショナルカンファレンス2026
+    <span class="en">BNI Japan National Conference 2026</span>
+  </p>
+  <h2 class="event-main">
+    『インターナショナルウェルカムイブニング』
+    <span class="en">International Welcome Evening</span>
+  </h2>
+</div>
 
 <div class="container">
   <!-- 回答直後の感謝画面 -->
@@ -157,10 +181,10 @@
     <div class="disc-result" id="disc-emoji"></div>
     <div class="disc-label" id="disc-label-text"></div>
     <p class="msg">
-      回答ありがとうございます！<br>Thank you for your response!<br><br>
+      回答ありがとうございます！<br><span style="color:#EAEAEA;font-weight:600">Thank you for your response!</span><br><br>
       当日のグループ発表をお楽しみに！<br>
-      Look forward to the group announcement!<br><br>
-      <small>※グループはイベント当日に発表されます<br>Groups will be announced at the event</small>
+      <span style="color:#EAEAEA;font-weight:600">Look forward to the group announcement!</span><br><br>
+      <span style="font-size:0.8rem">※グループはイベント当日に発表されます<br>Groups will be announced at the event</span>
     </p>
   </div>
 

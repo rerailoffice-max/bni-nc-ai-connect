@@ -18,16 +18,37 @@
     padding: 40px 20px;
   }
   h1 {
-    font-size: 3rem;
-    font-weight: 900;
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #CF2030;
+    opacity: 0.85;
+    letter-spacing: 0.02em;
+    margin-bottom: 10px;
+  }
+  .event-sub {
+    font-size: 0.9rem; font-weight: 600; color: #888;
+    letter-spacing: 0.04em; margin-bottom: 10px; text-align: center; line-height: 1.5;
+  }
+  .event-sub .en { display: block; font-size: 0.82rem; color: #AAA; font-weight: 500; margin-top: 2px; }
+  .event-main {
+    font-size: 2.2rem; font-weight: 900; line-height: 1.2; text-align: center;
     background: linear-gradient(135deg, #CF2030, #C9A84C);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
   }
-  .sub { color: #888; font-size: 1.1rem; margin-bottom: 8px; }
+  .event-main .en {
+    display: block; font-size: 1.2rem; font-weight: 700; margin-top: 8px;
+    -webkit-text-fill-color: #EAEAEA; color: #EAEAEA;
+    letter-spacing: 0.03em;
+  }
+  .sub { color: #888; font-size: 1.05rem; margin-bottom: 8px; }
   .version { color: #555; font-size: 0.82rem; margin-bottom: 48px; }
+  @media (max-width: 600px) {
+    .event-main { font-size: 1.55rem; }
+    .event-main .en { font-size: 0.98rem; }
+  }
   .links {
     display: flex;
     flex-direction: column;
@@ -55,8 +76,16 @@
 </head>
 <body>
   <h1>AI Connect</h1>
+  <p class="event-sub">
+    BNIジャパン ナショナルカンファレンス2026
+    <span class="en">BNI Japan National Conference 2026</span>
+  </p>
+  <h2 class="event-main">
+    『インターナショナルウェルカムイブニング』
+    <span class="en">International Welcome Evening</span>
+  </h2>
   <p class="sub">パワーチーム × 行動特性 AIグループ編成</p>
-  <p class="version">v2.2 — BNI National Conference 前夜祭</p>
+  <p class="version">v2.3</p>
   <div class="links">
     <div class="section-label">参加者向け</div>
     <a href="src/screen/landing.html">

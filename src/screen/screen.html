@@ -145,13 +145,14 @@
     .member-avatar { width: 24px; height: 24px; font-size: 0.65rem; }
     .member-info { flex: 1; min-width: 0; }
     .member-name { font-size: 0.88rem; }
-    .member-name-en { font-size: 0.6rem; }
+    .member-name-en { font-size: 0.76rem; color: var(--bni-gold); }
     .member-right {
       flex-direction: column !important; align-items: flex-end !important; gap: 3px !important;
     }
     .member-right .member-meta { text-align: right; }
     .member-right .disc-badge { font-size: 0.65rem; padding: 2px 6px; }
-    .member-right .member-industry { font-size: 0.65rem; padding: 2px 6px; text-align: right; }
+    .member-right .member-industry { font-size: 0.66rem; padding: 3px 8px; text-align: right; align-items: flex-end; }
+    .member-right .member-industry .industry-en { font-size: 0.58rem; }
     .disc-detail { grid-template-columns: 1fr 1fr; gap: 6px; }
     .disc-detail-item { padding: 8px; }
     .disc-detail-item .count { font-size: 0.85rem; }
@@ -283,12 +284,18 @@
   }
   .member-info { flex: 1; min-width: 0; }
   .member-name { font-size: 0.88rem; font-weight: 700; }
-  .member-name-en { font-size: 0.65rem; color: #555; white-space: nowrap; }
+  .member-name-en { font-size: 0.82rem; color: var(--bni-gold); font-weight: 600; white-space: nowrap; letter-spacing: 0.01em; }
   .member-meta { font-size: 0.7rem; color: var(--text-dim); white-space: nowrap; }
   .member-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
   .member-industry {
-    display: inline-block; background: rgba(207,32,48,0.12); color: #FF6B7A;
-    padding: 2px 8px; border-radius: 100px; font-size: 0.72rem; font-weight: 600; white-space: nowrap;
+    display: inline-flex; flex-direction: column; align-items: flex-end;
+    background: rgba(207,32,48,0.12); color: #FF6B7A;
+    padding: 4px 10px; border-radius: 14px; font-size: 0.72rem; font-weight: 600;
+    line-height: 1.25; gap: 1px; white-space: nowrap;
+  }
+  .member-industry .industry-en {
+    display: block; font-size: 0.66rem; font-weight: 500;
+    color: #FFB0BA; letter-spacing: 0.02em;
   }
 
   /* Reveal前は業種バッジも非表示にするオプション */
@@ -337,7 +344,13 @@
   }
   .group-card-member .m-info { flex: 1; min-width: 0; }
   .group-card-member .m-name { font-weight: 600; font-size: 0.82rem; }
-  .group-card-member .m-name-en { font-size: 0.6rem; color: #555; }
+  .group-card-member .m-name-en { font-size: 0.74rem; color: var(--bni-gold); font-weight: 600; letter-spacing: 0.01em; }
+  .group-card-member .m-industry-wrap {
+    display: flex; flex-direction: column; align-items: flex-end; line-height: 1.2;
+    white-space: nowrap;
+  }
+  .group-card-member .m-industry-ja { color: var(--text-dim); font-size: 0.7rem; }
+  .group-card-member .m-industry-en { color: #FFB0BA; font-size: 0.62rem; font-weight: 500; }
   .group-card-member .m-right { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
   @media (max-width: 768px) {
     .group-card-member .m-right { flex-direction: column; align-items: flex-end; gap: 2px; }
@@ -383,12 +396,33 @@
     min-height: calc(100vh - 80px); text-align: center; padding: 40px;
   }
   .welcome h2 {
-    font-size: 3rem; font-weight: 900;
+    font-size: 1.6rem; font-weight: 800; color: var(--bni-red);
+    letter-spacing: 0.04em; margin-bottom: 20px; opacity: 0.85;
+  }
+  .welcome .event-sub {
+    font-size: 1rem; font-weight: 600; color: var(--text-dim);
+    letter-spacing: 0.05em; margin-bottom: 14px; line-height: 1.5;
+  }
+  .welcome .event-sub .en { display: block; font-size: 0.9rem; color: #B0B0B0; font-weight: 500; margin-top: 2px; }
+  .welcome .event-main {
+    font-size: 3rem; font-weight: 900; line-height: 1.2;
     background: linear-gradient(135deg, var(--bni-red), var(--bni-gold));
     -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-    margin-bottom: 16px;
+    margin-bottom: 10px;
   }
-  .welcome p { font-size: 1.2rem; color: var(--text-dim); margin-bottom: 40px; }
+  .welcome .event-main .en {
+    display: block; font-size: 1.6rem; font-weight: 700; margin-top: 10px;
+    -webkit-text-fill-color: #EAEAEA; color: #EAEAEA;
+    letter-spacing: 0.04em; background: none;
+  }
+  .welcome .event-spacer { height: 32px; }
+  @media (max-width: 600px) {
+    .welcome h2 { font-size: 1.2rem; margin-bottom: 16px; }
+    .welcome .event-sub { font-size: 0.85rem; }
+    .welcome .event-sub .en { font-size: 0.78rem; }
+    .welcome .event-main { font-size: 1.9rem; }
+    .welcome .event-main .en { font-size: 1.1rem; margin-top: 6px; }
+  }
   .welcome .start-btn {
     padding: 16px 48px; border-radius: 16px; border: none;
     background: var(--bni-red); color: var(--text);
@@ -430,7 +464,15 @@
   <div id="presentation-mode">
     <div class="welcome" id="welcome">
       <h2>AI Connect</h2>
-      <p>BNI National Conference 前夜祭</p>
+      <p class="event-sub">
+        BNIジャパン ナショナルカンファレンス2026
+        <span class="en">BNI Japan National Conference 2026</span>
+      </p>
+      <h3 class="event-main">
+        『インターナショナルウェルカムイブニング』
+        <span class="en">International Welcome Evening</span>
+      </h3>
+      <div class="event-spacer"></div>
       <button class="start-btn" onclick="startPresentation()">発表を開始する / Start Presentation</button>
     </div>
     <div id="presentation-content" style="display:none;width:100%">
@@ -457,6 +499,46 @@
 </div>
 
 <script>
+// ===== 業種の日本語→英語マップ（form.html と同期） =====
+const IND_EN = {
+  '建築設計・施工':'Architecture & Construction','リフォーム・リノベーション':'Renovation','不動産売買':'Real Estate Sales',
+  '不動産賃貸・管理':'Property Management','インテリア・内装':'Interior Design','外構・エクステリア':'Exterior & Landscaping',
+  '電気・設備工事':'Electrical & Facilities','Web制作・デザイン':'Web Design','システム開発':'Systems Development',
+  'AI・DX支援':'AI & DX Consulting','SNSマーケティング':'Social Media Marketing','動画制作・映像':'Video Production',
+  'IT機器・サポート':'IT Support','弁護士':'Lawyer','税理士・会計士':'Tax Accountant / CPA',
+  '社会保険労務士':'Labor Consultant','行政書士':'Administrative Scrivener','司法書士':'Judicial Scrivener',
+  '中小企業診断士':'SME Consultant','経営コンサルティング':'Management Consulting','人材・組織コンサルティング':'HR Consulting',
+  '生命保険':'Life Insurance','損害保険':'Property Insurance','ファイナンシャルプランナー':'Financial Planner',
+  '融資・資金調達':'Financing','投資・資産運用':'Investment & Asset Mgmt','美容室・ヘアサロン':'Hair Salon',
+  'エステ・リラクゼーション':'Spa & Relaxation','整体・鍼灸・接骨':'Chiropractic & Acupuncture',
+  'パーソナルトレーニング':'Personal Training','歯科':'Dentistry','医療・クリニック':'Medical Clinic',
+  '飲食店経営':'Restaurant','ケータリング・仕出し':'Catering','食品製造・販売':'Food Production',
+  '語学・翻訳':'Language & Translation','研修・セミナー':'Training & Seminars','コーチング':'Coaching',
+  '学習塾・スクール':'School & Academy','グラフィックデザイン':'Graphic Design','写真・映像':'Photography & Film',
+  'ライティング・編集':'Writing & Editing','印刷・出版':'Printing & Publishing',
+  '清掃・ハウスクリーニング':'Cleaning Services','引越し・物流':'Moving & Logistics',
+  '冠婚葬祭':'Ceremonies','ペット関連':'Pet Services','自動車販売・整備':'Auto Sales & Repair',
+  '人材紹介・派遣':'Staffing & Recruitment','広告・PR':'Advertising & PR','通信・インフラ':'Telecom & Infrastructure','その他':'Other'
+};
+
+// 氏名: name_en が空でも "日本語 / English" 形式なら自動分割
+function splitName(m) {
+  if (m.name_en && String(m.name_en).trim()) return { ja: m.name || '', en: m.name_en };
+  if (m.name && m.name.includes('/')) {
+    const parts = m.name.split('/').map(s => s.trim());
+    return { ja: parts[0] || '', en: parts[1] || '' };
+  }
+  return { ja: m.name || '', en: '' };
+}
+
+// 業種: 英語訳があれば 2 段表示
+function industryBilingual(ja) {
+  if (!ja) return '';
+  const en = IND_EN[ja] || '';
+  if (!en) return ja;
+  return `${ja}<span class="industry-en">${en}</span>`;
+}
+
 // ===== データ読み込み =====
 // 本番: GAS generateScreenData() の出力JSONを REAL_DATA に代入してからこのHTMLを開く
 // デモ: REAL_DATA未定義ならデモデータを自動生成
@@ -596,10 +678,11 @@ function discBarHtml(bal) {
 
 // 発表モード用: Reveal前はDISCバッジ非表示
 function memberHtmlSimple(m) {
+  const n = splitName(m);
   return `<div class="member-item">
-    <div class="member-avatar">${m.name.charAt(0)}</div>
-    <div class="member-info"><div class="member-name">${m.name}</div><div class="member-name-en">${m.name_en||''}</div></div>
-    <div class="member-right"><div class="member-meta">${m.chapter}</div><span class="member-industry">${m.industry}</span></div>
+    <div class="member-avatar">${(n.ja || m.name || '?').charAt(0)}</div>
+    <div class="member-info"><div class="member-name">${n.ja}</div>${n.en?`<div class="member-name-en">${n.en}</div>`:''}</div>
+    <div class="member-right"><div class="member-meta">${m.chapter||''}</div><span class="member-industry">${industryBilingual(m.industry)}</span></div>
   </div>`;
 }
 
@@ -608,10 +691,11 @@ function memberHtmlFull(m, opts={}) {
   const hl = opts.highlight ? ' highlight' : '';
   const avCss = m.disc_css || '';
   const avStyle = avCss ? '' : 'style="background:var(--bni-gold)"';
+  const n = splitName(m);
   return `<div class="member-item${hl}">
-    <div class="member-avatar ${avCss}" ${avStyle}>${m.name.charAt(0)}</div>
-    <div class="member-info"><div class="member-name">${m.name}</div><div class="member-name-en">${m.name_en||''}</div></div>
-    <div class="member-right"><div class="member-meta">${m.chapter}</div>${discBadge(m)}<span class="member-industry">${m.industry}</span></div>
+    <div class="member-avatar ${avCss}" ${avStyle}>${(n.ja || m.name || '?').charAt(0)}</div>
+    <div class="member-info"><div class="member-name">${n.ja}</div>${n.en?`<div class="member-name-en">${n.en}</div>`:''}</div>
+    <div class="member-right"><div class="member-meta">${m.chapter||''}</div>${discBadge(m)}<span class="member-industry">${industryBilingual(m.industry)}</span></div>
   </div>`;
 }
 
@@ -823,11 +907,15 @@ function buildListView() {
     const isSeren = g._isSerendipity;
     const membersHtml = g.tables.map(t =>
       `<div class="table-divider">Table ${t.table_number}</div>` +
-      t.members.map(m => `<div class="group-card-member">
-        <div class="mini-avatar ${m.disc_css||''}" ${!m.disc_css?'style="background:var(--bni-gold)"':''}>${m.name.charAt(0)}</div>
-        <div class="m-info"><div class="m-name">${m.name}</div>${m.name_en?`<div class="m-name-en">${m.name_en}</div>`:''}</div>
-        <div class="m-right"><span style="color:var(--text-dim);font-size:0.7rem">${m.chapter||''}</span>${discBadge(m)}<span style="color:var(--text-dim);font-size:0.68rem;white-space:nowrap">${m.industry}</span></div>
-      </div>`).join('')
+      t.members.map(m => {
+        const n = splitName(m);
+        const indEn = IND_EN[m.industry] || '';
+        return `<div class="group-card-member">
+        <div class="mini-avatar ${m.disc_css||''}" ${!m.disc_css?'style="background:var(--bni-gold)"':''}>${(n.ja || m.name || '?').charAt(0)}</div>
+        <div class="m-info"><div class="m-name">${n.ja}</div>${n.en?`<div class="m-name-en">${n.en}</div>`:''}</div>
+        <div class="m-right"><span style="color:var(--text-dim);font-size:0.7rem">${m.chapter||''}</span>${discBadge(m)}<span class="m-industry-wrap"><span class="m-industry-ja">${m.industry||''}</span>${indEn?`<span class="m-industry-en">${indEn}</span>`:''}</span></div>
+      </div>`;
+      }).join('')
     ).join('');
 
     return `<div class="group-card ${isSeren?'serendipity':''}">
@@ -1019,9 +1107,10 @@ function searchByNameOrPhone() {
       t.members.map(m => memberHtmlFull(m, {highlight: m.id===found.member.id})).join('')
     ).join('');
 
+    const foundName = splitName(found.member);
     res.innerHTML = `
       <div class="search-group-number">${isSeren?'✨':'Group '+found.group.group_number}</div>
-      <div class="search-label">${found.member.name}'s Group ${discBadge(found.member)}</div>
+      <div class="search-label">${foundName.ja}${foundName.en?` / ${foundName.en}`:''}'s Group ${discBadge(found.member)}</div>
       <div style="background:var(--card-bg);border-radius:16px;padding:20px;border:1px solid var(--border)">
         <h3 style="font-size:1rem;color:var(--bni-gold);margin-bottom:8px">${found.group.group_name||''}</h3>
         ${found.group.disc_balance ? discBarHtml(found.group.disc_balance) : ''}
