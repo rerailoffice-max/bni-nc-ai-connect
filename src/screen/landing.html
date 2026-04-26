@@ -154,10 +154,14 @@
       📝 アンケートに回答する
       <span class="desc">Answer the Survey (2 min)</span>
     </a>
-    <a class="btn btn-check" id="check-btn" onclick="checkGroup()">
+    <a class="btn btn-check ready" id="check-btn" href="screen.html#search">
       🔍 グループを確認する
       <span class="desc">Check Your Group</span>
-      <span class="status-badge waiting" id="status-badge">準備中 / Coming soon</span>
+      <span class="status-badge live" id="status-badge">✓ 確認可能 / Available</span>
+    </a>
+    <a class="btn" id="all-btn" href="screen.html" style="background:rgba(201,168,76,0.1);color:var(--gold);border:1px solid var(--gold);font-size:1rem">
+      📋 全グループ一覧を見る
+      <span class="desc" style="color:var(--gold);opacity:0.8">View All Groups</span>
     </a>
   </div>
 
@@ -182,19 +186,9 @@ let matchingReady = false;
 
 // ページ読み込み時にマッチング状態を確認
 document.addEventListener('DOMContentLoaded', () => {
-  fetch(`${GAS_URL}?action=status`)
-    .then(r => r.json())
-    .then(data => {
-      if (data.status === 'ready') {
-        matchingReady = true;
-        const btn = document.getElementById('check-btn');
-        btn.classList.add('ready');
-        const badge = document.getElementById('status-badge');
-        badge.className = 'status-badge live';
-        badge.textContent = '✓ 確認可能 / Available';
-      }
-    })
-    .catch(() => {}); // エラー時はデフォルト（未準備）のまま
+  // v2: マッチング結果は screen.html に直接埋め込み済み (REAL_DATA)
+  // GAS status 確認は不要、常に表示可能
+  matchingReady = true;
 });
 
 function checkGroup() {
