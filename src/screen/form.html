@@ -173,7 +173,23 @@
 <div class="form-container">
   <div id="msg-area"></div>
 
-  <form id="form" onsubmit="return send(event)">
+  <!-- 受付終了お知らせ -->
+  <div class="closed-notice" style="background:var(--card);border:2px solid var(--gold);border-radius:18px;padding:36px 24px;text-align:center;margin:24px 0;box-shadow:0 4px 24px rgba(201,168,76,0.15)">
+    <div style="font-size:3rem;margin-bottom:12px">⏰</div>
+    <h2 style="color:var(--gold);font-size:1.4rem;margin-bottom:8px;font-weight:800">アンケート受付終了</h2>
+    <p style="color:var(--text);font-size:1.05rem;font-weight:600;margin-bottom:18px">Survey Closed</p>
+    <p style="color:var(--text-dim);font-size:0.92rem;line-height:1.7">
+      ご回答ありがとうございました。<br>
+      Thank you for your responses.<br><br>
+      AIによるグループ編成が完了しました。<br>
+      AI matching is complete.
+    </p>
+    <a href="landing.html" style="display:inline-block;margin-top:24px;padding:14px 36px;background:linear-gradient(135deg,var(--accent),var(--accent-dark));color:#fff;text-decoration:none;border-radius:12px;font-weight:700;font-size:1rem;box-shadow:0 4px 20px rgba(207,32,48,0.25)">
+      🔍 グループを見る / View Your Group
+    </a>
+  </div>
+
+  <form id="form" onsubmit="event.preventDefault();return false" style="display:none">
 
     <!-- 基本情報 -->
     <div class="section">
