@@ -1006,17 +1006,8 @@ let currentGroupIndex = 0;
 let autoPlayInterval = null;
 let currentTableTab = 0;
 
-// ===== Reveal / Admin 状態 =====
+// ===== Admin 判定 =====
 const ADMIN_TOKEN = 'rerail-2026';
-const REVEAL_KEY = 'aiconnect_revealed_v1';
-function loadRevealed() {
-  try { return JSON.parse(localStorage.getItem(REVEAL_KEY) || '[]'); }
-  catch (e) { return []; }
-}
-function saveRevealed() {
-  try { localStorage.setItem(REVEAL_KEY, JSON.stringify([...revealedGroups])); }
-  catch (e) { /* localStorage 無効環境では無視 */ }
-}
 function checkAdmin() {
   const hash = window.location.hash || '';
   const m = hash.match(/admin=([^&]+)/);
@@ -1026,7 +1017,8 @@ function checkAdmin() {
   }
   try { return sessionStorage.getItem('aiconnect_admin') === '1'; } catch (e) { return false; }
 }
-let revealedGroups = new Set(loadRevealed());
+// 旧個別revealトグルの localStorage 残骸を一掃（汚染端末救済）
+try { localStorage.removeItem('aiconnect_revealed_v1'); } catch (e) {}
 let isAdmin = checkAdmin();
 
 // ===== サーバー側ステージ管理（GAS同期） =====
@@ -1319,42 +1311,17 @@ function setupPassportGate() {
 
 function isServerRevealed() { return serverStage === 'revealed'; }
 
-function renderTeamName(g, index) {
+function renderTeamName(g) {
   const isSeren = g._isSerendipity;
-  // サーバーstage=revealedなら全員に公開、それ以外は個別revealed状態と admin
-  const isRevealed = isSeren || isServerRevealed() || revealedGroups.has(index);
+  // サーバーstage=revealedなら全員に公開、それ以外は admin だけ見える
+  const isRevealed = isSeren || isServerRevealed();
   const visibleToViewer = isRevealed || isAdmin;
   const label = visibleToViewer ? (g.group_name || '') : '???';
   const cls = visibleToViewer ? 'table-block-team' : 'table-block-team locked';
   const adminHint = (isAdmin && !isRevealed && !isSeren)
     ? `<span class="team-locked-mark">(未公開)</span>`
     : '';
-  // サーバーstage=revealedの時は個別トグルは非表示（混乱防止）
-  const btn = (isAdmin && !isSeren && !isServerRevealed())
-    ? `<button class="reveal-toggle" onclick="toggleReveal(${index})">${isRevealed ? '🙈 隠す' : '🎉 公開'}</button>`
-    : '';
-  return `<div class="${cls}"><span>${label}</span>${adminHint}${btn}</div>`;
-}
-
-function toggleReveal(index) {
-  if (!isAdmin) return;
-  if (revealedGroups.has(index)) {
-    revealedGroups.delete(index);
-  } else {
-    revealedGroups.add(index);
-    try { playSound('fanfare'); } catch (e) {}
-    try { launchConfetti(2000); } catch (e) {}
-  }
-  saveRevealed();
-  buildListView();
-  // 発表モード表示中なら同期
-  if (document.getElementById('presentation-mode').style.display !== 'none') {
-    renderGroup(currentGroupIndex);
-  }
-  // 検索モード表示中なら再検索
-  if (document.getElementById('search-mode').style.display !== 'none') {
-    if (typeof searchByNameOrPhone === 'function') searchByNameOrPhone();
-  }
+  return `<div class="${cls}"><span>${label}</span>${adminHint}</div>`;
 }
 
 // ===== 初期化 =====
@@ -1415,13 +1382,12 @@ function renderGroup(index) {
   const g = allGroups[index];
   const container = document.getElementById('card-container');
   const isSeren = g._isSerendipity;
-  const isRevealed = isServerRevealed() || revealedGroups.has(index);
+  const isRevealed = isSeren || isServerRevealed();
 
   // 常に3カラム: 左=チーム情報 | 中=Table1 | 右=Table2
   const renderFn = (isRevealed || isSeren) ? memberHtmlFull : memberHtmlSimple;
 
-  // 左カラム: グループ情報 + Reveal（個別トグル: server=revealedの時は隠す）
-  const revealBtnHtml = (!isSeren && !isRevealed && isAdmin && !isServerRevealed()) ? `<button class="reveal-btn" onclick="revealGroup(${index})">🎉 Reveal!</button>` : '';
+  // 左カラム: グループ情報（admin は常にチーム名を見られる、(未公開)マーカー付き）
   const showName = isSeren || isRevealed || isAdmin;
   const adminHintHtml = (isAdmin && !isRevealed && !isSeren) ? ` <span class="team-locked-mark">(未公開)</span>` : '';
   const leftColHtml = `<div class="col-info">
@@ -1434,10 +1400,7 @@ function renderGroup(index) {
         <p>${g.synergy_reason || ''}</p>
       </div>
       ${g.disc_balance ? discDetailHtml(g.disc_balance) : ''}
-    ` : `
-      <div style="flex:1"></div>
-      ${revealBtnHtml}
-    `}
+    ` : ''}
     ${isSeren ? `<div class="synergy-box"><p>${g.synergy_reason}</p></div>` : ''}
   </div>`;
 
@@ -1462,21 +1425,6 @@ function renderGroup(index) {
   const total = allGroups.length;
   document.getElementById('progress').style.width = `${(index+1)/total*100}%`;
   document.getElementById('counter').textContent = `Group ${index+1} / ${total}`;
-}
-
-function revealGroup(index) {
-  if (!isAdmin) return;
-  revealedGroups.add(index);
-  saveRevealed();
-  playSound('fanfare');
-  launchConfetti(3000);
-  const card = document.getElementById('pcard-'+index);
-  if (card) { card.classList.add('reveal-flash','reveal-glow'); }
-  renderGroup(index);
-  // 一覧モードも開いていれば同期
-  if (document.getElementById('list-mode').style.display === 'block') {
-    buildListView();
-  }
 }
 
 function switchTableTab(i) { currentTableTab = i; renderGroup(currentGroupIndex); }
@@ -1513,7 +1461,6 @@ function toggleAutoPlay() {
 document.addEventListener('keydown', e => {
   if (e.key==='ArrowRight' || e.key===' ') { e.preventDefault(); nextGroup(); }
   if (e.key==='ArrowLeft') { e.preventDefault(); prevGroup(); }
-  if (e.key==='r' || e.key==='R') { revealGroup(currentGroupIndex); }
 });
 
 // ===== 一覧モード =====
@@ -1522,7 +1469,7 @@ function buildListView() {
   const allGroups = getAllGroups();
   grid.innerHTML = allGroups.map((g, idx) => {
     const isSeren = g._isSerendipity;
-    const isRevealed = isSeren || isServerRevealed() || revealedGroups.has(idx);
+    const isRevealed = isSeren || isServerRevealed();
     // Table ごとに「大見出し + チーム名 + メンバー」のブロックを並べる
     const tableBlocksHtml = g.tables.map(t => {
       const membersHtml = t.members.map(m => {
@@ -1536,7 +1483,7 @@ function buildListView() {
       }).join('');
       return `<div class="table-block">
         <div class="table-block-title">Table ${t.table_number}</div>
-        ${renderTeamName(g, idx)}
+        ${renderTeamName(g)}
         ${renderGuessArea(t.table_number)}
         <div class="group-card-members">${membersHtml}</div>
       </div>`;
@@ -1726,7 +1673,7 @@ function searchByNameOrPhone() {
   if (found) {
     noRes.style.display='none';
     const isSeren = found.group._isSerendipity;
-    const isRevealed = isSeren || isServerRevealed() || revealedGroups.has(found.index);
+    const isRevealed = isSeren || isServerRevealed();
     const visibleToViewer = isRevealed || isAdmin;
     const allMembers = found.group.tables.map(t =>
       `<div class="table-divider">Table ${t.table_number}</div>` +
@@ -1737,8 +1684,6 @@ function searchByNameOrPhone() {
     const teamLabel = visibleToViewer ? (found.group.group_name || '') : '???';
     const adminHint = (isAdmin && !isRevealed && !isSeren)
       ? ` <span class="team-locked-mark">(未公開)</span>` : '';
-    const toggleBtn = (isAdmin && !isSeren)
-      ? ` <button class="reveal-toggle" onclick="toggleReveal(${found.index})">${isRevealed ? '🙈 隠す' : '🎉 公開'}</button>` : '';
     const showSynergy = visibleToViewer && found.group.synergy_reason;
 
     res.innerHTML = `
@@ -1746,7 +1691,7 @@ function searchByNameOrPhone() {
       <div class="search-label">${foundName.ja}${foundName.en?` / ${foundName.en}`:''}'s Group ${discBadge(found.member)}</div>
       <div style="background:var(--card-bg);border-radius:16px;padding:20px;border:1px solid var(--border)">
         <h3 style="font-size:1rem;color:var(--bni-gold);margin-bottom:8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-          <span>${teamLabel}</span>${adminHint}${toggleBtn}
+          <span>${teamLabel}</span>${adminHint}
         </h3>
         ${found.group.disc_balance ? discBarHtml(found.group.disc_balance) : ''}
         <div class="member-list">${allMembers}</div>
