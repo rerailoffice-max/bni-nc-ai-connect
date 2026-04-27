@@ -584,32 +584,6 @@
   #stage-panel .stage-status.error { color: #ff8585; }
   #stage-panel .stage-status.success { color: #45B36B; }
 
-  /* ===== 準備中画面（stage=locked時の参加者用） ===== */
-  body.stage-locked .nav,
-  body.stage-locked .main,
-  body.stage-locked #qr-float { display: none !important; }
-  #stage-locked-screen {
-    display: none;
-    position: fixed; inset: 0;
-    background: var(--bg);
-    z-index: 9999;
-    align-items: center; justify-content: center;
-    padding: 24px;
-  }
-  body.stage-locked #stage-locked-screen { display: flex; }
-  .locked-card {
-    background: var(--card-bg); border-radius: 20px;
-    padding: 40px 28px; max-width: 380px; width: 100%;
-    text-align: center; border: 1px solid var(--border);
-  }
-  .locked-card .icon { font-size: 2.8rem; margin-bottom: 18px; animation: pulse-soft 2s ease-in-out infinite; }
-  @keyframes pulse-soft { 0%,100% { opacity: 1; } 50% { opacity: 0.6; } }
-  .locked-card h2 { font-size: 1.2rem; font-weight: 700; color: var(--bni-gold); margin-bottom: 8px; }
-  .locked-card h2 .en { display: block; font-size: 0.9rem; font-weight: 600; color: var(--text); margin-top: 6px; }
-  .locked-card p {
-    font-size: 0.88rem; color: var(--text-dim); line-height: 1.7;
-    margin-top: 20px;
-  }
 </style>
 </head>
 <body>
@@ -618,7 +592,6 @@
 <div id="stage-panel" aria-live="polite">
   <div class="stage-current">現在のステージ: <b id="stage-current-label">—</b></div>
   <div class="stage-buttons">
-    <button type="button" data-stage="locked" onclick="adminSetStage('locked')">🔒 受付前 (locked)</button>
     <button type="button" data-stage="open" onclick="adminSetStage('open')">🚪 受付開始 (open)</button>
     <button type="button" data-stage="answering" onclick="adminSetStage('answering')">📝 回答タイム (answering)</button>
     <button type="button" data-stage="revealed" onclick="adminSetStage('revealed')">🎉 結果発表 (revealed)</button>
@@ -642,20 +615,6 @@
       <button type="button" class="btn-cancel" onclick="closeGuessModal()">キャンセル / Cancel</button>
       <button type="button" class="btn-submit" id="guess-submit-confirm" onclick="submitGuess()">送信 / Submit</button>
     </div>
-  </div>
-</div>
-
-<!-- 準備中画面（stage=locked時のみ表示、合言葉ではなく自動解除） -->
-<div id="stage-locked-screen" role="dialog" aria-modal="true">
-  <div class="locked-card">
-    <div class="icon">⏳</div>
-    <h2>もうしばらくお待ちください<span class="en">Please wait a moment</span></h2>
-    <p>
-      グループ編成の準備中です。<br>
-      We're preparing the group reveal.<br><br>
-      開始まで自動で表示が切り替わります。<br>
-      The screen will update automatically.
-    </p>
   </div>
 </div>
 
@@ -1080,8 +1039,6 @@ function onStageChanged(prev, next) {
     try { playSound('fanfare'); } catch (e) {}
     try { launchConfetti(2500); } catch (e) {}
   }
-  // 非adminは locked 時のみ準備中画面、それ以外は通常表示
-  applyStageLock();
   // 表示再描画
   buildListView();
   if (document.getElementById('presentation-mode').style.display !== 'none') {
@@ -1094,7 +1051,7 @@ function onStageChanged(prev, next) {
 
 async function adminSetStage(stage) {
   if (!isAdmin) return;
-  const labels = { locked: '🔒 受付前', open: '🚪 受付開始', revealed: '🎉 結果発表' };
+  const labels = { open: '🚪 受付開始', answering: '📝 回答タイム', revealed: '🎉 結果発表' };
   if (!confirm(`ステージを「${labels[stage]}」に切り替えます。よろしいですか？`)) return;
   const status = document.getElementById('stage-status');
   status.className = 'stage-status'; status.textContent = '送信中…';
@@ -1123,7 +1080,9 @@ function updateStagePanelUI() {
   if (!panel) return;
   if (!isAdmin) { panel.classList.remove('visible'); return; }
   panel.classList.add('visible');
-  const labels = { locked: '🔒 受付前', open: '🚪 受付開始', answering: '📝 回答タイム', revealed: '🎉 結果発表' };
+  const labels = { open: '🚪 受付開始', answering: '📝 回答タイム', revealed: '🎉 結果発表' };
+  // 念のため locked のラベルもフォールバックで持っておく（GASがlockedを返した場合の表示用）
+  if (serverStage === 'locked') document.getElementById('stage-current-label').textContent = '🔒 受付前 (旧)';
   document.getElementById('stage-current-label').textContent = labels[serverStage] || serverStage;
   panel.querySelectorAll('button[data-stage]').forEach(b => {
     b.classList.toggle('active', b.dataset.stage === serverStage);
@@ -1283,21 +1242,9 @@ function escapeHtml(s) {
   return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 
-// ===== ステージロック表示制御 =====
-// admin はlocked時でも常に画面が見える。非adminは locked のとき準備中画面のみ。
-function applyStageLock() {
-  if (isAdmin) {
-    document.body.classList.remove('stage-locked');
-    return;
-  }
-  if (serverStage === 'locked') {
-    document.body.classList.add('stage-locked');
-  } else {
-    document.body.classList.remove('stage-locked');
-  }
-}
-// 旧 sessionStorage 残骸を一掃（汚染端末救済）
+// 旧合言葉/ロック関連の sessionStorage 残骸を一掃（汚染端末救済）
 try { sessionStorage.removeItem('aiconnect_passport'); } catch (e) {}
+try { document.body.classList.remove('stage-locked', 'passport-locked'); } catch (e) {}
 
 function isServerRevealed() { return serverStage === 'revealed'; }
 
@@ -1316,8 +1263,6 @@ function renderTeamName(g) {
 
 // ===== 初期化 =====
 document.addEventListener('DOMContentLoaded', () => {
-  // 起動時は安全側で「準備中」表示（admin以外）。fetchStage で実ステージ取得後に解除される
-  if (!isAdmin) document.body.classList.add('stage-locked');
   if (isAdmin) updateStagePanelUI();
   startStagePolling();
   startGuessPolling();
