@@ -380,6 +380,29 @@
     display: inline-block; letter-spacing: 0.04em;
     border-left: 3px solid var(--bni-gold);
   }
+  .table-block { margin: 14px 0 6px; }
+  .table-block:first-child { margin-top: 0; }
+  .table-block-title {
+    font-size: 1.6rem; font-weight: 900; color: var(--bni-gold);
+    letter-spacing: 0.04em; padding: 6px 14px;
+    background: rgba(201,168,76,0.12); border-left: 3px solid var(--bni-gold);
+    border-radius: 8px; display: inline-block;
+  }
+  .table-block-team {
+    font-size: 0.95rem; font-weight: 700; color: var(--bni-gold);
+    margin: 8px 0 8px 4px; opacity: 0.95;
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  }
+  .table-block-team.locked { color: var(--text-dim); font-style: italic; }
+  .reveal-toggle {
+    padding: 2px 10px; font-size: 0.75rem;
+    background: var(--bni-red); color: #fff; border: none; border-radius: 6px;
+    cursor: pointer; font-weight: 700; line-height: 1.4;
+  }
+  .reveal-toggle:hover { background: var(--bni-red-dark); }
+  .team-locked-mark {
+    font-size: 0.7rem; color: var(--text-dim); font-weight: 500;
+  }
   /* モバイルではQRコードを非表示 */
   @media (max-width: 768px) {
     #qr-float { display: none !important; }
@@ -786,7 +809,65 @@ function getAllGroups() {
 let currentGroupIndex = 0;
 let autoPlayInterval = null;
 let currentTableTab = 0;
-let revealedGroups = new Set(); // Reveal済みグループ
+
+// ===== Reveal / Admin 状態 =====
+const ADMIN_TOKEN = 'rerail-2026';
+const REVEAL_KEY = 'aiconnect_revealed_v1';
+function loadRevealed() {
+  try { return JSON.parse(localStorage.getItem(REVEAL_KEY) || '[]'); }
+  catch (e) { return []; }
+}
+function saveRevealed() {
+  try { localStorage.setItem(REVEAL_KEY, JSON.stringify([...revealedGroups])); }
+  catch (e) { /* localStorage 無効環境では無視 */ }
+}
+function checkAdmin() {
+  const hash = window.location.hash || '';
+  const m = hash.match(/admin=([^&]+)/);
+  if (m && m[1] === ADMIN_TOKEN) {
+    try { sessionStorage.setItem('aiconnect_admin', '1'); } catch (e) {}
+    return true;
+  }
+  try { return sessionStorage.getItem('aiconnect_admin') === '1'; } catch (e) { return false; }
+}
+let revealedGroups = new Set(loadRevealed());
+let isAdmin = checkAdmin();
+
+function renderTeamName(g, index) {
+  const isSeren = g._isSerendipity;
+  const isRevealed = isSeren || revealedGroups.has(index);
+  const visibleToViewer = isRevealed || isAdmin;
+  const label = visibleToViewer ? (g.group_name || '') : '???';
+  const cls = visibleToViewer ? 'table-block-team' : 'table-block-team locked';
+  const adminHint = (isAdmin && !isRevealed && !isSeren)
+    ? `<span class="team-locked-mark">(未公開)</span>`
+    : '';
+  const btn = (isAdmin && !isSeren)
+    ? `<button class="reveal-toggle" onclick="toggleReveal(${index})">${isRevealed ? '🙈 隠す' : '🎉 公開'}</button>`
+    : '';
+  return `<div class="${cls}"><span>${label}</span>${adminHint}${btn}</div>`;
+}
+
+function toggleReveal(index) {
+  if (!isAdmin) return;
+  if (revealedGroups.has(index)) {
+    revealedGroups.delete(index);
+  } else {
+    revealedGroups.add(index);
+    try { playSound('fanfare'); } catch (e) {}
+    try { launchConfetti(2000); } catch (e) {}
+  }
+  saveRevealed();
+  buildListView();
+  // 発表モード表示中なら同期
+  if (document.getElementById('presentation-mode').style.display !== 'none') {
+    renderGroup(currentGroupIndex);
+  }
+  // 検索モード表示中なら再検索
+  if (document.getElementById('search-mode').style.display !== 'none') {
+    if (typeof searchByNameOrPhone === 'function') searchByNameOrPhone();
+  }
+}
 
 // ===== 初期化 =====
 document.addEventListener('DOMContentLoaded', () => {
@@ -795,7 +876,9 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('nav-info').textContent = `${DATA.groups.length} Groups / ${total+seren} Members`;
   buildListView();
   // ハッシュルーティング: #search でアクセスした場合は検索モードを表示
-  if (window.location.hash === '#search') {
+  // #admin=xxx#search や #search&admin=xxx などの組み合わせも考慮
+  const hash = window.location.hash || '';
+  if (hash.indexOf('search') !== -1) {
     showMode('search');
   }
 });
@@ -835,10 +918,12 @@ function renderGroup(index) {
   const renderFn = (isRevealed || isSeren) ? memberHtmlFull : memberHtmlSimple;
 
   // 左カラム: グループ情報 + Reveal
-  const revealBtnHtml = (!isSeren && !isRevealed) ? `<button class="reveal-btn" onclick="revealGroup(${index})">🎉 Reveal!</button>` : '';
+  const revealBtnHtml = (!isSeren && !isRevealed && isAdmin) ? `<button class="reveal-btn" onclick="revealGroup(${index})">🎉 Reveal!</button>` : '';
+  const showName = isSeren || isRevealed || isAdmin;
+  const adminHintHtml = (isAdmin && !isRevealed && !isSeren) ? ` <span class="team-locked-mark">(未公開)</span>` : '';
   const leftColHtml = `<div class="col-info">
     <div class="group-number">${isSeren ? '✨' : 'Group '+g.group_number}</div>
-    <div class="group-name">${isSeren ? g.group_name : (isRevealed ? g.group_name : '???')}</div>
+    <div class="group-name">${showName ? g.group_name : '???'}${adminHintHtml}</div>
     ${g.disc_balance ? discBarHtml(g.disc_balance) : ''}
     ${isRevealed ? `
       <div class="synergy-box" style="margin-top:12px">
@@ -877,12 +962,18 @@ function renderGroup(index) {
 }
 
 function revealGroup(index) {
+  if (!isAdmin) return;
   revealedGroups.add(index);
+  saveRevealed();
   playSound('fanfare');
   launchConfetti(3000);
   const card = document.getElementById('pcard-'+index);
   if (card) { card.classList.add('reveal-flash','reveal-glow'); }
   renderGroup(index);
+  // 一覧モードも開いていれば同期
+  if (document.getElementById('list-mode').style.display === 'block') {
+    buildListView();
+  }
 }
 
 function switchTableTab(i) { currentTableTab = i; renderGroup(currentGroupIndex); }
@@ -922,32 +1013,37 @@ document.addEventListener('keydown', e => {
   if (e.key==='r' || e.key==='R') { revealGroup(currentGroupIndex); }
 });
 
-// ===== 一覧モード（常にフル表示） =====
+// ===== 一覧モード =====
 function buildListView() {
   const grid = document.getElementById('group-grid');
-  grid.innerHTML = getAllGroups().map(g => {
+  const allGroups = getAllGroups();
+  grid.innerHTML = allGroups.map((g, idx) => {
     const isSeren = g._isSerendipity;
-    const membersHtml = g.tables.map(t =>
-      `<div class="table-divider">Table ${t.table_number}</div>` +
-      t.members.map(m => {
+    const isRevealed = isSeren || revealedGroups.has(idx);
+    // Table ごとに「大見出し + チーム名 + メンバー」のブロックを並べる
+    const tableBlocksHtml = g.tables.map(t => {
+      const membersHtml = t.members.map(m => {
         const n = splitName(m);
         const indEn = IND_EN[m.industry] || '';
         return `<div class="group-card-member">
-        <div class="mini-avatar ${m.disc_css||''}" ${!m.disc_css?'style="background:var(--bni-gold)"':''}>${(n.ja || m.name || '?').charAt(0)}</div>
-        <div class="m-info"><div class="m-name">${n.ja}</div>${n.en?`<div class="m-name-en">${n.en}</div>`:''}</div>
-        <div class="m-right"><span style="color:var(--text-dim);font-size:0.7rem">${m.chapter||''}</span>${discBadge(m)}<span class="m-industry-wrap"><span class="m-industry-ja">${m.industry||''}</span>${indEn?`<span class="m-industry-en">${indEn}</span>`:''}</span></div>
+          <div class="mini-avatar ${m.disc_css||''}" ${!m.disc_css?'style="background:var(--bni-gold)"':''}>${(n.ja || m.name || '?').charAt(0)}</div>
+          <div class="m-info"><div class="m-name">${n.ja}</div>${n.en?`<div class="m-name-en">${n.en}</div>`:''}</div>
+          <div class="m-right"><span style="color:var(--text-dim);font-size:0.7rem">${m.chapter||''}</span>${discBadge(m)}<span class="m-industry-wrap"><span class="m-industry-ja">${m.industry||''}</span>${indEn?`<span class="m-industry-en">${indEn}</span>`:''}</span></div>
+        </div>`;
+      }).join('');
+      return `<div class="table-block">
+        <div class="table-block-title">Table ${t.table_number}</div>
+        ${renderTeamName(g, idx)}
+        <div class="group-card-members">${membersHtml}</div>
       </div>`;
-      }).join('')
-    ).join('');
+    }).join('');
 
+    // Synergy 説明はチーム名と紐づくので、reveal 後（または admin）にだけ出す
+    const showSynergy = (isRevealed || isAdmin) && g.synergy_reason;
     return `<div class="group-card ${isSeren?'serendipity':''}">
-      <div class="group-card-header">
-        <span class="group-card-number">${isSeren?'✨':g.group_number}</span>
-        <span class="group-card-name">${g.group_name||''}</span>
-      </div>
+      ${tableBlocksHtml}
       ${g.disc_balance ? discBarHtml(g.disc_balance) : ''}
-      <div class="group-card-members">${membersHtml}</div>
-      ${g.synergy_reason ? `<div class="group-card-synergy">💡 ${g.synergy_reason}</div>` : ''}
+      ${showSynergy ? `<div class="group-card-synergy">💡 ${g.synergy_reason}</div>` : ''}
     </div>`;
   }).join('');
 }
@@ -1107,13 +1203,15 @@ function searchByNameOrPhone() {
   const isPhone = /^\d{3,}$/.test(digitsOnly);
 
   let found = null;
-  for (const g of getAllGroups()) {
+  const allGroups = getAllGroups();
+  for (let gi = 0; gi < allGroups.length; gi++) {
+    const g = allGroups[gi];
     for (const t of g.tables) {
       for (const m of t.members) {
         if (isPhone) {
-          if (m.phone && m.phone.includes(digitsOnly)) { found = {group:g, table:t, member:m}; break; }
+          if (m.phone && m.phone.includes(digitsOnly)) { found = {group:g, table:t, member:m, index:gi}; break; }
         } else {
-          if (m.name && m.name.includes(raw)) { found = {group:g, table:t, member:m}; break; }
+          if (m.name && m.name.includes(raw)) { found = {group:g, table:t, member:m, index:gi}; break; }
         }
       }
       if (found) break;
@@ -1124,20 +1222,31 @@ function searchByNameOrPhone() {
   if (found) {
     noRes.style.display='none';
     const isSeren = found.group._isSerendipity;
+    const isRevealed = isSeren || revealedGroups.has(found.index);
+    const visibleToViewer = isRevealed || isAdmin;
     const allMembers = found.group.tables.map(t =>
       `<div class="table-divider">Table ${t.table_number}</div>` +
       t.members.map(m => memberHtmlFull(m, {highlight: m.id===found.member.id})).join('')
     ).join('');
 
     const foundName = splitName(found.member);
+    const teamLabel = visibleToViewer ? (found.group.group_name || '') : '???';
+    const adminHint = (isAdmin && !isRevealed && !isSeren)
+      ? ` <span class="team-locked-mark">(未公開)</span>` : '';
+    const toggleBtn = (isAdmin && !isSeren)
+      ? ` <button class="reveal-toggle" onclick="toggleReveal(${found.index})">${isRevealed ? '🙈 隠す' : '🎉 公開'}</button>` : '';
+    const showSynergy = visibleToViewer && found.group.synergy_reason;
+
     res.innerHTML = `
       <div class="search-group-number">${isSeren?'✨':'Group '+found.group.group_number}</div>
       <div class="search-label">${foundName.ja}${foundName.en?` / ${foundName.en}`:''}'s Group ${discBadge(found.member)}</div>
       <div style="background:var(--card-bg);border-radius:16px;padding:20px;border:1px solid var(--border)">
-        <h3 style="font-size:1rem;color:var(--bni-gold);margin-bottom:8px">${found.group.group_name||''}</h3>
+        <h3 style="font-size:1rem;color:var(--bni-gold);margin-bottom:8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <span>${teamLabel}</span>${adminHint}${toggleBtn}
+        </h3>
         ${found.group.disc_balance ? discBarHtml(found.group.disc_balance) : ''}
         <div class="member-list">${allMembers}</div>
-        ${found.group.synergy_reason ? `<div class="synergy-box"><p>${found.group.synergy_reason}</p></div>` : ''}
+        ${showSynergy ? `<div class="synergy-box"><p>${found.group.synergy_reason}</p></div>` : ''}
       </div>`;
     res.classList.add('visible');
   } else {
