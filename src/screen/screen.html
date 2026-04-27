@@ -477,9 +477,64 @@
     .group-grid { grid-template-columns: 1fr; }
     .search-group-number { font-size: 3.5rem; }
   }
+
+  /* ===== パスワードゲート ===== */
+  body.passport-locked .nav,
+  body.passport-locked .main,
+  body.passport-locked #qr-float { display: none !important; }
+  #passport-gate {
+    display: none;
+    position: fixed; inset: 0;
+    background: var(--bg);
+    z-index: 9999;
+    align-items: center; justify-content: center;
+    padding: 24px;
+  }
+  body.passport-locked #passport-gate { display: flex; }
+  .passport-card {
+    background: var(--card-bg); border-radius: 20px;
+    padding: 36px 28px; max-width: 380px; width: 100%;
+    text-align: center; border: 1px solid var(--border);
+  }
+  .passport-card .icon { font-size: 2.6rem; margin-bottom: 18px; }
+  .passport-card h2 { font-size: 1.15rem; font-weight: 700; color: var(--bni-gold); margin-bottom: 8px; }
+  .passport-card h2 .en { display: block; font-size: 0.9rem; font-weight: 600; color: var(--text); margin-top: 4px; }
+  .passport-card p {
+    font-size: 0.85rem; color: var(--text-dim); line-height: 1.6; margin-bottom: 22px;
+  }
+  .passport-card input {
+    width: 100%; padding: 14px 16px; border-radius: 12px;
+    border: 1px solid var(--border); background: #0F1015; color: var(--text);
+    font-size: 1.1rem; text-align: center; letter-spacing: 0.4em;
+    outline: none; margin-bottom: 8px;
+  }
+  .passport-card input:focus { border-color: var(--bni-gold); }
+  .passport-card .err {
+    color: #ff8585; font-size: 0.78rem;
+    min-height: 1.1em; margin-bottom: 12px; visibility: hidden;
+  }
+  .passport-card button {
+    padding: 12px 36px; border-radius: 12px;
+    border: 1px solid var(--bni-gold); background: transparent;
+    color: var(--bni-gold); font-size: 0.95rem; font-weight: 700;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .passport-card button:hover { background: var(--bni-gold); color: #000; }
 </style>
 </head>
-<body>
+<body class="passport-locked">
+
+<!-- パスワードゲート -->
+<div id="passport-gate" role="dialog" aria-modal="true">
+  <div class="passport-card">
+    <div class="icon">🔐</div>
+    <h2>合言葉を入力してください<span class="en">Enter passcode</span></h2>
+    <p>当日まで、運営の合言葉が必要です。<br>A passcode is required until the event day.</p>
+    <input id="passport-input" type="password" inputmode="numeric" autocomplete="off" placeholder="••••" maxlength="12">
+    <div class="err" id="passport-err">合言葉が違います / Wrong passcode</div>
+    <button id="passport-submit" type="button">OK</button>
+  </div>
+</div>
 
 <nav class="nav">
   <div class="nav-brand"><div class="logo">AI</div><h1>AI Connect</h1></div>
@@ -531,7 +586,11 @@
 
   <!-- 検索モード -->
   <div id="search-mode">
-    <input class="search-box" id="search-input" type="text" placeholder="名前 or 電話番号 / Name or Phone..." oninput="searchByNameOrPhone()">
+    <input class="search-box" id="search-input" type="text" placeholder="名前 or 電話番号 / Name or Phone" oninput="searchByNameOrPhone()">
+    <div class="search-hint" style="font-size:0.78rem;color:var(--text-dim);margin:-12px 0 20px;line-height:1.6">
+      📱 電話番号は<strong style="color:var(--bni-gold)">フル番号</strong>または<strong style="color:var(--bni-gold)">下4桁</strong>で検索できます<br>
+      Phone: search by <strong style="color:var(--bni-gold)">full number</strong> or <strong style="color:var(--bni-gold)">last 4 digits</strong>
+    </div>
     <div class="search-result" id="search-result"></div>
     <div class="no-result" id="no-result">該当する参加者が見つかりません / No participant found</div>
   </div>
@@ -833,6 +892,44 @@ function checkAdmin() {
 let revealedGroups = new Set(loadRevealed());
 let isAdmin = checkAdmin();
 
+// ===== パスワードゲート =====
+const PASSPORT_TOKEN = '1123';
+function passportOK() {
+  if (isAdmin) return true; // admin は自動通過
+  try { return sessionStorage.getItem('aiconnect_passport') === '1'; }
+  catch (e) { return false; }
+}
+function unlockPassport() {
+  document.body.classList.remove('passport-locked');
+}
+function setupPassportGate() {
+  if (passportOK()) {
+    unlockPassport();
+    return;
+  }
+  const input = document.getElementById('passport-input');
+  const submit = document.getElementById('passport-submit');
+  const err = document.getElementById('passport-err');
+  if (!input || !submit) return;
+  function tryUnlock() {
+    const v = (input.value || '').trim();
+    if (v === PASSPORT_TOKEN) {
+      try { sessionStorage.setItem('aiconnect_passport', '1'); } catch (e) {}
+      unlockPassport();
+    } else {
+      err.style.visibility = 'visible';
+      input.value = ''; input.focus();
+    }
+  }
+  submit.addEventListener('click', tryUnlock);
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); tryUnlock(); } });
+  input.addEventListener('input', () => {
+    err.style.visibility = 'hidden';
+    if (input.value.length >= PASSPORT_TOKEN.length) tryUnlock();
+  });
+  setTimeout(() => input.focus(), 100);
+}
+
 function renderTeamName(g, index) {
   const isSeren = g._isSerendipity;
   const isRevealed = isSeren || revealedGroups.has(index);
@@ -871,6 +968,7 @@ function toggleReveal(index) {
 
 // ===== 初期化 =====
 document.addEventListener('DOMContentLoaded', () => {
+  setupPassportGate();
   const total = DATA.groups.reduce((s,g)=>s+g.tables.reduce((ss,t)=>ss+t.members.length,0),0);
   const seren = DATA.serendipity_group ? DATA.serendipity_group.tables.reduce((s,t)=>s+t.members.length,0) : 0;
   document.getElementById('nav-info').textContent = `${DATA.groups.length} Groups / ${total+seren} Members`;
