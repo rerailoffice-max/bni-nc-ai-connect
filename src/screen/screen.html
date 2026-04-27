@@ -478,6 +478,77 @@
     .search-group-number { font-size: 3.5rem; }
   }
 
+  /* ===== テーブル予想（answering / revealed） ===== */
+  .table-guess-area {
+    margin: 10px 0 6px 0; padding: 10px 12px;
+    background: rgba(207,32,48,0.06); border-left: 3px solid var(--bni-red);
+    border-radius: 8px;
+  }
+  .table-guess-label {
+    font-size: 0.75rem; color: var(--bni-red); font-weight: 700;
+    letter-spacing: 0.04em; margin-bottom: 6px;
+  }
+  .table-guess-text {
+    font-size: 0.95rem; color: var(--text); line-height: 1.5;
+    white-space: pre-wrap; word-break: break-word;
+  }
+  .table-guess-empty {
+    font-size: 0.78rem; color: var(--text-dim); font-style: italic;
+  }
+  .guess-submit-btn {
+    margin-top: 8px; padding: 8px 14px;
+    background: var(--bni-red); color: #fff; border: none;
+    border-radius: 8px; font-size: 0.85rem; font-weight: 700;
+    cursor: pointer; transition: background 0.2s;
+  }
+  .guess-submit-btn:hover { background: var(--bni-red-dark); }
+  .guess-submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .guess-submitted-mark {
+    display: inline-block; margin-left: 8px;
+    font-size: 0.75rem; color: #45B36B; font-weight: 700;
+  }
+
+  /* 予想送信モーダル */
+  .guess-modal-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.75); z-index: 1000;
+    align-items: center; justify-content: center; padding: 20px;
+  }
+  .guess-modal-overlay.visible { display: flex; }
+  .guess-modal {
+    background: var(--card-bg); border-radius: 18px;
+    padding: 28px 24px; max-width: 460px; width: 100%;
+    border: 1px solid var(--bni-red);
+    animation: modalIn 0.25s ease-out;
+  }
+  @keyframes modalIn { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: scale(1); } }
+  .guess-modal h3 { font-size: 1.1rem; color: var(--bni-red); margin-bottom: 6px; font-weight: 800; }
+  .guess-modal h3 .en { display: block; font-size: 0.9rem; color: var(--text); font-weight: 600; margin-top: 4px; }
+  .guess-modal p { font-size: 0.85rem; color: var(--text-dim); line-height: 1.5; margin-bottom: 14px; }
+  .guess-modal label { display: block; font-size: 0.78rem; color: var(--text-dim); margin: 8px 0 4px; font-weight: 600; }
+  .guess-modal select, .guess-modal textarea {
+    width: 100%; padding: 10px 12px; border-radius: 8px;
+    border: 1px solid var(--border); background: #0F1015; color: var(--text);
+    font-size: 0.95rem; outline: none; font-family: inherit;
+  }
+  .guess-modal select:focus, .guess-modal textarea:focus { border-color: var(--bni-gold); }
+  .guess-modal textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
+  .guess-modal .modal-err { color: #ff8585; font-size: 0.78rem; min-height: 1.1em; margin: 6px 0; visibility: hidden; }
+  .guess-modal .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 14px; }
+  .guess-modal .modal-actions button {
+    padding: 10px 20px; border-radius: 10px;
+    font-size: 0.9rem; font-weight: 700; cursor: pointer; transition: all 0.2s;
+  }
+  .guess-modal .modal-actions .btn-cancel {
+    background: transparent; color: var(--text); border: 1px solid var(--border);
+  }
+  .guess-modal .modal-actions .btn-cancel:hover { border-color: var(--text); }
+  .guess-modal .modal-actions .btn-submit {
+    background: var(--bni-red); color: #fff; border: none;
+  }
+  .guess-modal .modal-actions .btn-submit:hover { background: var(--bni-red-dark); }
+  .guess-modal .modal-actions .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+
   /* ===== ステージ管理パネル（admin専用） ===== */
   #stage-panel {
     position: fixed; top: 16px; right: 16px; z-index: 998;
@@ -565,9 +636,29 @@
   <div class="stage-buttons">
     <button type="button" data-stage="locked" onclick="adminSetStage('locked')">🔒 受付前 (locked)</button>
     <button type="button" data-stage="open" onclick="adminSetStage('open')">🚪 受付開始 (open)</button>
+    <button type="button" data-stage="answering" onclick="adminSetStage('answering')">📝 回答タイム (answering)</button>
     <button type="button" data-stage="revealed" onclick="adminSetStage('revealed')">🎉 結果発表 (revealed)</button>
+    <button type="button" onclick="adminClearGuesses()" style="margin-top:4px;font-size:0.72rem;border-color:var(--text-dim);color:var(--text-dim)">🗑 予想をリセット</button>
   </div>
   <div class="stage-status" id="stage-status"></div>
+</div>
+
+<!-- テーブル予想送信モーダル -->
+<div class="guess-modal-overlay" id="guess-modal" role="dialog" aria-modal="true">
+  <div class="guess-modal">
+    <h3>このテーブルの予想を送信<span class="en">Submit Your Table's Guess</span></h3>
+    <p>「このテーブルはどんなコンタクトサークル？どんな協業ができるか？」を、テーブルから一人代表で送信してください（日本語/英語OK）。<br>
+    Have one representative from your table submit your team's prediction (Japanese or English).</p>
+    <label>テーブル番号 / Table number</label>
+    <select id="guess-table-select"></select>
+    <label>予想 / Your guess (max 500 chars)</label>
+    <textarea id="guess-text" maxlength="500" placeholder="例: 住まいまるごと相談チーム — 不動産・保険・施工で家を起点に紹介の連鎖が生まれる" rows="4"></textarea>
+    <div class="modal-err" id="guess-err"></div>
+    <div class="modal-actions">
+      <button type="button" class="btn-cancel" onclick="closeGuessModal()">キャンセル / Cancel</button>
+      <button type="button" class="btn-submit" id="guess-submit-confirm" onclick="submitGuess()">送信 / Submit</button>
+    </div>
+  </div>
 </div>
 
 <!-- パスワードゲート -->
@@ -1027,11 +1118,164 @@ function updateStagePanelUI() {
   if (!panel) return;
   if (!isAdmin) { panel.classList.remove('visible'); return; }
   panel.classList.add('visible');
-  const labels = { locked: '🔒 受付前', open: '🚪 受付開始', revealed: '🎉 結果発表' };
+  const labels = { locked: '🔒 受付前', open: '🚪 受付開始', answering: '📝 回答タイム', revealed: '🎉 結果発表' };
   document.getElementById('stage-current-label').textContent = labels[serverStage] || serverStage;
   panel.querySelectorAll('button[data-stage]').forEach(b => {
     b.classList.toggle('active', b.dataset.stage === serverStage);
   });
+}
+
+async function adminClearGuesses() {
+  if (!isAdmin) return;
+  if (!confirm('全テーブルの予想を削除します。よろしいですか？')) return;
+  const status = document.getElementById('stage-status');
+  status.className = 'stage-status'; status.textContent = '送信中…';
+  try {
+    const res = await fetch(`${GAS_URL}?action=clearGuesses&token=${encodeURIComponent('rerail-2026')}&t=${Date.now()}`);
+    const json = await res.json();
+    if (json.success) {
+      status.classList.add('success');
+      status.textContent = '✓ 予想を全削除しました';
+      tableGuesses = {};
+      buildListView();
+    } else {
+      status.classList.add('error');
+      status.textContent = `エラー: ${json.error || 'unknown'}`;
+    }
+  } catch (e) {
+    status.classList.add('error');
+    status.textContent = `通信エラー: ${e.message}`;
+  }
+}
+
+// ===== テーブル予想（answering / revealed） =====
+let tableGuesses = {}; // { [tableNumber]: { text, timestamp } }
+let myGuessSubmitted = {}; // ローカル送信済み記録（テーブル別）
+function loadMyGuessSubmitted() {
+  try { return JSON.parse(localStorage.getItem('aiconnect_guess_sub_v1') || '{}'); }
+  catch (e) { return {}; }
+}
+function saveMyGuessSubmitted() {
+  try { localStorage.setItem('aiconnect_guess_sub_v1', JSON.stringify(myGuessSubmitted)); } catch (e) {}
+}
+myGuessSubmitted = loadMyGuessSubmitted();
+
+async function fetchGuesses() {
+  try {
+    const res = await fetch(`${GAS_URL}?action=getGuesses&t=${Date.now()}`);
+    if (!res.ok) return;
+    const json = await res.json();
+    const map = {};
+    (json.guesses || []).forEach(g => {
+      // 同一テーブルの最新投稿を保持（後勝ち）
+      map[g.tableNumber] = { text: g.text, timestamp: g.timestamp };
+    });
+    // 変化があった場合のみ再描画
+    const same = JSON.stringify(map) === JSON.stringify(tableGuesses);
+    tableGuesses = map;
+    if (!same) {
+      buildListView();
+      if (document.getElementById('search-mode').style.display !== 'none') {
+        if (typeof searchByNameOrPhone === 'function') searchByNameOrPhone();
+      }
+    }
+  } catch (e) {}
+}
+
+let guessPollTimer = null;
+function startGuessPolling() {
+  if (guessPollTimer) return;
+  fetchGuesses();
+  guessPollTimer = setInterval(fetchGuesses, 5000);
+}
+
+function openGuessModal(defaultTable) {
+  // テーブル番号セレクトを populate
+  const select = document.getElementById('guess-table-select');
+  select.innerHTML = '';
+  // DATA から全テーブル番号を抽出
+  const tables = new Set();
+  DATA.groups.forEach(g => g.tables.forEach(t => tables.add(t.table_number)));
+  if (DATA.serendipity_group) DATA.serendipity_group.tables.forEach(t => tables.add(t.table_number));
+  [...tables].sort((a, b) => a - b).forEach(n => {
+    const opt = document.createElement('option');
+    opt.value = n; opt.textContent = `Table ${n}`;
+    if (n === defaultTable) opt.selected = true;
+    select.appendChild(opt);
+  });
+  document.getElementById('guess-text').value = '';
+  document.getElementById('guess-err').style.visibility = 'hidden';
+  document.getElementById('guess-submit-confirm').disabled = false;
+  document.getElementById('guess-modal').classList.add('visible');
+  setTimeout(() => document.getElementById('guess-text').focus(), 100);
+}
+
+function closeGuessModal() {
+  document.getElementById('guess-modal').classList.remove('visible');
+}
+
+async function submitGuess() {
+  const select = document.getElementById('guess-table-select');
+  const tableNumber = parseInt(select.value, 10);
+  const text = document.getElementById('guess-text').value.trim();
+  const err = document.getElementById('guess-err');
+  err.style.visibility = 'hidden';
+  if (!tableNumber) {
+    err.textContent = 'テーブル番号を選択してください'; err.style.visibility = 'visible'; return;
+  }
+  if (!text) {
+    err.textContent = '予想を入力してください / Please enter your guess'; err.style.visibility = 'visible'; return;
+  }
+  const btn = document.getElementById('guess-submit-confirm');
+  btn.disabled = true; btn.textContent = '送信中… / Sending…';
+  try {
+    const url = `${GAS_URL}?action=submitGuess&table=${tableNumber}&text=${encodeURIComponent(text)}&t=${Date.now()}`;
+    const res = await fetch(url);
+    const json = await res.json();
+    if (json.success) {
+      myGuessSubmitted[tableNumber] = true;
+      saveMyGuessSubmitted();
+      tableGuesses[tableNumber] = { text: json.text, timestamp: json.timestamp };
+      try { playSound('whoosh'); } catch(e) {}
+      try { launchConfetti(1500); } catch(e) {}
+      closeGuessModal();
+      buildListView();
+    } else {
+      err.textContent = `エラー: ${json.error || 'unknown'}`;
+      err.style.visibility = 'visible';
+      btn.disabled = false; btn.textContent = '送信 / Submit';
+    }
+  } catch (e) {
+    err.textContent = `通信エラー / Network error: ${e.message}`;
+    err.style.visibility = 'visible';
+    btn.disabled = false; btn.textContent = '送信 / Submit';
+  }
+}
+
+function renderGuessArea(tableNumber) {
+  // answering または revealed の時にテーブル予想を表示
+  if (serverStage !== 'answering' && serverStage !== 'revealed') return '';
+  const g = tableGuesses[tableNumber];
+  const submitted = !!myGuessSubmitted[tableNumber];
+  const isAnswering = serverStage === 'answering';
+  let inner;
+  if (g && g.text) {
+    inner = `<div class="table-guess-label">📝 みんなの予想 / Guess from this table</div>
+      <div class="table-guess-text">${escapeHtml(g.text)}</div>`;
+  } else {
+    inner = `<div class="table-guess-label">📝 みんなの予想 / Guess from this table</div>
+      <div class="table-guess-empty">${isAnswering ? '（まだ未投稿 / Not yet submitted）' : '（予想は届きませんでした / No submission）'}</div>`;
+  }
+  if (isAnswering) {
+    inner += submitted
+      ? `<span class="guess-submitted-mark">✓ 送信済 / Sent</span>`
+      : `<button class="guess-submit-btn" onclick="openGuessModal(${tableNumber})">📝 このテーブルから予想を送信 / Submit Guess</button>`;
+  }
+  return `<div class="table-guess-area">${inner}</div>`;
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 
 // ===== パスワードゲート =====
@@ -1118,6 +1362,18 @@ document.addEventListener('DOMContentLoaded', () => {
   setupPassportGate();
   if (isAdmin) updateStagePanelUI();
   startStagePolling();
+  startGuessPolling();
+  // モーダル外クリックで閉じる
+  document.getElementById('guess-modal').addEventListener('click', e => {
+    if (e.target === document.getElementById('guess-modal')) closeGuessModal();
+  });
+  // Esc キーで閉じる
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      const modal = document.getElementById('guess-modal');
+      if (modal && modal.classList.contains('visible')) closeGuessModal();
+    }
+  });
   const total = DATA.groups.reduce((s,g)=>s+g.tables.reduce((ss,t)=>ss+t.members.length,0),0);
   const seren = DATA.serendipity_group ? DATA.serendipity_group.tables.reduce((s,t)=>s+t.members.length,0) : 0;
   document.getElementById('nav-info').textContent = `${DATA.groups.length} Groups / ${total+seren} Members`;
@@ -1281,6 +1537,7 @@ function buildListView() {
       return `<div class="table-block">
         <div class="table-block-title">Table ${t.table_number}</div>
         ${renderTeamName(g, idx)}
+        ${renderGuessArea(t.table_number)}
         <div class="group-card-members">${membersHtml}</div>
       </div>`;
     }).join('');
