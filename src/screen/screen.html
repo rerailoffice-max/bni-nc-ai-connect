@@ -1738,8 +1738,8 @@ function searchByNameOrPhone() {
     const showSynergy = visibleToViewer && found.group.synergy_reason;
 
     res.innerHTML = `
-      <div class="search-group-number">${isSeren?'✨':'Group '+found.group.group_number}</div>
-      <div class="search-label">${foundName.ja}${foundName.en?` / ${foundName.en}`:''}'s Group ${discBadge(found.member)}</div>
+      <div class="search-group-number">${isSeren?'✨':'Table '+found.table.table_number}</div>
+      <div class="search-label">${foundName.ja}${foundName.en?` / ${foundName.en}`:''}'s Table ${discBadge(found.member)}</div>
       <div style="background:var(--card-bg);border-radius:16px;padding:20px;border:1px solid var(--border)">
         <h3 style="font-size:1rem;color:var(--bni-gold);margin-bottom:8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
           <span>${teamLabel}</span>${adminHint}
