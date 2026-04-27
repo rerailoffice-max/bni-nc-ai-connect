@@ -584,11 +584,11 @@
   #stage-panel .stage-status.error { color: #ff8585; }
   #stage-panel .stage-status.success { color: #45B36B; }
 
-  /* ===== パスワードゲート ===== */
-  body.passport-locked .nav,
-  body.passport-locked .main,
-  body.passport-locked #qr-float { display: none !important; }
-  #passport-gate {
+  /* ===== 準備中画面（stage=locked時の参加者用） ===== */
+  body.stage-locked .nav,
+  body.stage-locked .main,
+  body.stage-locked #qr-float { display: none !important; }
+  #stage-locked-screen {
     display: none;
     position: fixed; inset: 0;
     background: var(--bg);
@@ -596,39 +596,23 @@
     align-items: center; justify-content: center;
     padding: 24px;
   }
-  body.passport-locked #passport-gate { display: flex; }
-  .passport-card {
+  body.stage-locked #stage-locked-screen { display: flex; }
+  .locked-card {
     background: var(--card-bg); border-radius: 20px;
-    padding: 36px 28px; max-width: 380px; width: 100%;
+    padding: 40px 28px; max-width: 380px; width: 100%;
     text-align: center; border: 1px solid var(--border);
   }
-  .passport-card .icon { font-size: 2.6rem; margin-bottom: 18px; }
-  .passport-card h2 { font-size: 1.15rem; font-weight: 700; color: var(--bni-gold); margin-bottom: 8px; }
-  .passport-card h2 .en { display: block; font-size: 0.9rem; font-weight: 600; color: var(--text); margin-top: 4px; }
-  .passport-card p {
-    font-size: 0.85rem; color: var(--text-dim); line-height: 1.6; margin-bottom: 22px;
+  .locked-card .icon { font-size: 2.8rem; margin-bottom: 18px; animation: pulse-soft 2s ease-in-out infinite; }
+  @keyframes pulse-soft { 0%,100% { opacity: 1; } 50% { opacity: 0.6; } }
+  .locked-card h2 { font-size: 1.2rem; font-weight: 700; color: var(--bni-gold); margin-bottom: 8px; }
+  .locked-card h2 .en { display: block; font-size: 0.9rem; font-weight: 600; color: var(--text); margin-top: 6px; }
+  .locked-card p {
+    font-size: 0.88rem; color: var(--text-dim); line-height: 1.7;
+    margin-top: 20px;
   }
-  .passport-card input {
-    width: 100%; padding: 14px 16px; border-radius: 12px;
-    border: 1px solid var(--border); background: #0F1015; color: var(--text);
-    font-size: 1.1rem; text-align: center; letter-spacing: 0.4em;
-    outline: none; margin-bottom: 8px;
-  }
-  .passport-card input:focus { border-color: var(--bni-gold); }
-  .passport-card .err {
-    color: #ff8585; font-size: 0.78rem;
-    min-height: 1.1em; margin-bottom: 12px; visibility: hidden;
-  }
-  .passport-card button {
-    padding: 12px 36px; border-radius: 12px;
-    border: 1px solid var(--bni-gold); background: transparent;
-    color: var(--bni-gold); font-size: 0.95rem; font-weight: 700;
-    cursor: pointer; transition: all 0.2s;
-  }
-  .passport-card button:hover { background: var(--bni-gold); color: #000; }
 </style>
 </head>
-<body class="passport-locked">
+<body>
 
 <!-- ステージ管理パネル（admin専用） -->
 <div id="stage-panel" aria-live="polite">
@@ -661,15 +645,17 @@
   </div>
 </div>
 
-<!-- パスワードゲート -->
-<div id="passport-gate" role="dialog" aria-modal="true">
-  <div class="passport-card">
-    <div class="icon">🔐</div>
-    <h2>合言葉を入力してください<span class="en">Enter passcode</span></h2>
-    <p>当日まで、運営の合言葉が必要です。<br>A passcode is required until the event day.</p>
-    <input id="passport-input" type="password" inputmode="numeric" autocomplete="off" placeholder="••••" maxlength="12">
-    <div class="err" id="passport-err">合言葉が違います / Wrong passcode</div>
-    <button id="passport-submit" type="button">OK</button>
+<!-- 準備中画面（stage=locked時のみ表示、合言葉ではなく自動解除） -->
+<div id="stage-locked-screen" role="dialog" aria-modal="true">
+  <div class="locked-card">
+    <div class="icon">⏳</div>
+    <h2>もうしばらくお待ちください<span class="en">Please wait a moment</span></h2>
+    <p>
+      グループ編成の準備中です。<br>
+      We're preparing the group reveal.<br><br>
+      開始まで自動で表示が切り替わります。<br>
+      The screen will update automatically.
+    </p>
   </div>
 </div>
 
@@ -1094,14 +1080,8 @@ function onStageChanged(prev, next) {
     try { playSound('fanfare'); } catch (e) {}
     try { launchConfetti(2500); } catch (e) {}
   }
-  if (next !== 'locked' && document.body.classList.contains('passport-locked')) {
-    // サーバーが open/revealed → ゲート自動解除
-    document.body.classList.remove('passport-locked');
-  }
-  if (next === 'locked' && !isAdmin) {
-    // サーバーがlocked に戻った → 参加者は再ロック
-    document.body.classList.add('passport-locked');
-  }
+  // 非adminは locked 時のみ準備中画面、それ以外は通常表示
+  applyStageLock();
   // 表示再描画
   buildListView();
   if (document.getElementById('presentation-mode').style.display !== 'none') {
@@ -1303,44 +1283,21 @@ function escapeHtml(s) {
   return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 
-// ===== パスワードゲート =====
-const PASSPORT_TOKEN = '1123';
-function passportOK() {
-  if (isAdmin) return true; // admin は自動通過
-  if (serverStage !== 'locked') return true; // サーバーが open/revealed なら全員通過
-  try { return sessionStorage.getItem('aiconnect_passport') === '1'; }
-  catch (e) { return false; }
-}
-function unlockPassport() {
-  document.body.classList.remove('passport-locked');
-}
-function setupPassportGate() {
-  if (passportOK()) {
-    unlockPassport();
+// ===== ステージロック表示制御 =====
+// admin はlocked時でも常に画面が見える。非adminは locked のとき準備中画面のみ。
+function applyStageLock() {
+  if (isAdmin) {
+    document.body.classList.remove('stage-locked');
     return;
   }
-  const input = document.getElementById('passport-input');
-  const submit = document.getElementById('passport-submit');
-  const err = document.getElementById('passport-err');
-  if (!input || !submit) return;
-  function tryUnlock() {
-    const v = (input.value || '').trim();
-    if (v === PASSPORT_TOKEN) {
-      try { sessionStorage.setItem('aiconnect_passport', '1'); } catch (e) {}
-      unlockPassport();
-    } else {
-      err.style.visibility = 'visible';
-      input.value = ''; input.focus();
-    }
+  if (serverStage === 'locked') {
+    document.body.classList.add('stage-locked');
+  } else {
+    document.body.classList.remove('stage-locked');
   }
-  submit.addEventListener('click', tryUnlock);
-  input.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); tryUnlock(); } });
-  input.addEventListener('input', () => {
-    err.style.visibility = 'hidden';
-    if (input.value.length >= PASSPORT_TOKEN.length) tryUnlock();
-  });
-  setTimeout(() => input.focus(), 100);
 }
+// 旧 sessionStorage 残骸を一掃（汚染端末救済）
+try { sessionStorage.removeItem('aiconnect_passport'); } catch (e) {}
 
 function isServerRevealed() { return serverStage === 'revealed'; }
 
@@ -1359,7 +1316,8 @@ function renderTeamName(g) {
 
 // ===== 初期化 =====
 document.addEventListener('DOMContentLoaded', () => {
-  setupPassportGate();
+  // 起動時は安全側で「準備中」表示（admin以外）。fetchStage で実ステージ取得後に解除される
+  if (!isAdmin) document.body.classList.add('stage-locked');
   if (isAdmin) updateStagePanelUI();
   startStagePolling();
   startGuessPolling();

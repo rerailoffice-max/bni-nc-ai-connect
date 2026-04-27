@@ -154,14 +154,14 @@
       📝 アンケートに回答する
       <span class="desc">Answer the Survey (2 min)</span>
     </a>
-    <button class="btn btn-check ready" id="check-btn" type="button" onclick="openPassportModal()">
+    <a class="btn btn-check ready" id="check-btn" href="screen.html">
       🔍 グループを見る
       <span class="desc">View Your Group</span>
-      <span class="status-badge live" id="status-badge">✓ 当日公開 / Available on the day</span>
-    </button>
+      <span class="status-badge live" id="status-badge">✓ 公開中 / Live</span>
+    </a>
   </div>
 
-  <!-- 未準備モーダル -->
+  <!-- 未準備モーダル（旧式・残置） -->
   <div class="modal-overlay" id="modal">
     <div class="modal">
       <div class="icon">⏳</div>
@@ -176,91 +176,19 @@
     </div>
   </div>
 
-  <!-- パスワード入力モーダル -->
-  <div class="modal-overlay" id="passport-modal">
-    <div class="modal">
-      <div class="icon">🔐</div>
-      <h2>合言葉を入力<br><span style="font-size:0.95rem;font-weight:600;color:#EAEAEA">Enter passcode</span></h2>
-      <p>
-        当日まで、運営の合言葉が必要です。<br>
-        A passcode is required until the event day.
-      </p>
-      <input id="passport-input" type="password" inputmode="numeric" autocomplete="off"
-        placeholder="••••"
-        style="width:100%;padding:14px 16px;border-radius:12px;border:1px solid var(--border);background:#0F1015;color:var(--text);font-size:1.1rem;text-align:center;letter-spacing:0.4em;margin-bottom:8px;outline:none"
-        oninput="onPassportInput()">
-      <div id="passport-error" style="color:#ff8585;font-size:0.78rem;min-height:1.1em;margin-bottom:12px;visibility:hidden">合言葉が違います / Wrong passcode</div>
-      <div style="display:flex;gap:10px;justify-content:center">
-        <button class="modal-close" onclick="closePassportModal()">キャンセル / Cancel</button>
-        <button class="modal-close" id="passport-submit" onclick="submitPassport()" style="border-color:var(--gold);color:var(--gold)">OK</button>
-      </div>
-    </div>
-  </div>
-
 <script>
 const GAS_URL='https://script.google.com/macros/s/AKfycbxinT85Mq5KSEJyujQs_OI0-hzM1vALHOjg9ICjv8jdjdJjTFYMIq4boKLbHNqJfPX8/exec';
-const PASSPORT_TOKEN = '1123';
-let matchingReady = false;
 
-document.addEventListener('DOMContentLoaded', () => {
-  matchingReady = true;
-});
+// 旧合言葉のsessionStorage残骸を一掃（汚染端末救済）
+try { sessionStorage.removeItem('aiconnect_passport'); } catch (e) {}
 
 function closeModal() {
   document.getElementById('modal').classList.remove('visible');
 }
 
-function openPassportModal() {
-  // 既に通過済みなら直接 screen.html へ
-  try {
-    if (sessionStorage.getItem('aiconnect_passport') === '1') {
-      window.location.href = 'screen.html';
-      return;
-    }
-  } catch (e) {}
-  const modal = document.getElementById('passport-modal');
-  modal.classList.add('visible');
-  setTimeout(() => {
-    const input = document.getElementById('passport-input');
-    if (input) { input.value = ''; input.focus(); }
-    document.getElementById('passport-error').style.visibility = 'hidden';
-  }, 50);
-}
-
-function closePassportModal() {
-  document.getElementById('passport-modal').classList.remove('visible');
-}
-
-function onPassportInput() {
-  document.getElementById('passport-error').style.visibility = 'hidden';
-  const input = document.getElementById('passport-input');
-  if (input.value.length >= PASSPORT_TOKEN.length) {
-    submitPassport();
-  }
-}
-
-function submitPassport() {
-  const v = (document.getElementById('passport-input').value || '').trim();
-  if (v === PASSPORT_TOKEN) {
-    try { sessionStorage.setItem('aiconnect_passport', '1'); } catch (e) {}
-    window.location.href = 'screen.html';
-  } else {
-    document.getElementById('passport-error').style.visibility = 'visible';
-    const input = document.getElementById('passport-input');
-    input.value = ''; input.focus();
-  }
-}
-
 // モーダル外クリックで閉じる
 document.getElementById('modal').addEventListener('click', function(e) {
   if (e.target === this) closeModal();
-});
-document.getElementById('passport-modal').addEventListener('click', function(e) {
-  if (e.target === this) closePassportModal();
-});
-// Enter で送信
-document.getElementById('passport-input').addEventListener('keydown', function(e) {
-  if (e.key === 'Enter') { e.preventDefault(); submitPassport(); }
 });
 </script>
 </body>
