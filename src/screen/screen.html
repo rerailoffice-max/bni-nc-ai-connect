@@ -1685,8 +1685,11 @@ function searchByNameOrPhone() {
   if (!raw || raw.length < 2) { res.classList.remove('visible'); noRes.style.display='none'; return; }
 
   // 数字が多ければ電話番号検索、そうでなければ名前検索
-  const digitsOnly = raw.replace(/[-\s+]/g,'');
+  const digitsOnly = raw.replace(/[\D]/g,''); // 数字以外を除去（ハイフン、スペース、+、全角空白等含む）
   const isPhone = /^\d{3,}$/.test(digitsOnly);
+  // 名前検索用の正規化（半角/全角スペース除去 + 小文字化）
+  const normalize = s => String(s || '').toLowerCase().replace(/[\s　]+/g, '');
+  const queryNorm = normalize(raw);
 
   let found = null;
   const allGroups = getAllGroups();
@@ -1695,9 +1698,22 @@ function searchByNameOrPhone() {
     for (const t of g.tables) {
       for (const m of t.members) {
         if (isPhone) {
-          if (m.phone && m.phone.includes(digitsOnly)) { found = {group:g, table:t, member:m, index:gi}; break; }
+          // m.phone はスプシでは下4桁。フル番号入力でも末尾4桁で照合できるようにする
+          const memberPhone = String(m.phone || '');
+          if (!memberPhone) continue;
+          // ① 完全一致 ② 入力末尾4桁が一致 ③ 部分一致（下4桁の中の連続数字）
+          const last4 = digitsOnly.slice(-4);
+          if (memberPhone === digitsOnly ||
+              memberPhone === last4 ||
+              digitsOnly.endsWith(memberPhone) ||
+              memberPhone.includes(digitsOnly)) {
+            found = {group:g, table:t, member:m, index:gi}; break;
+          }
         } else {
-          if (m.name && m.name.includes(raw)) { found = {group:g, table:t, member:m, index:gi}; break; }
+          // 名前検索: 大文字小文字無視 + スペース無視で部分一致
+          if (normalize(m.name).includes(queryNorm)) {
+            found = {group:g, table:t, member:m, index:gi}; break;
+          }
         }
       }
       if (found) break;
