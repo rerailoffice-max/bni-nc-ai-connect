@@ -780,7 +780,7 @@ const REAL_DATA = {"groups": [{"group_number": 1, "group_name": "住まい・暮
 // ===== データ読み込み =====
 // 本番: GAS generateScreenData() の出力JSONを REAL_DATA に代入してからこのHTMLを開く
 // デモ: REAL_DATA未定義ならデモデータを自動生成
-const DATA = (typeof REAL_DATA !== 'undefined') ? REAL_DATA : generateDemoData();
+let DATA = (typeof REAL_DATA !== 'undefined') ? REAL_DATA : generateDemoData();
 
 function generateDemoData() {
   const lastNamesJa = ["佐藤","鈴木","高橋","田中","伊藤","渡辺","山本","中村","小林","加藤","吉田","山田","佐々木","松本","井上","木村","林","斎藤","清水","山崎","森","池田","橋本","阿部","石川","前田","藤田","小川","岡田","後藤","長谷川","石井","村上","近藤","坂本","遠藤","青木","藤井","西村","福田","太田","三浦","岡本","松田","中川","中野","原田","小野","竹内","金子","和田","中山","石田","上田","柴田","宮崎","酒井","宮本","工藤","横山","高木","安藤","内田","谷口","大野","丸山","今井","河野","武田","藤原","杉山","増田","小島","平野","土屋","大塚","千葉","久保","菅原","岩崎","松井","木下","佐野","野口","菊地","杉本","渡部","古川","市川","望月","北村","吉川","片山","野村","新井","中田","桜井","浜田","三宅"];
@@ -1021,8 +1021,41 @@ function checkAdmin() {
 try { localStorage.removeItem('aiconnect_revealed_v1'); } catch (e) {}
 let isAdmin = checkAdmin();
 
-// ===== サーバー側ステージ管理（GAS同期） =====
+// ===== サーバー側ステージ管理 + マッチング結果同期（GAS） =====
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbxinT85Mq5KSEJyujQs_OI0-hzM1vALHOjg9ICjv8jdjdJjTFYMIq4boKLbHNqJfPX8/exec';
+
+// 起動時に最新マッチング結果を fetch して REAL_DATA を上書き
+async function fetchLatestResults() {
+  try {
+    const res = await fetch(`${GAS_URL}?action=getResults&t=${Date.now()}`);
+    if (!res.ok) return false;
+    const json = await res.json();
+    if (!json || !Array.isArray(json.groups) || json.groups.length === 0) return false;
+    // 既存DATAを上書き（serendipity含む）
+    DATA = {
+      groups: json.groups,
+      serendipity_group: json.serendipity_group || null
+    };
+    // ナビ統計を再計算
+    const total = DATA.groups.reduce((s,g)=>s+g.tables.reduce((ss,t)=>ss+t.members.length,0),0);
+    const seren = DATA.serendipity_group ? DATA.serendipity_group.tables.reduce((s,t)=>s+t.members.length,0) : 0;
+    const navInfo = document.getElementById('nav-info');
+    if (navInfo) navInfo.textContent = `${DATA.groups.length} Groups / ${total+seren} Members`;
+    // 全モードを再描画
+    if (typeof buildListView === 'function') buildListView();
+    if (document.getElementById('presentation-mode') && document.getElementById('presentation-mode').style.display !== 'none') {
+      try { renderGroup(currentGroupIndex); } catch (e) {}
+    }
+    if (document.getElementById('search-mode') && document.getElementById('search-mode').style.display !== 'none') {
+      if (typeof searchByNameOrPhone === 'function') searchByNameOrPhone();
+    }
+    console.log(`[AI Connect] 最新マッチング結果を取得: ${DATA.groups.length} groups / ${total+seren} members`);
+    return true;
+  } catch (e) {
+    console.warn('[AI Connect] getResults 失敗、埋め込みデータを使用:', e);
+    return false;
+  }
+}
 const STAGE_POLL_MS = 5000; // 参加者は5秒ごとにポーリング
 let serverStage = 'locked'; // 初期値（GAS応答前は安全側に倒す）
 let stagePollTimer = null;
@@ -1330,6 +1363,8 @@ document.addEventListener('DOMContentLoaded', () => {
   if (isAdmin) updateStagePanelUI();
   startStagePolling();
   startGuessPolling();
+  // GAS から最新マッチング結果を取得（失敗しても埋め込みREAL_DATAで動く）
+  fetchLatestResults();
   // モーダル外クリックで閉じる
   document.getElementById('guess-modal').addEventListener('click', e => {
     if (e.target === document.getElementById('guess-modal')) closeGuessModal();
